@@ -5,7 +5,6 @@
 <style>
 body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
 h1, h2, h3 { color: #333; }
-.fixture { margin-bottom: 40px; border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
 .format { margin: 20px 0; }
 .format-header { font-weight: bold; margin-bottom: 8px; color: #555; }
 .tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: #f5f5f5; padding: 15px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
@@ -14,34 +13,63 @@ h1, h2, h3 { color: #333; }
 .token-newline { background: #f0e8ff !important; color: #999; border-color: #c8b8e8 !important; }
 .stats { color: #666; font-size: 14px; }
 .na { color: #999; font-style: italic; }
-table { border-collapse: collapse; width: 100%; margin: 20px 0; }
-th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-th { background: #f0f0f0; }
-.best { font-weight: bold; color: #2a7; }
-.tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #ddd; }
-.tab { padding: 10px 20px; cursor: pointer; border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: #f5f5f5; margin-bottom: -2px; transition: all 0.2s; }
+table { border-collapse: collapse; margin: 20px 0; }
+th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: right; }
+th { background: #f0f0f0; font-weight: 600; }
+td:first-child, th:first-child { text-align: left; }
+.best { font-weight: bold; color: #228855; }
+.partial-best { font-weight: bold; }
+.summary-section { margin-bottom: 30px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid #ddd; }
+.tab { padding: 10px 20px; cursor: pointer; border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: #f5f5f5; margin-bottom: -2px; transition: all 0.2s; user-select: none; }
 .tab:hover { background: #e8e8e8; }
 .tab.active { background: white; border-color: #ddd; border-bottom-color: white; font-weight: bold; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-.tokenizer-info { color: #666; font-size: 13px; margin-top: 4px; }
+.tab-group { margin-bottom: 30px; }
+.tab-group-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 14px; }
+.fixture-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px; }
 </style>
 </head><body>
 <h1>Token Visualization</h1>
 <p>Compare how different tokenizers split the same text. Each token is colored uniquely.</p>
-
-<!-- Tokenizer tabs -->
-<div class='tabs'>
-  <div class='tab active' data-tab='gpt2'>gpt2</div>
-  <div class='tab' data-tab='llama'>llama</div>
-  <div class='tab' data-tab='qwen2.5'>qwen2.5</div>
-  <div class='tab' data-tab='phi4'>phi4</div>
+<div class='summary-section'>
+<h2>Token Efficiency Summary</h2>
+<p><em>Original chars encoded per token (higher is better)</em></p>
+<table>
+<tr><th>Format</th><th>complex mixed</th><th>lists of primitives</th><th>nested objects</th><th>simple flat</th><th>sparse data</th><th>avg</th></tr>
+<tr><td>JSON (pretty)</td><td>2.4</td><td>2.2</td><td>2.4</td><td>2.4</td><td>2.3</td><td>2.3</td></tr>
+<tr><td>JSON (min)</td><td>5.4</td><td>5.5</td><td>5.3</td><td>5.2</td><td>4.9</td><td>5.3</td></tr>
+<tr><td>CSV</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td>8.7</td><td class='na'>✗</td><td class='partial-best'>8.7</td></tr>
+<tr><td>TSV</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td>8.7</td><td class='na'>✗</td><td class='partial-best'>8.7</td></tr>
+<tr><td>YAML</td><td>4.1</td><td>4.0</td><td>4.3</td><td>4.5</td><td>4.1</td><td>4.2</td></tr>
+<tr><td>minemizer</td><td class='best'>6.1</td><td class='best'>8.1</td><td class='best'>8.7</td><td class='best'>10.1</td><td class='best'>7.4</td><td class='best'>8.1</td></tr>
+<tr><td>minemizer (compact)</td><td>6.0</td><td>8.0</td><td>8.4</td><td>9.2</td><td>7.2</td><td>7.8</td></tr>
+</table>
 </div>
-<div class='tab-content active' id='tab-gpt2'>
-<p class='tokenizer-info'>Model: openai-community/gpt2</p>
-<div class='fixture'>
-<h2>complex_mixed.json</h2>
-<p>Original size: 1320 chars</p>
+<div class='tab-group'>
+<div class='tab-group-label'>Tokenizer:</div>
+<div class='tabs' id='tokenizer-tabs'>
+  <div class='tab active' data-tokenizer='gpt2'>gpt2</div>
+  <div class='tab' data-tokenizer='llama'>llama</div>
+  <div class='tab' data-tokenizer='qwen2.5'>qwen2.5</div>
+  <div class='tab' data-tokenizer='phi4'>phi4</div>
+</div>
+</div>
+<div class='tab-group'>
+<div class='tab-group-label'>Example:</div>
+<div class='tabs' id='fixture-tabs'>
+  <div class='tab active' data-fixture='complex_mixed'>complex mixed</div>
+  <div class='tab' data-fixture='lists_of_primitives'>lists of primitives</div>
+  <div class='tab' data-fixture='nested_objects'>nested objects</div>
+  <div class='tab' data-fixture='simple_flat'>simple flat</div>
+  <div class='tab' data-fixture='sparse_data'>sparse data</div>
+</div>
+</div>
+<div class='tab-content active' id='content-gpt2-complex_mixed' data-tokenizer='gpt2' data-fixture='complex_mixed'>
+<div class='fixture-info'>
+<strong>complex_mixed.json</strong> &mdash; Original size: 1320 chars &mdash; Tokenizer: gpt2 (openai-community/gpt2)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(1320 chars, 768 tokens, 1.7 orig/tok)</span></div>
 <div class='tokens'>
@@ -79,9 +107,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>lists_of_primitives.json</h2>
-<p>Original size: 610 chars</p>
+<div class='tab-content' id='content-gpt2-lists_of_primitives' data-tokenizer='gpt2' data-fixture='lists_of_primitives'>
+<div class='fixture-info'>
+<strong>lists_of_primitives.json</strong> &mdash; Original size: 610 chars &mdash; Tokenizer: gpt2 (openai-community/gpt2)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(610 chars, 382 tokens, 1.6 orig/tok)</span></div>
 <div class='tokens'>
@@ -119,9 +148,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>nested_objects.json</h2>
-<p>Original size: 741 chars</p>
+<div class='tab-content' id='content-gpt2-nested_objects' data-tokenizer='gpt2' data-fixture='nested_objects'>
+<div class='fixture-info'>
+<strong>nested_objects.json</strong> &mdash; Original size: 741 chars &mdash; Tokenizer: gpt2 (openai-community/gpt2)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(741 chars, 407 tokens, 1.8 orig/tok)</span></div>
 <div class='tokens'>
@@ -159,9 +189,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>simple_flat.json</h2>
-<p>Original size: 763 chars</p>
+<div class='tab-content' id='content-gpt2-simple_flat' data-tokenizer='gpt2' data-fixture='simple_flat'>
+<div class='fixture-info'>
+<strong>simple_flat.json</strong> &mdash; Original size: 763 chars &mdash; Tokenizer: gpt2 (openai-community/gpt2)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(763 chars, 384 tokens, 2.0 orig/tok)</span></div>
 <div class='tokens'>
@@ -205,9 +236,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>sparse_data.json</h2>
-<p>Original size: 589 chars</p>
+<div class='tab-content' id='content-gpt2-sparse_data' data-tokenizer='gpt2' data-fixture='sparse_data'>
+<div class='fixture-info'>
+<strong>sparse_data.json</strong> &mdash; Original size: 589 chars &mdash; Tokenizer: gpt2 (openai-community/gpt2)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(589 chars, 318 tokens, 1.9 orig/tok)</span></div>
 <div class='tokens'>
@@ -245,12 +277,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
+<div class='tab-content' id='content-llama-complex_mixed' data-tokenizer='llama' data-fixture='complex_mixed'>
+<div class='fixture-info'>
+<strong>complex_mixed.json</strong> &mdash; Original size: 1320 chars &mdash; Tokenizer: llama (NousResearch/Llama-2-7b-hf)
 </div>
-<div class='tab-content' id='tab-llama'>
-<p class='tokenizer-info'>Model: NousResearch/Llama-2-7b-hf</p>
-<div class='fixture'>
-<h2>complex_mixed.json</h2>
-<p>Original size: 1320 chars</p>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(1320 chars, 560 tokens, 2.4 orig/tok)</span></div>
 <div class='tokens'>
@@ -288,9 +318,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>lists_of_primitives.json</h2>
-<p>Original size: 610 chars</p>
+<div class='tab-content' id='content-llama-lists_of_primitives' data-tokenizer='llama' data-fixture='lists_of_primitives'>
+<div class='fixture-info'>
+<strong>lists_of_primitives.json</strong> &mdash; Original size: 610 chars &mdash; Tokenizer: llama (NousResearch/Llama-2-7b-hf)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(610 chars, 280 tokens, 2.2 orig/tok)</span></div>
 <div class='tokens'>
@@ -328,9 +359,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>nested_objects.json</h2>
-<p>Original size: 741 chars</p>
+<div class='tab-content' id='content-llama-nested_objects' data-tokenizer='llama' data-fixture='nested_objects'>
+<div class='fixture-info'>
+<strong>nested_objects.json</strong> &mdash; Original size: 741 chars &mdash; Tokenizer: llama (NousResearch/Llama-2-7b-hf)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(741 chars, 322 tokens, 2.3 orig/tok)</span></div>
 <div class='tokens'>
@@ -368,9 +400,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>simple_flat.json</h2>
-<p>Original size: 763 chars</p>
+<div class='tab-content' id='content-llama-simple_flat' data-tokenizer='llama' data-fixture='simple_flat'>
+<div class='fixture-info'>
+<strong>simple_flat.json</strong> &mdash; Original size: 763 chars &mdash; Tokenizer: llama (NousResearch/Llama-2-7b-hf)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(763 chars, 334 tokens, 2.3 orig/tok)</span></div>
 <div class='tokens'>
@@ -414,9 +447,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>sparse_data.json</h2>
-<p>Original size: 589 chars</p>
+<div class='tab-content' id='content-llama-sparse_data' data-tokenizer='llama' data-fixture='sparse_data'>
+<div class='fixture-info'>
+<strong>sparse_data.json</strong> &mdash; Original size: 589 chars &mdash; Tokenizer: llama (NousResearch/Llama-2-7b-hf)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(589 chars, 278 tokens, 2.1 orig/tok)</span></div>
 <div class='tokens'>
@@ -454,12 +488,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
+<div class='tab-content' id='content-qwen2.5-complex_mixed' data-tokenizer='qwen2.5' data-fixture='complex_mixed'>
+<div class='fixture-info'>
+<strong>complex_mixed.json</strong> &mdash; Original size: 1320 chars &mdash; Tokenizer: qwen2.5 (Qwen/Qwen2.5-0.5B)
 </div>
-<div class='tab-content' id='tab-qwen2.5'>
-<p class='tokenizer-info'>Model: Qwen/Qwen2.5-0.5B</p>
-<div class='fixture'>
-<h2>complex_mixed.json</h2>
-<p>Original size: 1320 chars</p>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(1320 chars, 455 tokens, 2.9 orig/tok)</span></div>
 <div class='tokens'>
@@ -497,9 +529,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>lists_of_primitives.json</h2>
-<p>Original size: 610 chars</p>
+<div class='tab-content' id='content-qwen2.5-lists_of_primitives' data-tokenizer='qwen2.5' data-fixture='lists_of_primitives'>
+<div class='fixture-info'>
+<strong>lists_of_primitives.json</strong> &mdash; Original size: 610 chars &mdash; Tokenizer: qwen2.5 (Qwen/Qwen2.5-0.5B)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(610 chars, 217 tokens, 2.8 orig/tok)</span></div>
 <div class='tokens'>
@@ -537,9 +570,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>nested_objects.json</h2>
-<p>Original size: 741 chars</p>
+<div class='tab-content' id='content-qwen2.5-nested_objects' data-tokenizer='qwen2.5' data-fixture='nested_objects'>
+<div class='fixture-info'>
+<strong>nested_objects.json</strong> &mdash; Original size: 741 chars &mdash; Tokenizer: qwen2.5 (Qwen/Qwen2.5-0.5B)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(741 chars, 252 tokens, 2.9 orig/tok)</span></div>
 <div class='tokens'>
@@ -577,9 +611,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>simple_flat.json</h2>
-<p>Original size: 763 chars</p>
+<div class='tab-content' id='content-qwen2.5-simple_flat' data-tokenizer='qwen2.5' data-fixture='simple_flat'>
+<div class='fixture-info'>
+<strong>simple_flat.json</strong> &mdash; Original size: 763 chars &mdash; Tokenizer: qwen2.5 (Qwen/Qwen2.5-0.5B)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(763 chars, 264 tokens, 2.9 orig/tok)</span></div>
 <div class='tokens'>
@@ -623,9 +658,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>sparse_data.json</h2>
-<p>Original size: 589 chars</p>
+<div class='tab-content' id='content-qwen2.5-sparse_data' data-tokenizer='qwen2.5' data-fixture='sparse_data'>
+<div class='fixture-info'>
+<strong>sparse_data.json</strong> &mdash; Original size: 589 chars &mdash; Tokenizer: qwen2.5 (Qwen/Qwen2.5-0.5B)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(589 chars, 224 tokens, 2.6 orig/tok)</span></div>
 <div class='tokens'>
@@ -663,12 +699,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
+<div class='tab-content' id='content-phi4-complex_mixed' data-tokenizer='phi4' data-fixture='complex_mixed'>
+<div class='fixture-info'>
+<strong>complex_mixed.json</strong> &mdash; Original size: 1320 chars &mdash; Tokenizer: phi4 (microsoft/phi-4)
 </div>
-<div class='tab-content' id='tab-phi4'>
-<p class='tokenizer-info'>Model: microsoft/phi-4</p>
-<div class='fixture'>
-<h2>complex_mixed.json</h2>
-<p>Original size: 1320 chars</p>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(1320 chars, 427 tokens, 3.1 orig/tok)</span></div>
 <div class='tokens'>
@@ -706,9 +740,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>lists_of_primitives.json</h2>
-<p>Original size: 610 chars</p>
+<div class='tab-content' id='content-phi4-lists_of_primitives' data-tokenizer='phi4' data-fixture='lists_of_primitives'>
+<div class='fixture-info'>
+<strong>lists_of_primitives.json</strong> &mdash; Original size: 610 chars &mdash; Tokenizer: phi4 (microsoft/phi-4)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(610 chars, 217 tokens, 2.8 orig/tok)</span></div>
 <div class='tokens'>
@@ -746,9 +781,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>nested_objects.json</h2>
-<p>Original size: 741 chars</p>
+<div class='tab-content' id='content-phi4-nested_objects' data-tokenizer='phi4' data-fixture='nested_objects'>
+<div class='fixture-info'>
+<strong>nested_objects.json</strong> &mdash; Original size: 741 chars &mdash; Tokenizer: phi4 (microsoft/phi-4)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(741 chars, 252 tokens, 2.9 orig/tok)</span></div>
 <div class='tokens'>
@@ -786,9 +822,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>simple_flat.json</h2>
-<p>Original size: 763 chars</p>
+<div class='tab-content' id='content-phi4-simple_flat' data-tokenizer='phi4' data-fixture='simple_flat'>
+<div class='fixture-info'>
+<strong>simple_flat.json</strong> &mdash; Original size: 763 chars &mdash; Tokenizer: phi4 (microsoft/phi-4)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(763 chars, 264 tokens, 2.9 orig/tok)</span></div>
 <div class='tokens'>
@@ -832,9 +869,10 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-<div class='fixture'>
-<h2>sparse_data.json</h2>
-<p>Original size: 589 chars</p>
+<div class='tab-content' id='content-phi4-sparse_data' data-tokenizer='phi4' data-fixture='sparse_data'>
+<div class='fixture-info'>
+<strong>sparse_data.json</strong> &mdash; Original size: 589 chars &mdash; Tokenizer: phi4 (microsoft/phi-4)
+</div>
 <div class='format'>
 <div class='format-header'>JSON (pretty) <span class='stats'>(589 chars, 224 tokens, 2.6 orig/tok)</span></div>
 <div class='tokens'>
@@ -872,18 +910,35 @@ th { background: #f0f0f0; }
 </div>
 </div>
 </div>
-</div>
 
 <script>
-document.querySelectorAll('.tab').forEach(tab => {
+let currentTokenizer = 'gpt2';
+let currentFixture = 'complex_mixed';
+
+function updateContent() {
+  // Hide all content
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  // Show selected combination
+  const id = 'content-' + currentTokenizer + '-' + currentFixture;
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+document.querySelectorAll('#tokenizer-tabs .tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    const tabName = tab.dataset.tab;
-    // Update active tab
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#tokenizer-tabs .tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    // Update active content
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById('tab-' + tabName).classList.add('active');
+    currentTokenizer = tab.dataset.tokenizer;
+    updateContent();
+  });
+});
+
+document.querySelectorAll('#fixture-tabs .tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#fixture-tabs .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentFixture = tab.dataset.fixture;
+    updateContent();
   });
 });
 </script>

@@ -188,7 +188,8 @@ _Last updated: 2025-11-30_
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._
 
-See [token visualization](benchmarks/results/benchmark_tokens.html) for detailed tokenization comparison across different tokenizers (gpt2, llama, qwen2.5, phi4).<!-- BENCHMARK_END -->
+See [token visualization](benchmarks/results/benchmark_tokens.html) for detailed tokenization comparison across different tokenizers (gpt2, llama, qwen2.5, phi4).
+<!-- BENCHMARK_END -->
 
 ## Installation
 
