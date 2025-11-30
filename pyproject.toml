@@ -24,6 +24,12 @@ dev = [
     "pytest>=9.0.0",
     "ruff>=0.14.7",
 ]
+benchmark = [
+    "transformers>=4.57.0",
+    "pyyaml>=6.0",
+    "sentencepiece>=0.2.0",
+    "protobuf>=5.0.0",
+]
 
 
 

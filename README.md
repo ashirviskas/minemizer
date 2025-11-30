@@ -1,5 +1,15 @@
 # minemizer
-Minimize your stuff
+Minimize your data to decrease LLM token usage
+
+
+Pros
+- Most efficient for token usage among tested formats
+- Simple
+- Not vibe coded, so the code is actually readable and uses at least *some* engineering principles
+- 
+
+Cons
+- Not a standard format, so smaller LLMs may not know what to do with it. Bigger LLMs should have no issue, but I can't confirm or deny before I have done any proper benchmarks. 
 
 ## Using minemizer
 
@@ -72,9 +82,14 @@ id; name; location{ city; floor; ...}
 4; Oliver; { London; 2; desk:B04}
 ```
 
+### Some explanation of defaults
+- **Delimiter**: `;` - Chosen mostly arbitrarily as it is not used too often in text data, but is used often enough to be recognized as a separator by LLMs.
+- **Use spaces**: `True` - Renders strings as `{  somevalue; othervalue}` instead of `{somevalue;othervalue}` for better tokenization efficiency. It does introduce more tokens on average (~3-5% in my testing), but more the tokens more often preserve whole words. Example `{Hana;pyramid}` will tokenize to `{|H|ana|;p|yramid}` (5 tokens and words are split), while `{ Hana; pyramid}` tokenizes to `{| Hana|;| pyramid|}` (still 5 tokens, but the words are preserved). This will not matter much for bigger LLMs, but for smaller models it can make a difference. If you use a model that is 100B+ parameters, you can probably set this to `False` and save some tokens. Real benchmarks are more than welcome.
+- **Sparsity threshold**: `0.5` - If some value appears in less than 50% of records, 
+
 ## Presets
 
-Use built-in presets for common formats:
+I added some presets just for fun if you want your data to look more like something else that might help your LLM understand it better. It does not guarantee the format will be compliant and **will likely not load with old school non-LLM parsers**.
 
 ```python
 from minemizer import minemize, presets
@@ -154,4 +169,35 @@ print(minemize(data, delimiter=","))  # a,b \n 1,2
 | `header_separator` | `None` | Separator row after header (e.g., `"---"`) |
 | `wrap_lines` | `None` | Wrap each line with this string (e.g., `"\|"`) |
 
+## Benchmarks
+
+<!-- BENCHMARK_START -->
+_Last updated: 2025-11-30_
+
+### Token efficiency
+
+| Format | Avg Chars | Avg Tokens | Orig Chars/Token |
+|--------|-----------|------------|------------------|
+| JSON (pretty) | 805 | 341 | 2.35 |
+| JSON (min) | 492 | 152 | 5.26 |
+| CSV ** | 234 | 88 | 8.72 |
+| TSV ** | 234 | 88 | 8.72 |
+| YAML | 493 | 192 | 4.19 |
+| minemizer | 290 | 107 | 8.08 |
+| minemizer (compact) | 259 | 110 | 7.78 |
+
+_** fails on: complex mixed, lists of primitives, nested objects, sparse data_
+<!-- BENCHMARK_END -->
+
 ## Installation
+
+
+
+
+
+## Future work
+
+
+- Create presets for different LLM tokenizers/models to maximize token efficiency (less tokens) and/or performance (better benchmarks)
+- Support for type hints to optimize formatting (e.g., dates, numbers).
+- 
