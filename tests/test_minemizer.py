@@ -1,6 +1,16 @@
 """Tests for the minemize function."""
 
-from minemizer import minemize
+import pytest
+
+from minemizer import config, minemize
+
+
+@pytest.fixture(autouse=True)
+def reset_config():
+    """Reset global config before each test."""
+    original = (config.delimiter, config.use_spaces, config.threshold, config.sparse_indicator)
+    yield
+    config.delimiter, config.use_spaces, config.threshold, config.sparse_indicator = original
 
 
 def test_minemize_basic():
@@ -68,3 +78,51 @@ def test_minemize_no_spaces():
     data = [{"name": "Alice", "age": 30}]
     result = minemize(data, use_spaces=False)
     assert result == "name;age\nAlice;30"
+
+
+# Config tests
+
+
+def test_global_config_delimiter():
+    """Test that global config delimiter is used."""
+    config.delimiter = "|"
+    data = [{"name": "Alice", "age": 30}]
+    result = minemize(data)
+    assert result == "name| age\nAlice| 30"
+
+
+def test_global_config_custom_delimiter_no_spaces():
+    """Test custom delimiter without spaces."""
+    config.delimiter = "|"
+    config.use_spaces = False
+    data = [{"name": "Alice", "age": 30}]
+    result = minemize(data)
+    assert result == "name|age\nAlice|30"
+
+
+def test_override_global_config():
+    """Test that function args override global config."""
+    config.delimiter = "|"
+    data = [{"name": "Alice", "age": 30}]
+    result = minemize(data, delimiter=",")
+    assert result == "name, age\nAlice, 30"
+
+
+def test_global_config_sparse_indicator():
+    """Test custom sparse indicator in header."""
+    config.sparse_indicator = "*"
+    config.threshold = 0.6  # b appears in 1/3 = 33%, below threshold
+    data = [
+        {"name": "Alice", "meta": {"a": 1}},
+        {"name": "Bob", "meta": {"a": 2}},
+        {"name": "Charlie", "meta": {"a": 3, "b": 4}},
+    ]
+    result = minemize(data)
+    assert "meta{ a; *}" in result
+
+
+def test_config_derive():
+    """Test config.derive() creates independent copy."""
+    derived = config.derive(delimiter="|")
+    assert derived.delimiter == "|"
+    assert config.delimiter == ";"  # Original unchanged

@@ -4,6 +4,9 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
 
+from minemizer.config import Config
+from minemizer.config import config as _global_config
+
 
 @dataclass
 class KeyAnalysis:
@@ -23,213 +26,207 @@ class HeaderElement:
 
     name: str
     type: str = "value"  # "value", "dict", "list"
-    schema: list[str] = field(default_factory=list)  # For dict/list of dict
+    schema: list[str] = field(default_factory=list)
     has_sparse: bool = False
-    list_type: str | None = None  # "dict" or "simple" for lists
+    list_type: str | None = None
+    delimiter: str = "; "
+    sparse_indicator: str = "..."
 
     def to_string(self) -> str:
-        """Convert this header element to its string representation."""
         if self.type == "value":
             return self.name
 
-        schema_str = "; ".join(self.schema)
+        schema_str = self.delimiter.join(self.schema)
         if self.has_sparse:
-            schema_str = f"{schema_str}; ..." if schema_str else "..."
+            schema_str = f"{schema_str}{self.delimiter}{self.sparse_indicator}" if schema_str else self.sparse_indicator
 
         if self.type == "dict":
             return f"{self.name}{{ {schema_str}}}"
         elif self.type == "list" and self.list_type == "dict":
             return f"{self.name}[{{ {schema_str}}}]"
-        else:  # list with simple type
-            return f"{self.name}[]"
+        return f"{self.name}[]"
 
 
-@dataclass
-class SerializerConfig:
-    """Configuration for the serializer."""
-
-    threshold: float = 0.9
-    use_spaces: bool = True
-
-    @property
-    def delimiter(self) -> str:
-        return "; " if self.use_spaces else ";"
-
-    @property
-    def dict_open(self) -> str:
-        return "{ " if self.use_spaces else "{"
-
-    @property
-    def list_open(self) -> str:
-        return "[ " if self.use_spaces else "["
+# --- Pure functions ---
 
 
-class SchemaMinemizer:
-    def __init__(self, config: SerializerConfig | None = None):
-        self.config = config or SerializerConfig()
+def _normalize(value: Any) -> str:
+    return str(value).lower() if isinstance(value, bool) else str(value)
 
-    def minemize(self, data: list | dict) -> str:
-        """Main entry point - converts data to our schema format."""
-        if isinstance(data, dict):
-            data = [data]
 
-        if not data or not isinstance(data, list):
-            return ""
+def _analyze_keys(items: list[dict], threshold: float) -> KeyAnalysis:
+    if not items:
+        return KeyAnalysis()
 
-        header = self._build_header(data)
-        rows = [self._format_row(item, header) for item in data]
-        header_str = self.config.delimiter.join(h.to_string() for h in header)
-        return "\n".join([header_str] + rows)
+    all_keys = list(dict.fromkeys(key for item in items for key in item))
+    counts = Counter(key for item in items for key in item)
+    total = len(items)
 
-    def _analyze_keys(self, items: list[dict]) -> KeyAnalysis:
-        """Analyze which keys appear frequently enough for the header."""
-        if not items:
-            return KeyAnalysis()
+    return KeyAnalysis(
+        common=[k for k in all_keys if counts[k] / total >= threshold],
+        sparse=[k for k in all_keys if counts[k] / total < threshold],
+    )
 
-        all_keys = list(dict.fromkeys(key for item in items for key in item))
-        key_counts = Counter(key for item in items for key in item)
-        total = len(items)
-        threshold = self.config.threshold
 
-        return KeyAnalysis(
-            common=[key for key in all_keys if key_counts[key] / total >= threshold],
-            sparse=[key for key in all_keys if key_counts[key] / total < threshold],
+def _create_header_element(key: str, items: list[dict], cfg: Config) -> HeaderElement:
+    values = [v for item in items if (v := item.get(key)) is not None]
+    delim = cfg.spaced_delimiter
+    sparse = cfg.sparse_indicator
+
+    if not values:
+        return HeaderElement(name=key, delimiter=delim, sparse_indicator=sparse)
+
+    if all(isinstance(v, dict) for v in values):
+        analysis = _analyze_keys(values, cfg.threshold)
+        return HeaderElement(
+            name=key,
+            type="dict",
+            schema=analysis.common,
+            has_sparse=analysis.has_sparse,
+            delimiter=delim,
+            sparse_indicator=sparse,
         )
 
-    def _build_header(self, items: list[dict]) -> list[HeaderElement]:
-        """Build the header schema from data."""
-        if not items:
-            return []
-
-        all_keys = dict.fromkeys(key for item in items for key in item)
-        return [self._create_header_element(key, items) for key in all_keys if self._should_include_key(key, items)]
-
-    def _create_header_element(self, key: str, all_items: list) -> HeaderElement:
-        """Create a header element with type information from ALL values."""
-        values = [v for item in all_items if (v := item.get(key)) is not None]
-
-        if not values:
-            return HeaderElement(name=key)
-
-        if all(isinstance(v, dict) for v in values):
-            analysis = self._analyze_keys(values)
+    if all(isinstance(v, list) for v in values):
+        all_items = [x for sublist in values for x in sublist]
+        if all_items and all(isinstance(x, dict) for x in all_items):
+            analysis = _analyze_keys(all_items, cfg.threshold)
             return HeaderElement(
                 name=key,
-                type="dict",
+                type="list",
+                list_type="dict",
                 schema=analysis.common,
                 has_sparse=analysis.has_sparse,
+                delimiter=delim,
+                sparse_indicator=sparse,
             )
+        return HeaderElement(name=key, type="list", list_type="simple", delimiter=delim, sparse_indicator=sparse)
 
-        if all(isinstance(v, list) for v in values):
-            all_list_items = [item for sublist in values for item in sublist]
-            if all_list_items and all(isinstance(item, dict) for item in all_list_items):
-                analysis = self._analyze_keys(all_list_items)
-                return HeaderElement(
-                    name=key,
-                    type="list",
-                    list_type="dict",
-                    schema=analysis.common,
-                    has_sparse=analysis.has_sparse,
-                )
-            return HeaderElement(name=key, type="list", list_type="simple")
-
-        return HeaderElement(name=key)
-
-    def _should_include_key(self, key: str, items: list) -> bool:
-        """Check if key appears in enough items to include in header."""
-        return sum(1 for item in items if key in item) / len(items) >= self.config.threshold
-
-    def _format_row(self, item: dict, header: list[HeaderElement]) -> str:
-        """Format a data row according to the header schema."""
-        header_keys = {element.name for element in header}
-
-        # Format header fields
-        header_parts = [self._format_value(item.get(element.name), element) for element in header]
-
-        # Format sparse fields
-        sparse_parts = [self._format_sparse_field(key, item[key]) for key in item if key not in header_keys]
-
-        return self.config.delimiter.join(header_parts + sparse_parts)
-
-    def _format_value(self, value: Any, element: HeaderElement) -> str:
-        """Format a value according to its element type."""
-        if value is None:
-            return ""
-        if element.type == "dict":
-            return self._format_dict(value, element)
-        if element.type == "list":
-            return self._format_list(value, element)
-        return str(value)
-
-    def _normalize_value(self, value: Any) -> str:
-        """Normalize a value for output (handles booleans)."""
-        return str(value).lower() if isinstance(value, bool) else str(value)
-
-    def _format_dict_pairs(self, data: dict) -> list[str]:
-        """Format dict items as key:value pairs."""
-        return [f"{k}:{self._normalize_value(v)}" for k, v in data.items()]
-
-    def _format_sparse_field(self, key: str, value: Any) -> str:
-        """Format a sparse field (not in header) with key prefix."""
-        if isinstance(value, dict):
-            if not value:
-                return f"{key}{{}}"
-            pairs = self._format_dict_pairs(value)
-            return f"{key}{self.config.dict_open}{self.config.delimiter.join(pairs)}}}"
-
-        if isinstance(value, list):
-            if not value:
-                return f"{key}[]"
-            if all(isinstance(item, dict) for item in value):
-                formatted = [
-                    f"{self.config.dict_open}{self.config.delimiter.join(self._format_dict_pairs(d))}}}" for d in value
-                ]
-                return f"{key}{self.config.list_open}{self.config.delimiter.join(formatted)}]"
-            items_str = self.config.delimiter.join(str(item) for item in value)
-            return f"{key}{self.config.list_open}{items_str}]"
-
-        return f"{key}:{value}"
-
-    def _format_dict(self, data: dict, element: HeaderElement) -> str:
-        """Format a dict according to its schema."""
-        if not data:
-            return "{}"
-
-        # Common keys in schema order
-        common_values = [self._normalize_value(data.get(key, "")) for key in element.schema]
-
-        # Sparse keys as key:value
-        sparse_pairs = []
-        if element.has_sparse:
-            schema_keys = set(element.schema)
-            sparse_pairs = [f"{k}:{self._normalize_value(v)}" for k, v in data.items() if k not in schema_keys]
-
-        content = self.config.delimiter.join(common_values + sparse_pairs)
-        return f"{self.config.dict_open}{content}}}"
-
-    def _format_list(self, data: list, element: HeaderElement) -> str:
-        """Format a list according to its schema."""
-        if not data:
-            return "[]"
-
-        if element.list_type == "dict":
-            formatted = [self._format_dict(item, element) for item in data]
-            return f"{self.config.list_open}{self.config.delimiter.join(formatted)}]"
-
-        items_str = self.config.delimiter.join(str(item) for item in data)
-        return f"{self.config.list_open}{items_str}]"
+    return HeaderElement(name=key, delimiter=delim, sparse_indicator=sparse)
 
 
-def minemize(data: list | dict, threshold: float = 0.5, use_spaces: bool = True) -> str:
+def _build_header(items: list[dict], cfg: Config) -> list[HeaderElement]:
+    if not items:
+        return []
+
+    all_keys = dict.fromkeys(key for item in items for key in item)
+    return [
+        _create_header_element(key, items, cfg)
+        for key in all_keys
+        if sum(1 for item in items if key in item) / len(items) >= cfg.threshold
+    ]
+
+
+def _format_dict_pairs(data: dict) -> list[str]:
+    return [f"{k}:{_normalize(v)}" for k, v in data.items()]
+
+
+def _format_dict(data: dict, element: HeaderElement, cfg: Config) -> str:
+    if not data:
+        return "{}"
+
+    common_values = [_normalize(data.get(key, "")) for key in element.schema]
+    sparse_pairs = []
+    if element.has_sparse:
+        schema_keys = set(element.schema)
+        sparse_pairs = [f"{k}:{_normalize(v)}" for k, v in data.items() if k not in schema_keys]
+
+    content = cfg.spaced_delimiter.join(common_values + sparse_pairs)
+    return f"{cfg.dict_open}{content}}}"
+
+
+def _format_list(data: list, element: HeaderElement, cfg: Config) -> str:
+    if not data:
+        return "[]"
+
+    if element.list_type == "dict":
+        formatted = [_format_dict(item, element, cfg) for item in data]
+        return f"{cfg.list_open}{cfg.spaced_delimiter.join(formatted)}]"
+
+    return f"{cfg.list_open}{cfg.spaced_delimiter.join(str(x) for x in data)}]"
+
+
+def _format_value(value: Any, element: HeaderElement, cfg: Config) -> str:
+    if value is None:
+        return ""
+    if element.type == "dict":
+        return _format_dict(value, element, cfg)
+    if element.type == "list":
+        return _format_list(value, element, cfg)
+    return str(value)
+
+
+def _format_sparse_field(key: str, value: Any, cfg: Config) -> str:
+    if isinstance(value, dict):
+        if not value:
+            return f"{key}{{}}"
+        pairs = _format_dict_pairs(value)
+        return f"{key}{cfg.dict_open}{cfg.spaced_delimiter.join(pairs)}}}"
+
+    if isinstance(value, list):
+        if not value:
+            return f"{key}[]"
+        if all(isinstance(x, dict) for x in value):
+            delim = cfg.spaced_delimiter
+            formatted = [f"{cfg.dict_open}{delim.join(_format_dict_pairs(d))}}}" for d in value]
+            return f"{key}{cfg.list_open}{delim.join(formatted)}]"
+        return f"{key}{cfg.list_open}{cfg.spaced_delimiter.join(str(x) for x in value)}]"
+
+    return f"{key}:{value}"
+
+
+def _format_row(item: dict, header: list[HeaderElement], cfg: Config) -> str:
+    header_keys = {el.name for el in header}
+    header_parts = [_format_value(item.get(el.name), el, cfg) for el in header]
+    sparse_parts = [_format_sparse_field(k, item[k], cfg) for k in item if k not in header_keys]
+    return cfg.spaced_delimiter.join(header_parts + sparse_parts)
+
+
+def _serialize(data: list[dict], cfg: Config) -> str:
+    header = _build_header(data, cfg)
+    rows = [_format_row(item, header, cfg) for item in data]
+    header_str = cfg.spaced_delimiter.join(h.to_string() for h in header)
+    return "\n".join([header_str] + rows)
+
+
+# --- Public API ---
+
+
+def minemize(
+    data: list | dict,
+    *,
+    delimiter: str | None = None,
+    use_spaces: bool | None = None,
+    threshold: float | None = None,
+    sparse_indicator: str | None = None,
+) -> str:
     """Minimize your data into a compact string format.
 
     Args:
         data: A list of dicts or a single dict to minemize
-        threshold: Frequency threshold for including keys in header (0.0-1.0)
-        use_spaces: Whether to use spaces around delimiters
+        delimiter: Field separator (default from global config: ";")
+        use_spaces: Whether to use spaces around delimiters (default from global config: True)
+        threshold: Frequency threshold for including keys in header (default from global config: 0.5)
+        sparse_indicator: Indicator for sparse fields in header (default from global config: "...")
 
     Returns:
         str: The minemized representation
+
+    Note:
+        All parameters default to global config values. Set them via:
+            from minemizer import config
+            config.delimiter = "|"
     """
-    config = SerializerConfig(threshold=threshold, use_spaces=use_spaces)
-    return SchemaMinemizer(config).minemize(data)
+    if isinstance(data, dict):
+        data = [data]
+
+    if not data or not isinstance(data, list):
+        return ""
+
+    cfg = _global_config.derive(
+        delimiter=delimiter,
+        use_spaces=use_spaces,
+        threshold=threshold,
+        sparse_indicator=sparse_indicator,
+    )
+    return _serialize(data, cfg)
