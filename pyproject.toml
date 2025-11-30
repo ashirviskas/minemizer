@@ -29,6 +29,8 @@ benchmark = [
     "pyyaml>=6.0",
     "sentencepiece>=0.2.0",
     "protobuf>=5.0.0",
+    "toon-format @ git+https://github.com/toon-format/toon-python.git",
+    "tson>=1.0.0",
 ]
 
 

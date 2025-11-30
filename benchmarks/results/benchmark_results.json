@@ -47,6 +47,24 @@
           "phi4": 278
         }
       },
+      "toon": {
+        "chars": 881,
+        "tokens": {
+          "gpt2": 434,
+          "llama": 329,
+          "qwen2.5": 304,
+          "phi4": 276
+        }
+      },
+      "tson": {
+        "chars": 453,
+        "tokens": {
+          "gpt2": 207,
+          "llama": 237,
+          "qwen2.5": 203,
+          "phi4": 175
+        }
+      },
       "minemizer": {
         "chars": 421,
         "tokens": {
@@ -110,6 +128,24 @@
           "llama": 157,
           "qwen2.5": 149,
           "phi4": 149
+        }
+      },
+      "toon": {
+        "chars": 339,
+        "tokens": {
+          "gpt2": 161,
+          "llama": 141,
+          "qwen2.5": 137,
+          "phi4": 137
+        }
+      },
+      "tson": {
+        "chars": 168,
+        "tokens": {
+          "gpt2": 80,
+          "llama": 79,
+          "qwen2.5": 65,
+          "phi4": 65
         }
       },
       "minemizer": {
@@ -177,6 +213,24 @@
           "phi4": 158
         }
       },
+      "toon": {
+        "chars": 527,
+        "tokens": {
+          "gpt2": 252,
+          "llama": 191,
+          "qwen2.5": 166,
+          "phi4": 166
+        }
+      },
+      "tson": {
+        "chars": 249,
+        "tokens": {
+          "gpt2": 101,
+          "llama": 104,
+          "qwen2.5": 75,
+          "phi4": 75
+        }
+      },
       "minemizer": {
         "chars": 259,
         "tokens": {
@@ -242,6 +296,24 @@
           "phi4": 169
         }
       },
+      "toon": {
+        "chars": 246,
+        "tokens": {
+          "gpt2": 98,
+          "llama": 103,
+          "qwen2.5": 96,
+          "phi4": 96
+        }
+      },
+      "tson": {
+        "chars": 229,
+        "tokens": {
+          "gpt2": 90,
+          "llama": 95,
+          "qwen2.5": 80,
+          "phi4": 80
+        }
+      },
       "minemizer": {
         "chars": 251,
         "tokens": {
@@ -305,6 +377,24 @@
           "llama": 150,
           "qwen2.5": 143,
           "phi4": 143
+        }
+      },
+      "toon": {
+        "chars": 414,
+        "tokens": {
+          "gpt2": 184,
+          "llama": 161,
+          "qwen2.5": 153,
+          "phi4": 153
+        }
+      },
+      "tson": {
+        "chars": 300,
+        "tokens": {
+          "gpt2": 136,
+          "llama": 133,
+          "qwen2.5": 109,
+          "phi4": 109
         }
       },
       "minemizer": {

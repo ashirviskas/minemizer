@@ -12,7 +12,9 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import tson
 import yaml
+from toon_format import encode as toon_encode
 from transformers import AutoTokenizer
 
 from minemizer import minemize, presets
@@ -39,6 +41,8 @@ FORMATS = [
     "csv",
     "tsv",
     "yaml",
+    "toon",
+    "tson",
     "minemizer",
     "minemizer_compact",
 ]
@@ -49,6 +53,8 @@ FORMAT_LABELS = {
     "csv": "CSV",
     "tsv": "TSV",
     "yaml": "YAML",
+    "toon": "TOON",
+    "tson": "TSON",
     "minemizer": "minemizer",
     "minemizer_compact": "minemizer (compact)",
 }
@@ -139,6 +145,12 @@ def _convert_to_format(data: list[dict], format_name: str) -> str | None:
 
         case "yaml":
             return yaml.dump(data, default_flow_style=False, allow_unicode=True)
+
+        case "toon":
+            return toon_encode(data)
+
+        case "tson":
+            return tson.dumps(data)
 
         case "minemizer":
             return minemize(data)
@@ -682,6 +694,8 @@ def save_raw_results(
         "csv": "csv",
         "tsv": "tsv",
         "yaml": "yaml",
+        "toon": "toon",
+        "tson": "tson",
         "minemizer": "txt",
         "minemizer_compact": "txt",
     }

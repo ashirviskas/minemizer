@@ -15,6 +15,8 @@ Original size (JSON pretty): **1320 chars**
 | CSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | TSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | YAML | 818 | 374 | 338 | 306 | 278 | 324.0 | 4.07 |
+| TOON | 881 | 434 | 329 | 304 | 276 | 335.8 | 3.93 |
+| TSON | 453 | 207 | 237 | 203 | 175 | 205.5 | 6.42 |
 | minemizer | 421 | 159 | 201 | 191 | 163 | 178.5 | 7.39 |
 | minemizer (compact) | 364 | 173 | 214 | 191 | 163 | 185.2 | 7.13 |
 
@@ -187,6 +189,63 @@ N/A - format cannot represent this data
   - admin
 ```
 
+**TOON** (881 chars, 336 tokens):
+```toon
+[5]:
+  - id: 1
+    profile:
+      name: Grace
+      location:
+        city: NYC
+        country: USA
+    tags[2]: admin,verified
+    metadata:
+      created: 2024-01-15
+  - id: 2
+    profile:
+      name: Henry
+      location:
+        city: London
+        country: UK
+    tags[1]: user
+    metadata:
+      created: 2024-02-20
+      updated: 2024-03-10
+  - id: 3
+    profile:
+      name: Ivy
+      location:
+        city: Tokyo
+        country: Japan
+    tags[3]: moderator,verified,premium
+    metadata:
+      created: 2024-01-05
+  - id: 4
+    profile:
+      name: Jack
+      location:
+        city: Sydney
+        country: Australia
+    tags[2]: user,new
+    metadata:
+      created: 2024-04-01
+  - id: 5
+    profile:
+      name: Kate
+      location:
+        city: Berlin
+        country: Germany
+    tags[1]: admin
+    metadata:
+      created: 2023-12-01
+      updated: 2024-02-15
+```
+
+**TSON** (453 chars, 206 tokens):
+```tson
+{@id,profile(@name,location),tags,metadata#5|1,{Grace,{@city,country|NYC,USA}},[admin,verified],{@created|2024-01-15}|2,{Henry,{@city,country|London,UK}},[user],{@created,updated|2024-02-20,2024-03-10}|3,{Ivy,{@city,country|Tokyo,Japan}},[moderator,verified,premium],{@created|2024-01-05}|4,{Jack,{@city,country|Sydney,Australia}},[user,new],{@created|2024-04-01}|5,{Kate,{@city,country|Berlin,Germany}},[admin],{@created,updated|2023-12-01,2024-02-15}}
+```
+
 **minemizer** (421 chars, 178 tokens):
 ```txt
 id; profile{ name; location{ city; country}}; tags[]; metadata{ created; ...}
@@ -220,6 +279,8 @@ Original size (JSON pretty): **610 chars**
 | CSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | TSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | YAML | 341 | 153 | 157 | 149 | 149 | 152.0 | 4.01 |
+| TOON | 339 | 161 | 141 | 137 | 137 | 144.0 | 4.24 |
+| TSON | 168 | 80 | 79 | 65 | 65 | 72.2 | 8.44 |
 | minemizer | 194 | 81 | 79 | 71 | 71 | 75.5 | 8.08 |
 | minemizer (compact) | 165 | 83 | 83 | 70 | 70 | 76.5 | 7.97 |
 
@@ -334,6 +395,34 @@ N/A - format cannot represent this data
   - swift
 ```
 
+**TOON** (339 chars, 144 tokens):
+```toon
+[6]:
+  - id: 1
+    name: Alice
+    skills[3]: python,go,rust
+  - id: 2
+    name: Bob
+    skills[2]: javascript,typescript
+  - id: 3
+    name: Carol
+    skills[4]: java,kotlin,scala,groovy
+  - id: 4
+    name: David
+    skills[2]: c,cpp
+  - id: 5
+    name: Eva
+    skills[3]: ruby,elixir,erlang
+  - id: 6
+    name: Frank
+    skills[1]: swift
+```
+
+**TSON** (168 chars, 72 tokens):
+```tson
+{@id,name,skills#6|1,Alice,[python,go,rust]|2,Bob,[javascript,typescript]|3,Carol,[java,kotlin,scala,groovy]|4,David,[c,cpp]|5,Eva,[ruby,elixir,erlang]|6,Frank,[swift]}
+```
+
 **minemizer** (194 chars, 76 tokens):
 ```txt
 id; name; skills[]
@@ -369,6 +458,8 @@ Original size (JSON pretty): **741 chars**
 | CSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | TSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | YAML | 463 | 195 | 182 | 158 | 158 | 173.2 | 4.28 |
+| TOON | 527 | 252 | 191 | 166 | 166 | 193.8 | 3.82 |
+| TSON | 249 | 101 | 104 | 75 | 75 | 88.8 | 8.35 |
 | minemizer | 259 | 90 | 95 | 77 | 77 | 84.8 | 8.74 |
 | minemizer (compact) | 232 | 95 | 100 | 78 | 78 | 87.8 | 8.44 |
 
@@ -477,6 +568,46 @@ N/A - format cannot represent this data
     name: Frank
 ```
 
+**TOON** (527 chars, 194 tokens):
+```toon
+[6]:
+  - id: 1
+    user:
+      name: Alice
+      email: alice@example.com
+    status: active
+  - id: 2
+    user:
+      name: Bob
+      email: bob@example.com
+    status: inactive
+  - id: 3
+    user:
+      name: Carol
+      email: carol@example.com
+    status: active
+  - id: 4
+    user:
+      name: David
+      email: david@example.com
+    status: pending
+  - id: 5
+    user:
+      name: Eva
+      email: eva@example.com
+    status: active
+  - id: 6
+    user:
+      name: Frank
+      email: frank@example.com
+    status: active
+```
+
+**TSON** (249 chars, 89 tokens):
+```tson
+{@id,user(@name,email),status#6|1,{Alice,"alice@example.com"},active|2,{Bob,"bob@example.com"},inactive|3,{Carol,"carol@example.com"},active|4,{David,"david@example.com"},pending|5,{Eva,"eva@example.com"},active|6,{Frank,"frank@example.com"},active}
+```
+
 **minemizer** (259 chars, 85 tokens):
 ```txt
 id; user{ name; email}; status
@@ -512,6 +643,8 @@ Original size (JSON pretty): **763 chars**
 | CSV | 234 | 95 | 101 | 77 | 77 | 87.5 | 8.72 |
 | TSV | 234 | 95 | 101 | 77 | 77 | 87.5 | 8.72 |
 | YAML | 489 | 163 | 180 | 169 | 169 | 170.2 | 4.48 |
+| TOON | 246 | 98 | 103 | 96 | 96 | 98.2 | 7.77 |
+| TSON | 229 | 90 | 95 | 80 | 80 | 86.2 | 8.85 |
 | minemizer | 251 | 74 | 83 | 72 | 72 | 75.2 | 10.14 |
 | minemizer (compact) | 224 | 85 | 91 | 77 | 77 | 82.5 | 9.25 |
 
@@ -638,6 +771,24 @@ id	name	role	department
   role: Manager
 ```
 
+**TOON** (246 chars, 98 tokens):
+```toon
+[8]{id,name,role,department}:
+  1,Alice,Engineer,Backend
+  2,Bob,Designer,Frontend
+  3,Carol,Manager,Product
+  4,David,Engineer,Infrastructure
+  5,Eva,Analyst,Data
+  6,Frank,Engineer,Backend
+  7,Grace,Designer,Mobile
+  8,Henry,Manager,Engineering
+```
+
+**TSON** (229 chars, 86 tokens):
+```tson
+{@id,name,role,department#8|1,Alice,Engineer,Backend|2,Bob,Designer,Frontend|3,Carol,Manager,Product|4,David,Engineer,Infrastructure|5,Eva,Analyst,Data|6,Frank,Engineer,Backend|7,Grace,Designer,Mobile|8,Henry,Manager,Engineering}
+```
+
 **minemizer** (251 chars, 75 tokens):
 ```txt
 id; name; role; department
@@ -677,6 +828,8 @@ Original size (JSON pretty): **589 chars**
 | CSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | TSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | YAML | 356 | 135 | 150 | 143 | 143 | 142.8 | 4.13 |
+| TOON | 414 | 184 | 161 | 153 | 153 | 162.8 | 3.62 |
+| TSON | 300 | 136 | 133 | 109 | 109 | 121.8 | 4.84 |
 | minemizer | 232 | 79 | 87 | 77 | 77 | 80.0 | 7.36 |
 | minemizer (compact) | 207 | 84 | 90 | 77 | 77 | 82.0 | 7.18 |
 
@@ -775,6 +928,43 @@ N/A - format cannot represent this data
   id: 8
   name: Jack
   remote: false
+```
+
+**TOON** (414 chars, 163 tokens):
+```toon
+[8]:
+  - id: 1
+    name: Carol
+    role: Manager
+  - id: 2
+    name: Dave
+    remote: true
+  - id: 3
+    name: Eve
+    role: Designer
+    team: UX
+  - id: 4
+    name: Frank
+    department: Engineering
+  - id: 5
+    name: Grace
+    role: Engineer
+    remote: true
+    team: Platform
+  - id: 6
+    name: Henry
+    role: Analyst
+  - id: 7
+    name: Ivy
+  - id: 8
+    name: Jack
+    department: Sales
+    remote: false
+```
+
+**TSON** (300 chars, 122 tokens):
+```tson
+[{@id,name,role|1,Carol,Manager},{@id,name,remote|2,Dave,true},{@id,name,role,team|3,Eve,Designer,UX},{@id,name,department|4,Frank,Engineering},{@id,name,role,remote,team|5,Grace,Engineer,true,Platform},{@id,name,role|6,Henry,Analyst},{@id,name|7,Ivy},{@id,name,department,remote|8,Jack,Sales,false}]
 ```
 
 **minemizer** (232 chars, 80 tokens):

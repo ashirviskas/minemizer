@@ -3,10 +3,10 @@ Minimize your data to decrease LLM token usage
 
 
 Pros
-- Most efficient for token usage among tested formats
+- Most efficient for token usage among tested formats (See [Benchmarks](#benchmarks))
 - Simple
-- Not vibe coded, so the code is actually readable and uses at least *some* engineering principles
-- 
+- Flexible
+- Mostly readable code (not yet vibecoded) and uses at least *some* engineering principles
 
 Cons
 - Not a standard format, so smaller LLMs may not know what to do with it. Bigger LLMs should have no issue, but I can't confirm or deny before I have done any proper benchmarks. 
@@ -183,7 +183,9 @@ _Last updated: 2025-11-30_
 | CSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
 | TSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
 | YAML | 4.1 | 4.0 | 4.3 | 4.5 | 4.1 | 4.2 |
-| minemizer | **7.4** | **8.1** | **8.7** | **10.1** | **7.4** | **8.3** |
+| TOON | 3.9 | 4.2 | 3.8 | 7.8 | 3.6 | 4.7 |
+| TSON | 6.4 | **8.4** | 8.3 | 8.8 | 4.8 | 7.4 |
+| minemizer | **7.4** | 8.1 | **8.7** | **10.1** | **7.4** | **8.3** |
 | minemizer (compact) | 7.1 | 8.0 | 8.4 | 9.2 | 7.2 | 8.0 |
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._

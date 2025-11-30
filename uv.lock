@@ -210,7 +210,9 @@ benchmark = [
     { name = "protobuf" },
     { name = "pyyaml" },
     { name = "sentencepiece" },
+    { name = "toon-format" },
     { name = "transformers" },
+    { name = "tson" },
 ]
 dev = [
     { name = "basedpyright" },
@@ -226,7 +228,9 @@ benchmark = [
     { name = "protobuf", specifier = ">=5.0.0" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "sentencepiece", specifier = ">=0.2.0" },
+    { name = "toon-format", git = "https://github.com/toon-format/toon-python.git" },
     { name = "transformers", specifier = ">=4.57.0" },
+    { name = "tson", specifier = ">=1.0.0" },
 ]
 dev = [
     { name = "basedpyright", specifier = ">=1.34.0" },
@@ -667,6 +671,11 @@ wheels = [
 ]
 
 [[package]]
+name = "toon-format"
+version = "0.9.0b1"
+source = { git = "https://github.com/toon-format/toon-python.git#8dfb593ed1c2b1442f1dd161406e1f7b8ae16573" }
+
+[[package]]
 name = "tqdm"
 version = "4.67.1"
 source = { registry = "https://pypi.org/simple" }
@@ -697,6 +706,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/dd/70/d42a739e8dfde3d92bb2fff5819cbf331fe9657323221e79415cd5eb65ee/transformers-4.57.3.tar.gz", hash = "sha256:df4945029aaddd7c09eec5cad851f30662f8bd1746721b34cc031d70c65afebc", size = 10139680, upload-time = "2025-11-25T15:51:30.139Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/6b/2f416568b3c4c91c96e5a365d164f8a4a4a88030aa8ab4644181fdadce97/transformers-4.57.3-py3-none-any.whl", hash = "sha256:c77d353a4851b1880191603d36acb313411d3577f6e2897814f333841f7003f4", size = 11993463, upload-time = "2025-11-25T15:51:26.493Z" },
+]
+
+[[package]]
+name = "tson"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/af/b3/98ea248911e4210555b7f703a0a4b1a98ec705b494614ff15abb8800eb25/tson-1.0.0.tar.gz", hash = "sha256:8a5c4bb0efecd9965de075d0a2c54c17ec74e28f19cf3e492a13f0845a8c3bfa", size = 19396, upload-time = "2025-10-27T20:47:16.368Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5f/1c/0687becd296c69231fa3e1edb5e8b1ca3290ee613e46cc65bfac1283cc96/tson-1.0.0-py3-none-any.whl", hash = "sha256:c181685763711849e60bbc8aa82c798df6a36b8c05460d0e535c5d30488392ff", size = 12719, upload-time = "2025-10-27T20:47:15.137Z" },
 ]
 
 [[package]]
