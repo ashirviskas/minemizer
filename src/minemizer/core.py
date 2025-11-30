@@ -9,8 +9,8 @@ from typing import Any
 class KeyAnalysis:
     """Results from analyzing which keys are common vs sparse."""
 
-    common: set[str] = field(default_factory=set)
-    sparse: set[str] = field(default_factory=set)
+    common: list[str] = field(default_factory=list)
+    sparse: list[str] = field(default_factory=list)
 
     @property
     def has_sparse(self) -> bool:
@@ -86,13 +86,14 @@ class SchemaMinemizer:
         if not items:
             return KeyAnalysis()
 
+        all_keys = list(dict.fromkeys(key for item in items for key in item))
         key_counts = Counter(key for item in items for key in item)
         total = len(items)
         threshold = self.config.threshold
 
         return KeyAnalysis(
-            common={key for key, count in key_counts.items() if count / total >= threshold},
-            sparse={key for key, count in key_counts.items() if count / total < threshold},
+            common=[key for key in all_keys if key_counts[key] / total >= threshold],
+            sparse=[key for key in all_keys if key_counts[key] / total < threshold],
         )
 
     def _build_header(self, items: list[dict]) -> list[HeaderElement]:
@@ -100,12 +101,8 @@ class SchemaMinemizer:
         if not items:
             return []
 
-        all_keys = {key for item in items for key in item}
-        return [
-            self._create_header_element(key, items)
-            for key in all_keys
-            if self._should_include_key(key, items)
-        ]
+        all_keys = dict.fromkeys(key for item in items for key in item)
+        return [self._create_header_element(key, items) for key in all_keys if self._should_include_key(key, items)]
 
     def _create_header_element(self, key: str, all_items: list) -> HeaderElement:
         """Create a header element with type information from ALL values."""
@@ -119,7 +116,7 @@ class SchemaMinemizer:
             return HeaderElement(
                 name=key,
                 type="dict",
-                schema=list(analysis.common),
+                schema=analysis.common,
                 has_sparse=analysis.has_sparse,
             )
 
@@ -131,7 +128,7 @@ class SchemaMinemizer:
                     name=key,
                     type="list",
                     list_type="dict",
-                    schema=list(analysis.common),
+                    schema=analysis.common,
                     has_sparse=analysis.has_sparse,
                 )
             return HeaderElement(name=key, type="list", list_type="simple")
@@ -150,9 +147,7 @@ class SchemaMinemizer:
         header_parts = [self._format_value(item.get(element.name), element) for element in header]
 
         # Format sparse fields
-        sparse_parts = [
-            self._format_sparse_field(key, item[key]) for key in item if key not in header_keys
-        ]
+        sparse_parts = [self._format_sparse_field(key, item[key]) for key in item if key not in header_keys]
 
         return self.config.delimiter.join(header_parts + sparse_parts)
 
@@ -187,8 +182,7 @@ class SchemaMinemizer:
                 return f"{key}[]"
             if all(isinstance(item, dict) for item in value):
                 formatted = [
-                    f"{self.config.dict_open}{self.config.delimiter.join(self._format_dict_pairs(d))}}}"
-                    for d in value
+                    f"{self.config.dict_open}{self.config.delimiter.join(self._format_dict_pairs(d))}}}" for d in value
                 ]
                 return f"{key}{self.config.list_open}{self.config.delimiter.join(formatted)}]"
             items_str = self.config.delimiter.join(str(item) for item in value)
@@ -208,9 +202,7 @@ class SchemaMinemizer:
         sparse_pairs = []
         if element.has_sparse:
             schema_keys = set(element.schema)
-            sparse_pairs = [
-                f"{k}:{self._normalize_value(v)}" for k, v in data.items() if k not in schema_keys
-            ]
+            sparse_pairs = [f"{k}:{self._normalize_value(v)}" for k, v in data.items() if k not in schema_keys]
 
         content = self.config.delimiter.join(common_values + sparse_pairs)
         return f"{self.config.dict_open}{content}}}"
