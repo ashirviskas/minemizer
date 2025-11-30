@@ -174,19 +174,19 @@ print(minemize(data, delimiter=","))  # a,b \n 1,2
 <!-- BENCHMARK_START -->
 _Last updated: 2025-11-30_
 
-### Token efficiency
+### Token efficiency (original chars encoded per token)
 
-| Format | Avg Chars | Avg Tokens | Orig Chars/Token |
-|--------|-----------|------------|------------------|
-| JSON (pretty) | 805 | 341 | 2.35 |
-| JSON (min) | 492 | 152 | 5.26 |
-| CSV ** | 234 | 88 | 8.72 |
-| TSV ** | 234 | 88 | 8.72 |
-| YAML | 493 | 192 | 4.19 |
-| minemizer | 290 | 107 | 8.08 |
-| minemizer (compact) | 259 | 110 | 7.78 |
+| Format | complex | lists | nested | flat | sparse | avg |
+|---|---|---|---|---|---|---|
+| JSON (pretty) | 2.4 | 2.2 | 2.4 | 2.4 | 2.3 | 2.3 |
+| JSON (min) | 5.4 | 5.5 | 5.3 | 5.2 | 4.9 | 5.3 |
+| CSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
+| TSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
+| YAML | 4.1 | 4.0 | 4.3 | 4.5 | 4.1 | 4.2 |
+| minemizer | **6.1** | **8.1** | **8.7** | **10.1** | **7.4** | **8.1** |
+| minemizer (compact) | 6.0 | 8.0 | 8.4 | 9.2 | 7.2 | 7.8 |
 
-_** fails on: complex mixed, lists of primitives, nested objects, sparse data_
+_Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._
 <!-- BENCHMARK_END -->
 
 ## Installation
