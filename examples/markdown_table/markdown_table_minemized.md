@@ -9,17 +9,17 @@ Markdown preset - renders as proper table in markdown viewers
   {
     "project": "Phoenix",
     "status": "Active",
-    "lead": "Maria Santos"
+    "lead": "Jonas"
   },
   {
     "project": "Titan",
     "status": "Planning",
-    "lead": "James Okonkwo"
+    "lead": "Sarah"
   },
   {
     "project": "Nebula",
     "status": "Complete",
-    "lead": "Anika Patel"
+    "lead": "Akira"
   }
 ]
 ```
@@ -37,15 +37,15 @@ minemize(data, preset=presets.markdown)
 ```
 |project| status| lead|
 |---| ---| ---|
-|Phoenix| Active| Maria Santos|
-|Titan| Planning| James Okonkwo|
-|Nebula| Complete| Anika Patel|
+|Phoenix| Active| Jonas|
+|Titan| Planning| Sarah|
+|Nebula| Complete| Akira|
 ```
 
 ### Rendered
 
 |project| status| lead|
 |---| ---| ---|
-|Phoenix| Active| Maria Santos|
-|Titan| Planning| James Okonkwo|
-|Nebula| Complete| Anika Patel|
+|Phoenix| Active| Jonas|
+|Titan| Planning| Sarah|
+|Nebula| Complete| Akira|

@@ -8,27 +8,39 @@ All keys present in all items - clean tabular data (default preset)
 [
   {
     "id": 101,
-    "name": "Yuki Tanaka",
+    "name": "Marta",
     "age": 29,
-    "city": "Tokyo"
+    "city": "Vilnius"
   },
   {
     "id": 102,
-    "name": "Priya Sharma",
+    "name": "James",
     "age": 34,
-    "city": "Mumbai"
+    "city": "Austin"
   },
   {
     "id": 103,
-    "name": "Lucas Silva",
+    "name": "Sophie",
     "age": 27,
-    "city": "S\u00e3o Paulo"
+    "city": "Lyon"
   },
   {
     "id": 104,
-    "name": "Emma Nielsen",
+    "name": "Yuki",
     "age": 31,
-    "city": "Copenhagen"
+    "city": "Osaka"
+  },
+  {
+    "id": 105,
+    "name": "Lin",
+    "age": 28,
+    "city": "Singapore"
+  },
+  {
+    "id": 106,
+    "name": "Oliver",
+    "age": 35,
+    "city": "Bristol"
   }
 ]
 ```
@@ -43,8 +55,10 @@ minemize(data, preset=presets.default)
 
 ```
 id; name; age; city
-101; Yuki Tanaka; 29; Tokyo
-102; Priya Sharma; 34; Mumbai
-103; Lucas Silva; 27; São Paulo
-104; Emma Nielsen; 31; Copenhagen
+101; Marta; 29; Vilnius
+102; James; 34; Austin
+103; Sophie; 27; Lyon
+104; Yuki; 31; Osaka
+105; Lin; 28; Singapore
+106; Oliver; 35; Bristol
 ```

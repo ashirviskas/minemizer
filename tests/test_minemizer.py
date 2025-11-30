@@ -8,9 +8,9 @@ from minemizer import config, minemize
 @pytest.fixture(autouse=True)
 def reset_config():
     """Reset global config before each test."""
-    original = (config.delimiter, config.use_spaces, config.threshold, config.sparse_indicator)
+    original = (config.delimiter, config.use_spaces, config.sparsity_threshold, config.sparse_indicator)
     yield
-    config.delimiter, config.use_spaces, config.threshold, config.sparse_indicator = original
+    config.delimiter, config.use_spaces, config.sparsity_threshold, config.sparse_indicator = original
 
 
 def test_minemize_basic():
@@ -111,7 +111,7 @@ def test_override_global_config():
 def test_global_config_sparse_indicator():
     """Test custom sparse indicator in header."""
     config.sparse_indicator = "*"
-    config.threshold = 0.6  # b appears in 1/3 = 33%, below threshold
+    config.sparsity_threshold = 0.6  # b appears in 1/3 = 33%, below threshold
     data = [
         {"name": "Alice", "meta": {"a": 1}},
         {"name": "Bob", "meta": {"a": 2}},

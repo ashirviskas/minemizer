@@ -8,24 +8,34 @@ Sparse keys - some fields only present in some items
 [
   {
     "id": 1,
-    "name": "Kenji Watanabe",
+    "name": "Erik",
     "department": "Engineering"
   },
   {
     "id": 2,
-    "name": "Sofia Rodriguez",
+    "name": "Rachel",
     "department": "Design",
     "remote": true
   },
   {
     "id": 3,
-    "name": "Ahmed Hassan"
+    "name": "Hans"
   },
   {
     "id": 4,
-    "name": "Ingrid Larsson",
+    "name": "Kenji",
     "department": "Sales",
-    "slack": "@ingrid"
+    "slack": "@kenji"
+  },
+  {
+    "id": 5,
+    "name": "Mai",
+    "remote": true
+  },
+  {
+    "id": 6,
+    "name": "Tom",
+    "department": "Engineering"
   }
 ]
 ```
@@ -33,15 +43,17 @@ Sparse keys - some fields only present in some items
 ## Options
 
 ```python
-minemize(data, threshold=0.5)
+minemize(data, sparsity_threshold=0.5)
 ```
 
 ## Output
 
 ```
 id; name; department
-1; Kenji Watanabe; Engineering
-2; Sofia Rodriguez; Design; remote:True
-3; Ahmed Hassan; 
-4; Ingrid Larsson; Sales; slack:@ingrid
+1; Erik; Engineering
+2; Rachel; Design; remote:True
+3; Hans; 
+4; Kenji; Sales; slack:@kenji
+5; Mai; ; remote:True
+6; Tom; Engineering
 ```

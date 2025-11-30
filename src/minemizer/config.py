@@ -12,12 +12,12 @@ class Config:
 
         from minemizer import config
         config.delimiter = "|"
-        config.threshold = 0.9
+        config.sparsity_threshold = 0.9
     """
 
     delimiter: str = ";"
     use_spaces: bool = True
-    threshold: float = 0.5
+    sparsity_threshold: float = 0.5
     sparse_indicator: str = "..."
     header_separator: str | None = None
     wrap_lines: str | None = None

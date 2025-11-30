@@ -54,7 +54,7 @@ def _normalize(value: Any) -> str:
     return str(value).lower() if isinstance(value, bool) else str(value)
 
 
-def _analyze_keys(items: list[dict], threshold: float) -> KeyAnalysis:
+def _analyze_keys(items: list[dict], sparsity_threshold: float) -> KeyAnalysis:
     if not items:
         return KeyAnalysis()
 
@@ -63,8 +63,8 @@ def _analyze_keys(items: list[dict], threshold: float) -> KeyAnalysis:
     total = len(items)
 
     return KeyAnalysis(
-        common=[k for k in all_keys if counts[k] / total >= threshold],
-        sparse=[k for k in all_keys if counts[k] / total < threshold],
+        common=[k for k in all_keys if counts[k] / total >= sparsity_threshold],
+        sparse=[k for k in all_keys if counts[k] / total < sparsity_threshold],
     )
 
 
@@ -77,7 +77,7 @@ def _create_header_element(key: str, items: list[dict], cfg: Config) -> HeaderEl
         return HeaderElement(name=key, delimiter=delim, sparse_indicator=sparse)
 
     if all(isinstance(v, dict) for v in values):
-        analysis = _analyze_keys(values, cfg.threshold)
+        analysis = _analyze_keys(values, cfg.sparsity_threshold)
         return HeaderElement(
             name=key,
             type="dict",
@@ -90,7 +90,7 @@ def _create_header_element(key: str, items: list[dict], cfg: Config) -> HeaderEl
     if all(isinstance(v, list) for v in values):
         all_items = [x for sublist in values for x in sublist]
         if all_items and all(isinstance(x, dict) for x in all_items):
-            analysis = _analyze_keys(all_items, cfg.threshold)
+            analysis = _analyze_keys(all_items, cfg.sparsity_threshold)
             return HeaderElement(
                 name=key,
                 type="list",
@@ -113,7 +113,7 @@ def _build_header(items: list[dict], cfg: Config) -> list[HeaderElement]:
     return [
         _create_header_element(key, items, cfg)
         for key in all_keys
-        if sum(1 for item in items if key in item) / len(items) >= cfg.threshold
+        if sum(1 for item in items if key in item) / len(items) >= cfg.sparsity_threshold
     ]
 
 
@@ -210,7 +210,7 @@ def minemize(
     preset: Config | None = None,
     delimiter: str | None = None,
     use_spaces: bool | None = None,
-    threshold: float | None = None,
+    sparsity_threshold: float | None = None,
     sparse_indicator: str | None = None,
     header_separator: str | None = None,
     wrap_lines: str | None = None,
@@ -222,7 +222,7 @@ def minemize(
         preset: Pre-configured Config (e.g., presets.markdown, presets.csv)
         delimiter: Field separator (default: ";")
         use_spaces: Whether to use spaces around delimiters (default: True)
-        threshold: Frequency threshold for including keys in header (default: 0.5)
+        sparsity_threshold: Frequency threshold for including keys in header (default: 0.5)
         sparse_indicator: Indicator for sparse fields in header (default: "...")
         header_separator: Separator row after header, e.g., "---" for markdown tables
         wrap_lines: Wrap each line with this string (e.g., "|" for markdown tables)
@@ -251,7 +251,7 @@ def minemize(
     cfg = base.derive(
         delimiter=delimiter,
         use_spaces=use_spaces,
-        threshold=threshold,
+        sparsity_threshold=sparsity_threshold,
         sparse_indicator=sparse_indicator,
         header_separator=header_separator,
         wrap_lines=wrap_lines,

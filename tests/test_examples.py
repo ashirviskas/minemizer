@@ -111,7 +111,7 @@ def test_non_uniform_has_sparse_fields():
         {"name": "Bob"},
         {"name": "Charlie", "extra": "value"},
     ]
-    result = minemize(data, threshold=0.5)
+    result = minemize(data, sparsity_threshold=0.5)
 
     # "extra" should be sparse (in row, not header)
     header = result.split("\n")[0]

@@ -9,32 +9,67 @@ The default output is optimized for LLM token efficiency:
 from minemizer import minemize
 
 data = [
-    {"name": "Alice", "role": "Engineer", "team": "Backend"},
-    {"name": "Bob", "role": "Designer", "team": "Frontend"},
-    {"name": "Charlie", "role": "Manager", "team": "Product"},
+    {"name": "Marta", "role": "Engineer", "team": "Backend"},
+    {"name": "James", "role": "Designer", "team": "Frontend"},
+    {"name": "Sophie", "role": "Manager", "team": "Product"},
 ]
 print(minemize(data))
 ```
 ```
 name; role; team
-Alice; Engineer; Backend
-Bob; Designer; Frontend
-Charlie; Manager; Product
+Marta; Engineer; Backend
+James; Designer; Frontend
+Sophie; Manager; Product
 ```
 
 ### Nested data
 
 ```python
 data = [
-    {"id": 1, "name": "Alice", "address": {"street": "123 Main St", "city": "Boston"}},
-    {"id": 2, "name": "Bob", "address": {"street": "456 Oak Ave", "city": "NYC"}},
+    {"id": 1, "name": "Yuki", "address": {"street": "12 Sakura Lane", "city": "Kyoto"}},
+    {"id": 2, "name": "Lin", "address": {"street": "88 Garden Road", "city": "Taipei"}},
 ]
 print(minemize(data))
 ```
 ```
 id; name; address{ street; city}
-1; Alice; { 123 Main St; Boston}
-2; Bob; { 456 Oak Ave; NYC}
+1; Yuki; { 12 Sakura Lane; Kyoto}
+2; Lin; { 88 Garden Road; Taipei}
+```
+
+### Nested non-uniform data with sparsity_threshold
+
+Control how sparse fields are handled using `sparsity_threshold`. Fields appearing in fewer records than the threshold are shown inline in rows rather than in the header:
+
+```python
+data = [
+    {"id": 1, "name": "Lukas", "location": {"city": "Vilnius", "floor": 3}},
+    {"id": 2, "name": "Emma", "location": {"city": "Boston", "floor": 7, "desk": "A12"}},
+    {"id": 3, "name": "Yuki", "location": {"city": "Tokyo", "floor": 5}},
+    {"id": 4, "name": "Oliver", "location": {"city": "London", "floor": 2, "desk": "B04"}},
+]
+
+# Default (0.5): desk appears in 50% of records, included in schema
+print(minemize(data))
+```
+```
+id; name; location{ city; floor; desk}
+1; Lukas; { Vilnius; 3; }
+2; Emma; { Boston; 7; A12}
+3; Yuki; { Tokyo; 5; }
+4; Oliver; { London; 2; B04}
+```
+
+```python
+# Strict (1.0): only fields in ALL records go in schema, desk becomes sparse
+print(minemize(data, sparsity_threshold=1.0))
+```
+```
+id; name; location{ city; floor; ...}
+1; Lukas; { Vilnius; 3}
+2; Emma; { Boston; 7; desk:A12}
+3; Yuki; { Tokyo; 5}
+4; Oliver; { London; 2; desk:B04}
 ```
 
 ## Presets
@@ -52,9 +87,9 @@ print(minemize(data, preset=presets.csv))
 ```
 ```
 name,role,team
-Alice,Engineer,Backend
-Bob,Designer,Frontend
-Charlie,Manager,Product
+Marta,Engineer,Backend
+James,Designer,Frontend
+Sophie,Manager,Product
 ```
 
 ### Markdown table
@@ -65,18 +100,18 @@ print(minemize(data, preset=presets.markdown))
 ```
 |name| role| team|
 |---| ---| ---|
-|Alice| Engineer| Backend|
-|Bob| Designer| Frontend|
-|Charlie| Manager| Product|
+|Marta| Engineer| Backend|
+|James| Designer| Frontend|
+|Sophie| Manager| Product|
 ```
 
 Rendered:
 
 |name| role| team|
 |---| ---| ---|
-|Alice| Engineer| Backend|
-|Bob| Designer| Frontend|
-|Charlie| Manager| Product|
+|Marta| Engineer| Backend|
+|James| Designer| Frontend|
+|Sophie| Manager| Product|
 
 ### Available presets
 
@@ -114,7 +149,7 @@ print(minemize(data, delimiter=","))  # a,b \n 1,2
 |--------|---------|-------------|
 | `delimiter` | `";"` | Field separator |
 | `use_spaces` | `True` | Add space after delimiter |
-| `threshold` | `0.5` | Key frequency threshold for header (0.0-1.0) |
+| `sparsity_threshold` | `0.5` | Key frequency threshold for header (0.0-1.0) |
 | `sparse_indicator` | `"..."` | Indicator for sparse fields in schema |
 | `header_separator` | `None` | Separator row after header (e.g., `"---"`) |
 | `wrap_lines` | `None` | Wrap each line with this string (e.g., `"\|"`) |

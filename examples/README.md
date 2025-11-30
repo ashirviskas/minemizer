@@ -13,7 +13,7 @@ Each example has its own directory containing:
 | Example | Description | Preset |
 |---------|-------------|--------|
 | [uniform](uniform/) | All keys present in all items | `presets.default` |
-| [non_uniform](non_uniform/) | Sparse keys (some fields missing) | custom threshold |
+| [non_uniform](non_uniform/) | Sparse keys (some fields missing) | custom `sparsity_threshold` |
 | [nested](nested/) | Nested dicts and lists | `presets.default` |
 | [csv_style](csv_style/) | Comma-separated output | `presets.csv` |
 | [markdown_table](markdown_table/) | Proper markdown table | `presets.markdown` |
@@ -39,7 +39,7 @@ Example(
     data=[...],  # Your test data
     preset=presets.csv,  # Optional: use a preset
     preset_name="presets.csv",  # For display in docs
-    options={"threshold": 0.8},  # Optional: additional overrides
+    options={"sparsity_threshold": 0.8},  # Optional: additional overrides
 )
 ```
 

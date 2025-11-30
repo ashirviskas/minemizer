@@ -8,9 +8,9 @@ Nested structures - dicts and lists within items
 [
   {
     "id": "u1",
-    "name": "Chen Wei",
+    "name": "Lukas",
     "location": {
-      "office": "Shanghai HQ",
+      "office": "Kaunas HQ",
       "floor": 12
     },
     "skills": [
@@ -20,9 +20,9 @@ Nested structures - dicts and lists within items
   },
   {
     "id": "u2",
-    "name": "Fatima Al-Rashid",
+    "name": "Emma",
     "location": {
-      "office": "Dubai Tech Park",
+      "office": "Boston Hub",
       "floor": 7
     },
     "skills": [
@@ -33,13 +33,49 @@ Nested structures - dicts and lists within items
   },
   {
     "id": "u3",
-    "name": "Oluwaseun Adeyemi",
+    "name": "Pierre",
     "location": {
-      "office": "Lagos Hub",
+      "office": "Paris Office",
       "floor": 3
     },
     "skills": [
       "rust"
+    ]
+  },
+  {
+    "id": "u4",
+    "name": "Hana",
+    "location": {
+      "office": "Tokyo Tower",
+      "floor": 15
+    },
+    "skills": [
+      "go",
+      "docker"
+    ]
+  },
+  {
+    "id": "u5",
+    "name": "Wei",
+    "location": {
+      "office": "Taipei Center",
+      "floor": 8
+    },
+    "skills": [
+      "java",
+      "spring"
+    ]
+  },
+  {
+    "id": "u6",
+    "name": "Charlotte",
+    "location": {
+      "office": "London Bridge",
+      "floor": 5
+    },
+    "skills": [
+      "python",
+      "django"
     ]
   }
 ]
@@ -55,7 +91,10 @@ minemize(data)
 
 ```
 id; name; location{ office; floor}; skills[]
-u1; Chen Wei; { Shanghai HQ; 12}; [ python; kubernetes]
-u2; Fatima Al-Rashid; { Dubai Tech Park; 7}; [ react; typescript; graphql]
-u3; Oluwaseun Adeyemi; { Lagos Hub; 3}; [ rust]
+u1; Lukas; { Kaunas HQ; 12}; [ python; kubernetes]
+u2; Emma; { Boston Hub; 7}; [ react; typescript; graphql]
+u3; Pierre; { Paris Office; 3}; [ rust]
+u4; Hana; { Tokyo Tower; 15}; [ go; docker]
+u5; Wei; { Taipei Center; 8}; [ java; spring]
+u6; Charlotte; { London Bridge; 5}; [ python; django]
 ```
