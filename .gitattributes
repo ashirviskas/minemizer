@@ -1,0 +1,2 @@
+# Mark benchmark results as generated (hides from GitHub diffs by default)
+benchmarks/results/** linguist-generated=true -diff
