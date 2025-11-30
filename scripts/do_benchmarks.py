@@ -177,7 +177,7 @@ def run_benchmarks(
                     tokens=dict.fromkeys(tokenizers),
                 )
             else:
-                tokens = {name: count_tokens(converted, tok) for name, tok in tokenizers.items()}
+                tokens: dict[str, int | None] = {name: count_tokens(converted, tok) for name, tok in tokenizers.items()}
                 result = BenchmarkResult(
                     format_name=format_name,
                     chars=len(converted),
@@ -205,12 +205,13 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
         # Get base chars from JSON pretty for this fixture
         json_pretty_result = next(r for r in fixture.results if r.format_name == "json_pretty")
         base_chars = json_pretty_result.chars
+        assert base_chars is not None  # JSON always succeeds
 
         for result in fixture.results:
             if result.chars is not None:
                 format_stats[result.format_name]["chars"].append(result.chars)
                 # Average tokens across all tokenizers for this result
-                avg_tokens = sum(result.tokens.values()) / len(result.tokens)
+                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
                 format_stats[result.format_name]["tokens"].append(avg_tokens)
                 # Calculate chars/token ratio for this run
                 ratio = base_chars / avg_tokens if avg_tokens > 0 else 0
@@ -221,9 +222,10 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
     for fixture in results:
         json_pretty_result = next(r for r in fixture.results if r.format_name == "json_pretty")
         base_chars = json_pretty_result.chars
+        assert base_chars is not None  # JSON always succeeds
         for result in fixture.results:
             if result.chars is not None:
-                avg_tokens = sum(result.tokens.values()) / len(result.tokens)
+                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
                 fixture_ratios[result.format_name][fixture.fixture_name] = base_chars / avg_tokens
             else:
                 fixture_ratios[result.format_name][fixture.fixture_name] = None
@@ -405,8 +407,8 @@ def generate_token_visualization_html(
         "</style>",
         "</head><body>",
         "<h1>Token Visualization</h1>",
-        "<p>Compare <a href='https://github.com/ashirviskas/minemizer'>minemizer</a> to other methods of encoding various data for LLMs.",
-        " Each token is colored uniquely.</p>",
+        "<p>Compare <a href='https://github.com/ashirviskas/minemizer'>minemizer</a> "
+        "to other methods of encoding various data for LLMs. Each token is colored uniquely.</p>",
     ]
 
     # Generate summary table (like markdown version)
@@ -426,10 +428,11 @@ def generate_token_visualization_html(
     for fixture in results:
         json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
         base_chars = json_pretty.chars
+        assert base_chars is not None  # JSON always succeeds
         best_ratio = 0.0
         for result in fixture.results:
             if result.chars is not None:
-                avg_tokens = sum(result.tokens.values()) / len(result.tokens)
+                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
                 ratio = base_chars / avg_tokens if avg_tokens > 0 else 0
                 best_ratio = max(best_ratio, ratio)
         best_per_fixture[fixture.fixture_name] = best_ratio
@@ -443,9 +446,10 @@ def generate_token_visualization_html(
         for fixture in results:
             json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
             base_chars = json_pretty.chars
+            assert base_chars is not None  # JSON always succeeds
             result = next(r for r in fixture.results if r.format_name == fmt)
             if result.chars is not None:
-                avg_tokens = sum(result.tokens.values()) / len(result.tokens)
+                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
                 ratios.append(base_chars / avg_tokens if avg_tokens > 0 else 0)
         if ratios:
             format_avgs[fmt] = sum(ratios) / len(ratios)
@@ -466,12 +470,13 @@ def generate_token_visualization_html(
         for fixture in results:
             json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
             base_chars = json_pretty.chars
+            assert base_chars is not None  # JSON always succeeds
             result = next(r for r in fixture.results if r.format_name == fmt)
 
             if result.chars is None:
                 row.append("<td class='na'>✗</td>")
             else:
-                avg_tokens = sum(result.tokens.values()) / len(result.tokens)
+                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
                 ratio = base_chars / avg_tokens if avg_tokens > 0 else 0
                 css_class = " class='best'" if ratio == best_per_fixture[fixture.fixture_name] else ""
                 row.append(f"<td{css_class}>{ratio:.1f}</td>")
@@ -524,6 +529,7 @@ def generate_token_visualization_html(
             data = fixtures[fixture.fixture_name]
             json_pretty_result = next(r for r in fixture.results if r.format_name == "json_pretty")
             base_chars = json_pretty_result.chars
+            assert base_chars is not None  # JSON always succeeds
 
             active = " active" if i == 0 and j == 0 else ""
             content_id = f"content-{tok_name}-{fixture.fixture_name}"
@@ -686,6 +692,7 @@ def save_raw_results(
         # Get base chars
         json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
         base_chars = json_pretty.chars
+        assert base_chars is not None  # JSON always succeeds
 
         md_lines.append(f"## {fixture.fixture_name}.json")
         md_lines.append("")
@@ -739,7 +746,7 @@ def save_raw_results(
                 md_lines.append("N/A - format cannot represent this data")
                 md_lines.append("```")
             else:
-                avg_tokens = sum(result.tokens.values()) / len(result.tokens)
+                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
                 md_lines.append(f"**{label}** ({result.chars} chars, {avg_tokens:.0f} tokens):")
                 md_lines.append(f"```{ext}")
                 md_lines.append(output.rstrip())
