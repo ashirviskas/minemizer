@@ -1,0 +1,8 @@
+[
+  {"id": 1, "user": {"name": "Alice", "email": "alice@example.com"}, "status": "active"},
+  {"id": 2, "user": {"name": "Bob", "email": "bob@example.com"}, "status": "inactive"},
+  {"id": 3, "user": {"name": "Carol", "email": "carol@example.com"}, "status": "active"},
+  {"id": 4, "user": {"name": "David", "email": "david@example.com"}, "status": "pending"},
+  {"id": 5, "user": {"name": "Eva", "email": "eva@example.com"}, "status": "active"},
+  {"id": 6, "user": {"name": "Frank", "email": "frank@example.com"}, "status": "active"}
+]

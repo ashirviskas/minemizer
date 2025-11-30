@@ -1,0 +1,10 @@
+[
+  {"id": 1, "name": "Carol", "role": "Manager"},
+  {"id": 2, "name": "Dave", "remote": true},
+  {"id": 3, "name": "Eve", "role": "Designer", "team": "UX"},
+  {"id": 4, "name": "Frank", "department": "Engineering"},
+  {"id": 5, "name": "Grace", "role": "Engineer", "remote": true, "team": "Platform"},
+  {"id": 6, "name": "Henry", "role": "Analyst"},
+  {"id": 7, "name": "Ivy"},
+  {"id": 8, "name": "Jack", "department": "Sales", "remote": false}
+]

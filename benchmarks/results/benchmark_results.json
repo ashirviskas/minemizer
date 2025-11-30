@@ -1,0 +1,330 @@
+{
+  "date": "2025-11-30",
+  "fixtures": {
+    "complex_mixed": {
+      "json_pretty": {
+        "chars": 1320,
+        "tokens": {
+          "gpt2": 768,
+          "llama": 560,
+          "qwen2.5": 455,
+          "phi4": 427
+        }
+      },
+      "json_min": {
+        "chars": 760,
+        "tokens": {
+          "gpt2": 224,
+          "llama": 284,
+          "qwen2.5": 246,
+          "phi4": 218
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "yaml": {
+        "chars": 818,
+        "tokens": {
+          "gpt2": 374,
+          "llama": 338,
+          "qwen2.5": 306,
+          "phi4": 278
+        }
+      },
+      "minemizer": {
+        "chars": 515,
+        "tokens": {
+          "gpt2": 204,
+          "llama": 247,
+          "qwen2.5": 224,
+          "phi4": 196
+        }
+      },
+      "minemizer_compact": {
+        "chars": 469,
+        "tokens": {
+          "gpt2": 213,
+          "llama": 249,
+          "qwen2.5": 221,
+          "phi4": 193
+        }
+      }
+    },
+    "lists_of_primitives": {
+      "json_pretty": {
+        "chars": 610,
+        "tokens": {
+          "gpt2": 382,
+          "llama": 280,
+          "qwen2.5": 217,
+          "phi4": 217
+        }
+      },
+      "json_min": {
+        "chars": 330,
+        "tokens": {
+          "gpt2": 115,
+          "llama": 125,
+          "qwen2.5": 103,
+          "phi4": 103
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "yaml": {
+        "chars": 341,
+        "tokens": {
+          "gpt2": 153,
+          "llama": 157,
+          "qwen2.5": 149,
+          "phi4": 149
+        }
+      },
+      "minemizer": {
+        "chars": 194,
+        "tokens": {
+          "gpt2": 81,
+          "llama": 79,
+          "qwen2.5": 71,
+          "phi4": 71
+        }
+      },
+      "minemizer_compact": {
+        "chars": 165,
+        "tokens": {
+          "gpt2": 83,
+          "llama": 83,
+          "qwen2.5": 70,
+          "phi4": 70
+        }
+      }
+    },
+    "nested_objects": {
+      "json_pretty": {
+        "chars": 741,
+        "tokens": {
+          "gpt2": 407,
+          "llama": 322,
+          "qwen2.5": 252,
+          "phi4": 252
+        }
+      },
+      "json_min": {
+        "chars": 470,
+        "tokens": {
+          "gpt2": 143,
+          "llama": 159,
+          "qwen2.5": 127,
+          "phi4": 127
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "yaml": {
+        "chars": 463,
+        "tokens": {
+          "gpt2": 195,
+          "llama": 182,
+          "qwen2.5": 158,
+          "phi4": 158
+        }
+      },
+      "minemizer": {
+        "chars": 259,
+        "tokens": {
+          "gpt2": 90,
+          "llama": 95,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      },
+      "minemizer_compact": {
+        "chars": 232,
+        "tokens": {
+          "gpt2": 95,
+          "llama": 100,
+          "qwen2.5": 78,
+          "phi4": 78
+        }
+      }
+    },
+    "simple_flat": {
+      "json_pretty": {
+        "chars": 763,
+        "tokens": {
+          "gpt2": 384,
+          "llama": 334,
+          "qwen2.5": 264,
+          "phi4": 264
+        }
+      },
+      "json_min": {
+        "chars": 522,
+        "tokens": {
+          "gpt2": 152,
+          "llama": 165,
+          "qwen2.5": 137,
+          "phi4": 137
+        }
+      },
+      "csv": {
+        "chars": 234,
+        "tokens": {
+          "gpt2": 95,
+          "llama": 101,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      },
+      "tsv": {
+        "chars": 234,
+        "tokens": {
+          "gpt2": 95,
+          "llama": 101,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      },
+      "yaml": {
+        "chars": 489,
+        "tokens": {
+          "gpt2": 163,
+          "llama": 180,
+          "qwen2.5": 169,
+          "phi4": 169
+        }
+      },
+      "minemizer": {
+        "chars": 251,
+        "tokens": {
+          "gpt2": 74,
+          "llama": 83,
+          "qwen2.5": 72,
+          "phi4": 72
+        }
+      },
+      "minemizer_compact": {
+        "chars": 224,
+        "tokens": {
+          "gpt2": 85,
+          "llama": 91,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      }
+    },
+    "sparse_data": {
+      "json_pretty": {
+        "chars": 589,
+        "tokens": {
+          "gpt2": 318,
+          "llama": 278,
+          "qwen2.5": 224,
+          "phi4": 224
+        }
+      },
+      "json_min": {
+        "chars": 378,
+        "tokens": {
+          "gpt2": 121,
+          "llama": 133,
+          "qwen2.5": 114,
+          "phi4": 114
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "yaml": {
+        "chars": 356,
+        "tokens": {
+          "gpt2": 135,
+          "llama": 150,
+          "qwen2.5": 143,
+          "phi4": 143
+        }
+      },
+      "minemizer": {
+        "chars": 232,
+        "tokens": {
+          "gpt2": 79,
+          "llama": 87,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      },
+      "minemizer_compact": {
+        "chars": 207,
+        "tokens": {
+          "gpt2": 84,
+          "llama": 90,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      }
+    }
+  }
+}
