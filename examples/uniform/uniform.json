@@ -1,0 +1,26 @@
+[
+  {
+    "id": 101,
+    "name": "Yuki Tanaka",
+    "age": 29,
+    "city": "Tokyo"
+  },
+  {
+    "id": 102,
+    "name": "Priya Sharma",
+    "age": 34,
+    "city": "Mumbai"
+  },
+  {
+    "id": 103,
+    "name": "Lucas Silva",
+    "age": 27,
+    "city": "S\u00e3o Paulo"
+  },
+  {
+    "id": 104,
+    "name": "Emma Nielsen",
+    "age": 31,
+    "city": "Copenhagen"
+  }
+]

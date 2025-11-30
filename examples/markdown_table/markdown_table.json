@@ -1,0 +1,17 @@
+[
+  {
+    "project": "Phoenix",
+    "status": "Active",
+    "lead": "Maria Santos"
+  },
+  {
+    "project": "Titan",
+    "status": "Planning",
+    "lead": "James Okonkwo"
+  },
+  {
+    "project": "Nebula",
+    "status": "Complete",
+    "lead": "Anika Patel"
+  }
+]

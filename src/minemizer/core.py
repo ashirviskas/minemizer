@@ -186,7 +186,19 @@ def _serialize(data: list[dict], cfg: Config) -> str:
     header = _build_header(data, cfg)
     rows = [_format_row(item, header, cfg) for item in data]
     header_str = cfg.spaced_delimiter.join(h.to_string() for h in header)
-    return "\n".join([header_str] + rows)
+
+    lines = [header_str]
+    if cfg.header_separator:
+        sep_row = cfg.spaced_delimiter.join(cfg.header_separator for _ in header)
+        lines.append(sep_row)
+    lines.extend(rows)
+
+    # Wrap lines with delimiter (e.g., for markdown tables)
+    if cfg.wrap_lines:
+        w = cfg.wrap_lines
+        lines = [f"{w}{line}{w}" for line in lines]
+
+    return "\n".join(lines)
 
 
 # --- Public API ---
@@ -195,27 +207,37 @@ def _serialize(data: list[dict], cfg: Config) -> str:
 def minemize(
     data: list | dict,
     *,
+    preset: Config | None = None,
     delimiter: str | None = None,
     use_spaces: bool | None = None,
     threshold: float | None = None,
     sparse_indicator: str | None = None,
+    header_separator: str | None = None,
+    wrap_lines: str | None = None,
 ) -> str:
     """Minimize your data into a compact string format.
 
     Args:
         data: A list of dicts or a single dict to minemize
-        delimiter: Field separator (default from global config: ";")
-        use_spaces: Whether to use spaces around delimiters (default from global config: True)
-        threshold: Frequency threshold for including keys in header (default from global config: 0.5)
-        sparse_indicator: Indicator for sparse fields in header (default from global config: "...")
+        preset: Pre-configured Config (e.g., presets.markdown, presets.csv)
+        delimiter: Field separator (default: ";")
+        use_spaces: Whether to use spaces around delimiters (default: True)
+        threshold: Frequency threshold for including keys in header (default: 0.5)
+        sparse_indicator: Indicator for sparse fields in header (default: "...")
+        header_separator: Separator row after header, e.g., "---" for markdown tables
+        wrap_lines: Wrap each line with this string (e.g., "|" for markdown tables)
 
     Returns:
         str: The minemized representation
 
-    Note:
-        All parameters default to global config values. Set them via:
-            from minemizer import config
-            config.delimiter = "|"
+    Examples:
+        # Using presets
+        from minemizer import presets
+        minemize(data, preset=presets.markdown)
+        minemize(data, preset=presets.csv)
+
+        # Custom options
+        minemize(data, delimiter="|", header_separator="---")
     """
     if isinstance(data, dict):
         data = [data]
@@ -223,10 +245,15 @@ def minemize(
     if not data or not isinstance(data, list):
         return ""
 
-    cfg = _global_config.derive(
+    # Start from preset or global config
+    base = preset if preset is not None else _global_config
+
+    cfg = base.derive(
         delimiter=delimiter,
         use_spaces=use_spaces,
         threshold=threshold,
         sparse_indicator=sparse_indicator,
+        header_separator=header_separator,
+        wrap_lines=wrap_lines,
     )
     return _serialize(data, cfg)

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Kenji Watanabe",
+    "department": "Engineering"
+  },
+  {
+    "id": 2,
+    "name": "Sofia Rodriguez",
+    "department": "Design",
+    "remote": true
+  },
+  {
+    "id": 3,
+    "name": "Ahmed Hassan"
+  },
+  {
+    "id": 4,
+    "name": "Ingrid Larsson",
+    "department": "Sales",
+    "slack": "@ingrid"
+  }
+]

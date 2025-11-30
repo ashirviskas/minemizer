@@ -126,3 +126,52 @@ def test_config_derive():
     derived = config.derive(delimiter="|")
     assert derived.delimiter == "|"
     assert config.delimiter == ";"  # Original unchanged
+
+
+# Preset tests
+
+
+def test_preset_markdown():
+    """Test markdown preset produces proper table."""
+    from minemizer import presets
+
+    data = [{"a": 1, "b": 2}]
+    result = minemize(data, preset=presets.markdown)
+
+    assert result.startswith("|")
+    assert "---" in result
+    assert result.count("\n") == 2  # header, separator, data row
+
+
+def test_preset_csv():
+    """Test CSV preset produces comma-separated output."""
+    from minemizer import presets
+
+    data = [{"a": 1, "b": 2}]
+    result = minemize(data, preset=presets.csv)
+
+    assert "," in result
+    assert ";" not in result
+    assert " " not in result
+
+
+def test_preset_with_override():
+    """Test that preset options can be overridden."""
+    from minemizer import presets
+
+    data = [{"a": 1, "b": 2}]
+    # Use markdown preset but override delimiter
+    result = minemize(data, preset=presets.markdown, delimiter=":")
+
+    assert ":" in result
+    assert "|" not in result.split("\n")[0].strip("|")  # delimiter changed
+
+
+def test_preset_llm_alias():
+    """Test that presets.llm is an alias for presets.default."""
+    from minemizer import presets
+
+    assert presets.llm is presets.default
+
+    data = [{"a": 1, "b": 2}]
+    assert minemize(data, preset=presets.llm) == minemize(data, preset=presets.default)

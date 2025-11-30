@@ -19,6 +19,8 @@ class Config:
     use_spaces: bool = True
     threshold: float = 0.5
     sparse_indicator: str = "..."
+    header_separator: str | None = None
+    wrap_lines: str | None = None
 
     @property
     def spaced_delimiter(self) -> str:
@@ -38,5 +40,48 @@ class Config:
         return replace(self, **filtered) if filtered else self
 
 
-# Module-level singleton - Python guarantees single instantiation
+class presets:  # noqa: N801 - lowercase intentional for API style
+    """Pre-configured Config instances for common formats.
+
+    Usage:
+        from minemizer import presets
+        minemize(data, preset=presets.markdown)
+        minemize(data, preset=presets.llm)  # alias for default
+    """
+
+    # Default: optimized for LLM token efficiency
+    # - semicolon delimiter (single char, rarely appears in data)
+    # - spaces for readability without excessive tokens
+    # - 50% threshold balances schema info vs row verbosity
+    default = Config()
+    llm = default  # alias: explicit name for LLM-optimized preset
+
+    # Markdown table: renders as proper table in markdown viewers
+    markdown = Config(
+        delimiter="|",
+        use_spaces=True,
+        header_separator="---",
+        wrap_lines="|",
+    )
+
+    # CSV: standard comma-separated values
+    csv = Config(
+        delimiter=",",
+        use_spaces=False,
+    )
+
+    # TSV: tab-separated values
+    tsv = Config(
+        delimiter="\t",
+        use_spaces=False,
+    )
+
+    # Compact: minimal tokens, no spaces
+    compact = Config(
+        delimiter=";",
+        use_spaces=False,
+    )
+
+
+# Module-level singleton (starts with default preset)
 config = Config()
