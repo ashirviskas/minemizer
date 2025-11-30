@@ -15,8 +15,8 @@ Original size (JSON pretty): **1320 chars**
 | CSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | TSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | YAML | 818 | 374 | 338 | 306 | 278 | 324.0 | 4.07 |
-| minemizer | 515 | 204 | 247 | 224 | 196 | 217.8 | 6.06 |
-| minemizer (compact) | 469 | 213 | 249 | 221 | 193 | 219.0 | 6.03 |
+| minemizer | 421 | 159 | 201 | 191 | 163 | 178.5 | 7.39 |
+| minemizer (compact) | 364 | 173 | 214 | 191 | 163 | 185.2 | 7.13 |
 
 ### Serialized outputs
 
@@ -187,24 +187,24 @@ N/A - format cannot represent this data
   - admin
 ```
 
-**minemizer** (515 chars, 218 tokens):
+**minemizer** (421 chars, 178 tokens):
 ```txt
-id; profile{ name; location}; tags[]; metadata{ created; ...}
-1; { Grace; {'city': 'NYC', 'country': 'USA'}}; [ admin; verified]; { 2024-01-15}
-2; { Henry; {'city': 'London', 'country': 'UK'}}; [ user]; { 2024-02-20; updated:2024-03-10}
-3; { Ivy; {'city': 'Tokyo', 'country': 'Japan'}}; [ moderator; verified; premium]; { 2024-01-05}
-4; { Jack; {'city': 'Sydney', 'country': 'Australia'}}; [ user; new]; { 2024-04-01}
-5; { Kate; {'city': 'Berlin', 'country': 'Germany'}}; [ admin]; { 2023-12-01; updated:2024-02-15}
+id; profile{ name; location{ city; country}}; tags[]; metadata{ created; ...}
+1; { Grace; { NYC; USA}}; [ admin; verified]; { 2024-01-15}
+2; { Henry; { London; UK}}; [ user]; { 2024-02-20; updated:2024-03-10}
+3; { Ivy; { Tokyo; Japan}}; [ moderator; verified; premium]; { 2024-01-05}
+4; { Jack; { Sydney; Australia}}; [ user; new]; { 2024-04-01}
+5; { Kate; { Berlin; Germany}}; [ admin]; { 2023-12-01; updated:2024-02-15}
 ```
 
-**minemizer (compact)** (469 chars, 219 tokens):
+**minemizer (compact)** (364 chars, 185 tokens):
 ```txt
-id;profile{ name;location};tags[];metadata{ created;...}
-1;{Grace;{'city': 'NYC', 'country': 'USA'}};[admin;verified];{2024-01-15}
-2;{Henry;{'city': 'London', 'country': 'UK'}};[user];{2024-02-20;updated:2024-03-10}
-3;{Ivy;{'city': 'Tokyo', 'country': 'Japan'}};[moderator;verified;premium];{2024-01-05}
-4;{Jack;{'city': 'Sydney', 'country': 'Australia'}};[user;new];{2024-04-01}
-5;{Kate;{'city': 'Berlin', 'country': 'Germany'}};[admin];{2023-12-01;updated:2024-02-15}
+id;profile{ name;location{ city;country}};tags[];metadata{ created;...}
+1;{Grace;{NYC;USA}};[admin;verified];{2024-01-15}
+2;{Henry;{London;UK}};[user];{2024-02-20;updated:2024-03-10}
+3;{Ivy;{Tokyo;Japan}};[moderator;verified;premium];{2024-01-05}
+4;{Jack;{Sydney;Australia}};[user;new];{2024-04-01}
+5;{Kate;{Berlin;Germany}};[admin];{2023-12-01;updated:2024-02-15}
 ```
 
 ---

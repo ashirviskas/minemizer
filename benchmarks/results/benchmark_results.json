@@ -48,21 +48,21 @@
         }
       },
       "minemizer": {
-        "chars": 515,
+        "chars": 421,
         "tokens": {
-          "gpt2": 204,
-          "llama": 247,
-          "qwen2.5": 224,
-          "phi4": 196
+          "gpt2": 159,
+          "llama": 201,
+          "qwen2.5": 191,
+          "phi4": 163
         }
       },
       "minemizer_compact": {
-        "chars": 469,
+        "chars": 364,
         "tokens": {
-          "gpt2": 213,
-          "llama": 249,
-          "qwen2.5": 221,
-          "phi4": 193
+          "gpt2": 173,
+          "llama": 214,
+          "qwen2.5": 191,
+          "phi4": 163
         }
       }
     },

@@ -26,17 +26,23 @@ class HeaderElement:
 
     name: str
     type: str = "value"  # "value", "dict", "list"
-    schema: list[str] = field(default_factory=list)
+    schema: list["HeaderElement"] = field(default_factory=list)
     has_sparse: bool = False
     list_type: str | None = None
     delimiter: str = "; "
     sparse_indicator: str = "..."
 
+    @property
+    def schema_keys(self) -> set[str]:
+        """Get the set of key names in the schema."""
+        return {el.name for el in self.schema}
+
     def to_string(self) -> str:
         if self.type == "value":
             return self.name
 
-        schema_str = self.delimiter.join(self.schema)
+        # Recursively render child elements
+        schema_str = self.delimiter.join(el.to_string() for el in self.schema)
         if self.has_sparse:
             schema_str = f"{schema_str}{self.delimiter}{self.sparse_indicator}" if schema_str else self.sparse_indicator
 
@@ -78,10 +84,12 @@ def _create_header_element(key: str, items: list[dict], cfg: Config) -> HeaderEl
 
     if all(isinstance(v, dict) for v in values):
         analysis = _analyze_keys(values, cfg.sparsity_threshold)
+        # Recursively create HeaderElements for each schema key
+        nested_schema = [_create_header_element(k, values, cfg) for k in analysis.common]
         return HeaderElement(
             name=key,
             type="dict",
-            schema=analysis.common,
+            schema=nested_schema,
             has_sparse=analysis.has_sparse,
             delimiter=delim,
             sparse_indicator=sparse,
@@ -91,11 +99,13 @@ def _create_header_element(key: str, items: list[dict], cfg: Config) -> HeaderEl
         all_items = [x for sublist in values for x in sublist]
         if all_items and all(isinstance(x, dict) for x in all_items):
             analysis = _analyze_keys(all_items, cfg.sparsity_threshold)
+            # Recursively create HeaderElements for list of dicts
+            nested_schema = [_create_header_element(k, all_items, cfg) for k in analysis.common]
             return HeaderElement(
                 name=key,
                 type="list",
                 list_type="dict",
-                schema=analysis.common,
+                schema=nested_schema,
                 has_sparse=analysis.has_sparse,
                 delimiter=delim,
                 sparse_indicator=sparse,
@@ -125,11 +135,11 @@ def _format_dict(data: dict, element: HeaderElement, cfg: Config) -> str:
     if not data:
         return "{}"
 
-    common_values = [_normalize(data.get(key, "")) for key in element.schema]
+    # Recursively format each child element
+    common_values = [_format_value(data.get(child.name), child, cfg) for child in element.schema]
     sparse_pairs = []
     if element.has_sparse:
-        schema_keys = set(element.schema)
-        sparse_pairs = [f"{k}:{_normalize(v)}" for k, v in data.items() if k not in schema_keys]
+        sparse_pairs = [f"{k}:{_normalize(v)}" for k, v in data.items() if k not in element.schema_keys]
 
     content = cfg.spaced_delimiter.join(common_values + sparse_pairs)
     return f"{cfg.dict_open}{content}}}"

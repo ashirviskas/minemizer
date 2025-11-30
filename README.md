@@ -183,8 +183,8 @@ _Last updated: 2025-11-30_
 | CSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
 | TSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
 | YAML | 4.1 | 4.0 | 4.3 | 4.5 | 4.1 | 4.2 |
-| minemizer | **6.1** | **8.1** | **8.7** | **10.1** | **7.4** | **8.1** |
-| minemizer (compact) | 6.0 | 8.0 | 8.4 | 9.2 | 7.2 | 7.8 |
+| minemizer | **7.4** | **8.1** | **8.7** | **10.1** | **7.4** | **8.3** |
+| minemizer (compact) | 7.1 | 8.0 | 8.4 | 9.2 | 7.2 | 8.0 |
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._
 
