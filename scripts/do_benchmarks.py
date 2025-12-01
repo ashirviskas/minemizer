@@ -47,8 +47,8 @@ FORMATS = [
     "tson",
     "minemizer",
     "minemizer_compact",
-    "minemizer_33",
-    "minemizer_compact_33",
+    # "minemizer_33",
+    # "minemizer_compact_33",
 ]
 
 FORMAT_LABELS = {

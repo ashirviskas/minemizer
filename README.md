@@ -188,16 +188,14 @@ _Last updated: 2025-12-01_
 | Format | flat | nested | lists | sparse | complex | books | countries | large_mixed | large_numerical | large_text | mcp_tools | avg |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | JSON (pretty) | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x |
-| JSON (min) | 2.1x | 2.2x | 2.4x | 2.1x | 2.2x | 1.5x | 1.5x | 2.1x | 1.7x | 1.7x | 2.3x | 2.0x |
+| JSON (min) | 2.1x | 2.3x | 2.4x | 2.0x | 2.2x | 1.5x | 1.5x | 2.1x | 1.7x | 1.7x | 2.3x | 2.0x |
 | CSV | 3.4x | ✗ | ✗ | ✗ | ✗ | 2.0x | ✗ | ✗ | ✗ | ✗ | ✗ | 2.7x\*\* |
 | TSV | 3.4x | ✗ | ✗ | ✗ | ✗ | 2.0x | ✗ | ✗ | ✗ | ✗ | ✗ | 2.7x\*\* |
 | YAML | 1.8x | 1.8x | 1.8x | 1.8x | 1.7x | 1.3x | 2.1x | 1.7x | 1.4x | 1.5x | 1.5x | 1.7x |
-| TOON | 3.2x | 1.6x | 1.9x | 1.6x | 1.6x | 2.0x | 2.0x | 1.5x | 1.3x | 1.5x | 1.5x | 1.8x |
-| TSON | 3.6x | 3.3x | 3.7x | 2.1x | 2.6x | 2.0x | 2.9x | 1.9x | 1.7x | 1.6x | 2.4x | 2.5x |
-| minemizer | **4.1x** | **3.6x** | **3.7x** | **3.5x** | 3.1x | 2.0x | 3.7x | 2.4x | 1.8x | 2.2x | 2.9x | **3.0x** |
-| minemizer (compact) | 3.7x | 3.4x | 3.6x | 3.2x | 3.0x | **2.1x** | 3.6x | 2.4x | **1.9x** | 2.1x | **2.9x** | 2.9x |
-| minemizer (33%) | **4.1x** | **3.6x** | **3.7x** | 3.3x | **3.1x** | 2.0x | **3.7x** | **2.4x** | 1.8x | **2.2x** | 2.9x | 3.0x |
-| compact (33%) | 3.7x | 3.4x | 3.6x | 3.3x | 3.1x | **2.1x** | 3.6x | 2.4x | **1.9x** | 2.1x | **2.9x** | 2.9x |
+| TOON | 3.2x | 1.7x | 1.9x | 1.6x | 1.6x | 2.0x | 2.0x | 1.5x | 1.3x | 1.5x | 1.5x | 1.8x |
+| TSON | 3.6x | 3.4x | 3.7x | 2.0x | 2.6x | 2.0x | 2.9x | 1.9x | 1.7x | 1.6x | 2.4x | 2.5x |
+| minemizer | **4.1x** | **3.5x** | **3.7x** | **3.4x** | **3.1x** | 2.0x | **3.7x** | **2.4x** | 1.8x | **2.2x** | 2.9x | **3.0x** |
+| minemizer (compact) | 3.7x | 3.4x | 3.6x | 3.3x | 3.0x | **2.1x** | 3.6x | 2.4x | **1.9x** | 2.1x | **2.9x** | 2.9x |
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._
 

@@ -43,7 +43,7 @@ EXAMPLES = [
             {"id": 1, "name": "Erik", "department": "Engineering"},
             {"id": 2, "name": "Rachel", "department": "Design", "remote": True},
             {"id": 3, "name": "Hans"},
-            {"id": 4, "name": "Kenji", "department": "Sales", "slack": "@kenji"},
+            {"id": 4, "name": "Kenji", "department": "Sales", "slack": "@kenji", "remote": False},
             {"id": 5, "name": "Mai", "remote": True},
             {"id": 6, "name": "Tom", "department": "Engineering"},
         ],

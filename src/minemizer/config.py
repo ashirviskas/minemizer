@@ -57,8 +57,10 @@ class Config:
             return text
 
         d = self.spaced_delimiter
+        d_non_spaced = self.delimiter
         kv = self.spaced_kv_separator
         openers = [self.dict_open, self.list_open]
+        closers = [self.dict_close, self.list_close]
 
         # Token optimizations: ": true" → ":true" etc (single tokens in most tokenizers)
         if self.common_optimizations:
@@ -66,18 +68,17 @@ class Config:
                 text = text.replace(f"{kv}{val}", f":{val}")
                 text = text.replace(f"{d}{val}", f"{d.rstrip()}{val}")
 
-        # Fix: "; ;" → ";;" and "; {" → ";{" and "; [" → ";["
-        for suffix in [d.lstrip()] + openers:
-            text = text.replace(d + suffix, d.rstrip() + suffix)
+        all_stuff = [d, d_non_spaced, kv] + openers + closers
+        # Fix: "; ;" → ";;" and "; {" → ";{" and "; [" → ";[" and "[ ;" → "[;" etc"
+        for stuff_a in all_stuff:
+            stuff_a_stripped = stuff_a.strip()
+            for stuff_b in all_stuff:
+                stuff_b_stripped = stuff_b.strip()
+                # May be dumb, but it works.
+                text = text.replace(f"{stuff_a_stripped}  {stuff_b_stripped}", f"{stuff_a_stripped} {stuff_b_stripped}")
+                text = text.replace(f"{stuff_a_stripped} {stuff_b_stripped}", f"{stuff_a_stripped}{stuff_b_stripped}")
 
-        # Fix: ": {" → ":{" and ": [" → ":[" (kv separator before opener)
-        for opener in openers:
-            text = text.replace(kv + opener, kv.rstrip() + opener)
-
-        # Fix: "[ {" → "[{" and "{ [" → "{[" etc (opener after opener)
-        for op1 in openers:
-            for op2 in openers:
-                text = text.replace(op1 + op2, op1.rstrip() + op2)
+        text = text.replace(" \n", "\n")
 
         return text
 

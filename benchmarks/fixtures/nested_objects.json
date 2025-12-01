@@ -1,8 +1,38 @@
 [
-  {"id": 1, "user": {"name": "Alice", "email": "alice@example.com"}, "status": "active"},
-  {"id": 2, "user": {"name": "Bob", "email": "bob@example.com"}, "status": "inactive"},
-  {"id": 3, "user": {"name": "Carol", "email": "carol@example.com"}, "status": "active"},
-  {"id": 4, "user": {"name": "David", "email": "david@example.com"}, "status": "pending"},
-  {"id": 5, "user": {"name": "Eva", "email": "eva@example.com"}, "status": "active"},
-  {"id": 6, "user": {"name": "Frank", "email": "frank@example.com"}, "status": "active"}
+  {
+    "id": "u1",
+    "name": "Lukas",
+    "location": {"office": "Kaunas HQ", "floor": 12},
+    "skills": ["python", "kubernetes"]
+  },
+  {
+    "id": "u2",
+    "name": "Emma",
+    "location": {"office": "Boston Hub", "floor": 7},
+    "skills": ["react", "typescript", "graphql"]
+  },
+  {
+    "id": "u3",
+    "name": "Pierre",
+    "location": {"office": "Paris Office", "floor": 3},
+    "skills": ["rust"]
+  },
+  {
+    "id": "u4",
+    "name": "Hana",
+    "location": {"office": "Tokyo Tower", "floor": 15},
+    "skills": ["go", "docker"]
+  },
+  {
+    "id": "u5",
+    "name": "Wei",
+    "location": {"office": "Taipei Center", "floor": 8},
+    "skills": ["java", "spring"]
+  },
+  {
+    "id": "u6",
+    "name": "Charlotte",
+    "location": {"office": "London Bridge", "floor": 5},
+    "skills": ["python", "django"]
+  }
 ]

@@ -19,8 +19,6 @@ Original size (JSON pretty): **763 chars**
 | TSON | 229 | 90 | 95 | 80 | 85 | 87.5 | 8.7 |
 | minemizer | 251 | 74 | 83 | 72 | 74 | 75.8 | 10.1 |
 | minemizer (compact) | 224 | 85 | 91 | 77 | 82 | 83.8 | 9.1 |
-| minemizer (33%) | 251 | 74 | 83 | 72 | 74 | 75.8 | 10.1 |
-| compact (33%) | 224 | 85 | 91 | 77 | 82 | 83.8 | 9.1 |
 
 ### Serialized outputs
 
@@ -159,87 +157,59 @@ id;name;role;department
 8;Henry;Manager;Engineering
 ```
 
-**minemizer (33%)** (251 chars, 76 tokens):
-```txt
-id; name; role; department
-1; Alice; Engineer; Backend
-2; Bob; Designer; Frontend
-3; Carol; Manager; Product
-4; David; Engineer; Infrastructure
-5; Eva; Analyst; Data
-6; Frank; Engineer; Backend
-7; Grace; Designer; Mobile
-8; Henry; Manager; Engineering
-```
-
-**compact (33%)** (224 chars, 84 tokens):
-```txt
-id;name;role;department
-1;Alice;Engineer;Backend
-2;Bob;Designer;Frontend
-3;Carol;Manager;Product
-4;David;Engineer;Infrastructure
-5;Eva;Analyst;Data
-6;Frank;Engineer;Backend
-7;Grace;Designer;Mobile
-8;Henry;Manager;Engineering
-```
-
 ---
 
 ## nested_objects.json
 
-Original size (JSON pretty): **741 chars**
+Original size (JSON pretty): **1039 chars**
 
 | Format | Chars | gpt2 | llama | qwen2.5 | Deepseek-V3.2 | Avg Tokens | Orig/Token |
 |---|---|---|---|---|---|---|---|
-| JSON (pretty) | 741 | 407 | 322 | 252 | 261 | 310.5 | 2.4 |
-| JSON (min) | 470 | 143 | 159 | 127 | 147 | 144.0 | 5.1 |
+| JSON (pretty) | 1039 | 590 | 435 | 348 | 348 | 430.2 | 2.4 |
+| JSON (min) | 618 | 188 | 211 | 174 | 186 | 189.8 | 5.5 |
 | CSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | TSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
-| YAML | 463 | 195 | 182 | 158 | 166 | 175.2 | 4.2 |
-| TOON | 527 | 252 | 191 | 166 | 174 | 195.8 | 3.8 |
-| TSON | 249 | 101 | 104 | 75 | 93 | 93.2 | 7.9 |
-| minemizer | 253 | 90 | 95 | 77 | 85 | 86.8 | 8.5 |
-| minemizer (compact) | 231 | 95 | 100 | 77 | 88 | 90.0 | 8.2 |
-| minemizer (33%) | 253 | 90 | 95 | 77 | 85 | 86.8 | 8.5 |
-| compact (33%) | 231 | 95 | 100 | 77 | 88 | 90.0 | 8.2 |
+| YAML | 629 | 264 | 246 | 229 | 227 | 241.5 | 4.3 |
+| TOON | 675 | 315 | 238 | 223 | 223 | 249.8 | 4.2 |
+| TSON | 306 | 136 | 141 | 110 | 123 | 127.5 | 8.1 |
+| minemizer | 325 | 126 | 132 | 121 | 119 | 124.5 | 8.3 |
+| minemizer (compact) | 290 | 132 | 139 | 117 | 118 | 126.5 | 8.2 |
 
 ### Serialized outputs
 
-**JSON (pretty)** (741 chars, 310 tokens):
+**JSON (pretty)** (1039 chars, 430 tokens):
 ```json
 [
   {
-    "id": 1,
-    "user": {
-      "name": "Alice",
-      "email": "alice@example.com"
+    "id": "u1",
+    "name": "Lukas",
+    "location": {
+      "office": "Kaunas HQ",
+      "floor": 12
     },
-    "status": "active"
+    "skills": [
+      "python",
+      "kubernetes"
+    ]
   },
   {
-    "id": 2,
-    "user": {
-      "name": "Bob",
-      "email": "bob@example.com"
+    "id": "u2",
+    "name": "Emma",
+    "location": {
+      "office": "Boston Hub",
+      "floor": 7
     },
-    "status": "inactive"
-  },
-  {
-    "id": 3,
-    "user": {
-      "name": "Carol",
-      "email": "carol@example.com"
-    },
-    "status": "active"
-  },
+    "skills": [
+      "react",
+      "typescript",
+      "graphql"
+    ]
 ... (truncated)
 ```
 
-**JSON (min)** (470 chars, 144 tokens):
+**JSON (min)** (618 chars, 190 tokens):
 ```json
-[{"id":1,"user":{"name":"Alice","email":"alice@example.com"},"status":"active"},{"id":2,"user":{"name":"Bob","email":"bob@example.com"},"status":"inactive"},{"id":3,"user":{"name":"Carol","email":"carol@example.com"},"status":"active"},{"id":4,"user":{"name":"David","email":"david@example.com"},"status":"pending"},{"id":5,"user":{"name":"Eva","email":"eva@example.com"},"status":"active"},{"id":6,"user":{"name":"Frank","email":"frank@example.com"},"status":"active"}]
+[{"id":"u1","name":"Lukas","location":{"office":"Kaunas HQ","floor":12},"skills":["python","kubernetes"]},{"id":"u2","name":"Emma","location":{"office":"Boston Hub","floor":7},"skills":["react","typescript","graphql"]},{"id":"u3","name":"Pierre","location":{"office":"Paris Office","floor":3},"skills":["rust"]},{"id":"u4","name":"Hana","location":{"office":"Tokyo Tower","floor":15},"skills":["go","docker"]},{"id":"u5","name":"Wei","location":{"office":"Taipei Center","floor":8},"skills":["java","spring"]},{"id":"u6","name":"Charlotte","location":{"office":"London Bridge","floor":5},"skills":["python","django"]}]
 ```
 
 **CSV:** N/A
@@ -252,113 +222,91 @@ N/A - format cannot represent this data
 N/A - format cannot represent this data
 ```
 
-**YAML** (463 chars, 175 tokens):
+**YAML** (629 chars, 242 tokens):
 ```yaml
-- id: 1
-  status: active
-  user:
-    email: alice@example.com
-    name: Alice
-- id: 2
-  status: inactive
-  user:
-    email: bob@example.com
-    name: Bob
-- id: 3
-  status: active
-  user:
-    email: carol@example.com
-    name: Carol
-- id: 4
-  status: pending
-  user:
-    email: david@example.com
-    name: David
-- id: 5
-  status: active
-  user:
-    email: eva@example.com
-    name: Eva
+- id: u1
+  location:
+    floor: 12
+    office: Kaunas HQ
+  name: Lukas
+  skills:
+  - python
+  - kubernetes
+- id: u2
+  location:
+    floor: 7
+    office: Boston Hub
+  name: Emma
+  skills:
+  - react
+  - typescript
+  - graphql
+- id: u3
+  location:
+    floor: 3
+    office: Paris Office
+  name: Pierre
+  skills:
+  - rust
+- id: u4
 ... (truncated)
 ```
 
-**TOON** (527 chars, 196 tokens):
+**TOON** (675 chars, 250 tokens):
 ```toon
 [6]:
-  - id: 1
-    user:
-      name: Alice
-      email: alice@example.com
-    status: active
-  - id: 2
-    user:
-      name: Bob
-      email: bob@example.com
-    status: inactive
-  - id: 3
-    user:
-      name: Carol
-      email: carol@example.com
-    status: active
-  - id: 4
-    user:
-      name: David
-      email: david@example.com
-    status: pending
-  - id: 5
-    user:
-      name: Eva
-      email: eva@example.com
+  - id: u1
+    name: Lukas
+    location:
+      office: Kaunas HQ
+      floor: 12
+    skills[2]: python,kubernetes
+  - id: u2
+    name: Emma
+    location:
+      office: Boston Hub
+      floor: 7
+    skills[3]: react,typescript,graphql
+  - id: u3
+    name: Pierre
+    location:
+      office: Paris Office
+      floor: 3
+    skills[1]: rust
+  - id: u4
+    name: Hana
+    location:
+      office: Tokyo Tower
+      floor: 15
+    skills[2]: go,docker
 ... (truncated)
 ```
 
-**TSON** (249 chars, 93 tokens):
+**TSON** (306 chars, 128 tokens):
 ```tson
-{@id,user(@name,email),status#6|1,{Alice,"alice@example.com"},active|2,{Bob,"bob@example.com"},inactive|3,{Carol,"carol@example.com"},active|4,{David,"david@example.com"},pending|5,{Eva,"eva@example.com"},active|6,{Frank,"frank@example.com"},active}
+{@id,name,location(@office,floor),skills#6|u1,Lukas,{"Kaunas HQ",12},[python,kubernetes]|u2,Emma,{"Boston Hub",7},[react,typescript,graphql]|u3,Pierre,{"Paris Office",3},[rust]|u4,Hana,{"Tokyo Tower",15},[go,docker]|u5,Wei,{"Taipei Center",8},[java,spring]|u6,Charlotte,{"London Bridge",5},[python,django]}
 ```
 
-**minemizer** (253 chars, 87 tokens):
+**minemizer** (325 chars, 124 tokens):
 ```txt
-id; user{ name; email}; status
-1;{ Alice; alice@example.com}; active
-2;{ Bob; bob@example.com}; inactive
-3;{ Carol; carol@example.com}; active
-4;{ David; david@example.com}; pending
-5;{ Eva; eva@example.com}; active
-6;{ Frank; frank@example.com}; active
+id; name; location{ office; floor}; skills[]
+u1; Lukas;{ Kaunas HQ; 12};[ python; kubernetes]
+u2; Emma;{ Boston Hub; 7};[ react; typescript; graphql]
+u3; Pierre;{ Paris Office; 3};[ rust]
+u4; Hana;{ Tokyo Tower; 15};[ go; docker]
+u5; Wei;{ Taipei Center; 8};[ java; spring]
+u6; Charlotte;{ London Bridge; 5};[ python; django]
 ```
 
-**minemizer (compact)** (231 chars, 90 tokens):
+**minemizer (compact)** (290 chars, 126 tokens):
 ```txt
-id;user{name;email};status
-1;{Alice;alice@example.com};active
-2;{Bob;bob@example.com};inactive
-3;{Carol;carol@example.com};active
-4;{David;david@example.com};pending
-5;{Eva;eva@example.com};active
-6;{Frank;frank@example.com};active
-```
-
-**minemizer (33%)** (253 chars, 87 tokens):
-```txt
-id; user{ name; email}; status
-1;{ Alice; alice@example.com}; active
-2;{ Bob; bob@example.com}; inactive
-3;{ Carol; carol@example.com}; active
-4;{ David; david@example.com}; pending
-5;{ Eva; eva@example.com}; active
-6;{ Frank; frank@example.com}; active
-```
-
-**compact (33%)** (231 chars, 90 tokens):
-```txt
-id;user{name;email};status
-1;{Alice;alice@example.com};active
-2;{Bob;bob@example.com};inactive
-3;{Carol;carol@example.com};active
-4;{David;david@example.com};pending
-5;{Eva;eva@example.com};active
-6;{Frank;frank@example.com};active
+id;name;location{office;floor};skills[]
+u1;Lukas;{Kaunas HQ;12};[python;kubernetes]
+u2;Emma;{Boston Hub;7};[react;typescript;graphql]
+u3;Pierre;{Paris Office;3};[rust]
+u4;Hana;{Tokyo Tower;15};[go;docker]
+u5;Wei;{Taipei Center;8};[java;spring]
+u6;Charlotte;{London Bridge;5};[python;django]
 ```
 
 ---
@@ -378,8 +326,6 @@ Original size (JSON pretty): **610 chars**
 | TSON | 168 | 80 | 79 | 65 | 77 | 75.2 | 8.1 |
 | minemizer | 188 | 81 | 79 | 71 | 67 | 74.5 | 8.2 |
 | minemizer (compact) | 165 | 83 | 83 | 70 | 70 | 76.5 | 8.0 |
-| minemizer (33%) | 188 | 81 | 79 | 71 | 67 | 74.5 | 8.2 |
-| compact (33%) | 165 | 83 | 83 | 70 | 70 | 76.5 | 8.0 |
 
 ### Serialized outputs
 
@@ -508,83 +454,59 @@ id;name;skills[]
 6;Frank;[swift]
 ```
 
-**minemizer (33%)** (188 chars, 74 tokens):
-```txt
-id; name; skills[]
-1; Alice;[ python; go; rust]
-2; Bob;[ javascript; typescript]
-3; Carol;[ java; kotlin; scala; groovy]
-4; David;[ c; cpp]
-5; Eva;[ ruby; elixir; erlang]
-6; Frank;[ swift]
-```
-
-**compact (33%)** (165 chars, 76 tokens):
-```txt
-id;name;skills[]
-1;Alice;[python;go;rust]
-2;Bob;[javascript;typescript]
-3;Carol;[java;kotlin;scala;groovy]
-4;David;[c;cpp]
-5;Eva;[ruby;elixir;erlang]
-6;Frank;[swift]
-```
-
 ---
 
 ## sparse_data.json
 
-Original size (JSON pretty): **589 chars**
+Original size (JSON pretty): **611 chars**
 
 | Format | Chars | gpt2 | llama | qwen2.5 | Deepseek-V3.2 | Avg Tokens | Orig/Token |
 |---|---|---|---|---|---|---|---|
-| JSON (pretty) | 589 | 318 | 278 | 224 | 225 | 261.2 | 2.3 |
-| JSON (min) | 378 | 121 | 133 | 114 | 121 | 122.2 | 4.8 |
+| JSON (pretty) | 611 | 323 | 285 | 227 | 228 | 265.8 | 2.3 |
+| JSON (min) | 400 | 131 | 146 | 121 | 125 | 130.8 | 4.7 |
 | CSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | TSV | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
-| YAML | 356 | 135 | 150 | 143 | 143 | 142.8 | 4.1 |
-| TOON | 414 | 184 | 161 | 153 | 153 | 162.8 | 3.6 |
-| TSON | 300 | 136 | 133 | 109 | 112 | 122.5 | 4.8 |
-| minemizer | 233 | 75 | 82 | 71 | 74 | 75.5 | 7.8 |
-| minemizer (compact) | 207 | 84 | 90 | 74 | 78 | 81.5 | 7.2 |
-| minemizer (33%) | 227 | 78 | 85 | 75 | 75 | 78.2 | 7.5 |
-| compact (33%) | 198 | 83 | 89 | 73 | 76 | 80.2 | 7.3 |
+| YAML | 384 | 145 | 158 | 149 | 149 | 150.2 | 4.1 |
+| TOON | 438 | 190 | 167 | 159 | 159 | 168.8 | 3.6 |
+| TSON | 328 | 146 | 145 | 113 | 116 | 130.0 | 4.7 |
+| minemizer | 207 | 78 | 85 | 75 | 75 | 78.2 | 7.8 |
+| minemizer (compact) | 184 | 85 | 91 | 74 | 76 | 81.5 | 7.5 |
 
 ### Serialized outputs
 
-**JSON (pretty)** (589 chars, 261 tokens):
+**JSON (pretty)** (611 chars, 266 tokens):
 ```json
 [
   {
     "id": 1,
-    "name": "Carol",
-    "role": "Manager"
+    "name": "Erik",
+    "department": "Engineering"
   },
   {
     "id": 2,
-    "name": "Dave",
+    "name": "Rachel",
+    "department": "Design",
     "remote": true
   },
   {
     "id": 3,
-    "name": "Eve",
-    "role": "Designer",
-    "team": "UX"
+    "name": "Hans"
   },
   {
     "id": 4,
-    "name": "Frank",
-    "department": "Engineering"
+    "name": "Kenji",
+    "department": "Sales",
+    "slack": "@kenji",
+    "remote": false
   },
   {
     "id": 5,
-    "name": "Grace",
 ... (truncated)
 ```
 
-**JSON (min)** (378 chars, 122 tokens):
+**JSON (min)** (400 chars, 131 tokens):
 ```json
-[{"id":1,"name":"Carol","role":"Manager"},{"id":2,"name":"Dave","remote":true},{"id":3,"name":"Eve","role":"Designer","team":"UX"},{"id":4,"name":"Frank","department":"Engineering"},{"id":5,"name":"Grace","role":"Engineer","remote":true,"team":"Platform"},{"id":6,"name":"Henry","role":"Analyst"},{"id":7,"name":"Ivy"},{"id":8,"name":"Jack","department":"Sales","remote":false}]
+[{"id":1,"name":"Erik","department":"Engineering"},{"id":2,"name":"Rachel","department":"Design","remote":true},{"id":3,"name":"Hans"},{"id":4,"name":"Kenji","department":"Sales","slack":"@kenji","remote":false},{"id":5,"name":"Mai","remote":true},{"id":6,"name":"Tom","department":"Engineering"},{"id":7,"name":"Priya","slack":"@priya","remote":true},{"id":8,"name":"Nina","department":"Marketing"}]
 ```
 
 **CSV:** N/A
@@ -597,121 +519,95 @@ N/A - format cannot represent this data
 N/A - format cannot represent this data
 ```
 
-**YAML** (356 chars, 143 tokens):
+**YAML** (384 chars, 150 tokens):
 ```yaml
-- id: 1
-  name: Carol
-  role: Manager
-- id: 2
-  name: Dave
+- department: Engineering
+  id: 1
+  name: Erik
+- department: Design
+  id: 2
+  name: Rachel
   remote: true
 - id: 3
-  name: Eve
-  role: Designer
-  team: UX
-- department: Engineering
-  id: 4
-  name: Frank
-- id: 5
-  name: Grace
-  remote: true
-  role: Engineer
-  team: Platform
-- id: 6
-  name: Henry
-  role: Analyst
-- id: 7
-  name: Ivy
+  name: Hans
 - department: Sales
-  id: 8
+  id: 4
+  name: Kenji
+  remote: false
+  slack: '@kenji'
+- id: 5
+  name: Mai
+  remote: true
+- department: Engineering
+  id: 6
+  name: Tom
+- id: 7
+  name: Priya
+  remote: true
+  slack: '@priya'
+- department: Marketing
 ... (truncated)
 ```
 
-**TOON** (414 chars, 163 tokens):
+**TOON** (438 chars, 169 tokens):
 ```toon
 [8]:
   - id: 1
-    name: Carol
-    role: Manager
+    name: Erik
+    department: Engineering
   - id: 2
-    name: Dave
+    name: Rachel
+    department: Design
     remote: true
   - id: 3
-    name: Eve
-    role: Designer
-    team: UX
+    name: Hans
   - id: 4
-    name: Frank
-    department: Engineering
+    name: Kenji
+    department: Sales
+    slack: @kenji
+    remote: false
   - id: 5
-    name: Grace
-    role: Engineer
+    name: Mai
     remote: true
-    team: Platform
   - id: 6
-    name: Henry
-    role: Analyst
+    name: Tom
+    department: Engineering
   - id: 7
-    name: Ivy
-  - id: 8
+    name: Priya
+    slack: @priya
+    remote: true
 ... (truncated)
 ```
 
-**TSON** (300 chars, 122 tokens):
+**TSON** (328 chars, 130 tokens):
 ```tson
-[{@id,name,role|1,Carol,Manager},{@id,name,remote|2,Dave,true},{@id,name,role,team|3,Eve,Designer,UX},{@id,name,department|4,Frank,Engineering},{@id,name,role,remote,team|5,Grace,Engineer,true,Platform},{@id,name,role|6,Henry,Analyst},{@id,name|7,Ivy},{@id,name,department,remote|8,Jack,Sales,false}]
+[{@id,name,department|1,Erik,Engineering},{@id,name,department,remote|2,Rachel,Design,true},{@id,name|3,Hans},{@id,name,department,slack,remote|4,Kenji,Sales,"@kenji",false},{@id,name,remote|5,Mai,true},{@id,name,department|6,Tom,Engineering},{@id,name,slack,remote|7,Priya,"@priya",true},{@id,name,department|8,Nina,Marketing}]
 ```
 
-**minemizer** (233 chars, 76 tokens):
+**minemizer** (207 chars, 78 tokens):
 ```txt
-id; name; role
-1; Carol; Manager
-2; Dave;; remote:true
-3; Eve; Designer; team: UX
-4; Frank;; department: Engineering
-5; Grace; Engineer; remote:true; team: Platform
-6; Henry; Analyst
-7; Ivy; 
-8; Jack;; department: Sales; remote:false
+id; name; department; remote
+1; Erik; Engineering; 
+2; Rachel; Design;true
+3; Hans;; 
+4; Kenji; Sales;false; slack: @kenji
+5; Mai;;true
+6; Tom; Engineering; 
+7; Priya;;true; slack: @priya
+8; Nina; Marketing;
 ```
 
-**minemizer (compact)** (207 chars, 82 tokens):
+**minemizer (compact)** (184 chars, 82 tokens):
 ```txt
-id;name;role
-1;Carol;Manager
-2;Dave;;remote:true
-3;Eve;Designer;team:UX
-4;Frank;;department:Engineering
-5;Grace;Engineer;remote:true;team:Platform
-6;Henry;Analyst
-7;Ivy;
-8;Jack;;department:Sales;remote:false
-```
-
-**minemizer (33%)** (227 chars, 78 tokens):
-```txt
-id; name; role; remote
-1; Carol; Manager; 
-2; Dave; ;true
-3; Eve; Designer;; team: UX
-4; Frank;; ; department: Engineering
-5; Grace; Engineer;true; team: Platform
-6; Henry; Analyst; 
-7; Ivy;; 
-8; Jack; ;false; department: Sales
-```
-
-**compact (33%)** (198 chars, 80 tokens):
-```txt
-id;name;role;remote
-1;Carol;Manager;
-2;Dave;;true
-3;Eve;Designer;;team:UX
-4;Frank;;;department:Engineering
-5;Grace;Engineer;true;team:Platform
-6;Henry;Analyst;
-7;Ivy;;
-8;Jack;;false;department:Sales
+id;name;department;remote
+1;Erik;Engineering;
+2;Rachel;Design;true
+3;Hans;;
+4;Kenji;Sales;false;slack:@kenji
+5;Mai;;true
+6;Tom;Engineering;
+7;Priya;;true;slack:@priya
+8;Nina;Marketing;
 ```
 
 ---
@@ -731,8 +627,6 @@ Original size (JSON pretty): **1320 chars**
 | TSON | 453 | 207 | 237 | 203 | 193 | 210.0 | 6.3 |
 | minemizer | 403 | 157 | 203 | 193 | 160 | 178.2 | 7.4 |
 | minemizer (compact) | 361 | 173 | 214 | 190 | 158 | 183.8 | 7.2 |
-| minemizer (33%) | 395 | 156 | 202 | 192 | 159 | 177.2 | 7.4 |
-| compact (33%) | 352 | 169 | 210 | 186 | 154 | 179.8 | 7.3 |
 
 ### Serialized outputs
 
@@ -866,26 +760,6 @@ id;profile{name;location{city;country}};tags[];metadata{created;...}
 5;{Kate;{Berlin;Germany}};[admin];{2023-12-01;updated:2024-02-15}
 ```
 
-**minemizer (33%)** (395 chars, 177 tokens):
-```txt
-id; profile{ name; location{ city; country}}; tags[]; metadata{ created; updated}
-1;{ Grace;{ NYC; USA}};[ admin; verified];{ 2024-01-15; }
-2;{ Henry;{ London; UK}};[ user];{ 2024-02-20; 2024-03-10}
-3;{ Ivy;{ Tokyo; Japan}};[ moderator; verified; premium];{ 2024-01-05; }
-4;{ Jack;{ Sydney; Australia}};[ user; new];{ 2024-04-01; }
-5;{ Kate;{ Berlin; Germany}};[ admin];{ 2023-12-01; 2024-02-15}
-```
-
-**compact (33%)** (352 chars, 180 tokens):
-```txt
-id;profile{name;location{city;country}};tags[];metadata{created;updated}
-1;{Grace;{NYC;USA}};[admin;verified];{2024-01-15;}
-2;{Henry;{London;UK}};[user];{2024-02-20;2024-03-10}
-3;{Ivy;{Tokyo;Japan}};[moderator;verified;premium];{2024-01-05;}
-4;{Jack;{Sydney;Australia}};[user;new];{2024-04-01;}
-5;{Kate;{Berlin;Germany}};[admin];{2023-12-01;2024-02-15}
-```
-
 ---
 
 ## books.json
@@ -901,10 +775,8 @@ Original size (JSON pretty): **27902 chars**
 | YAML | 22400 | 8081 | 8859 | 7605 | 7158 | 7925.8 | 3.5 |
 | TOON | 14277 | 5388 | 6172 | 4866 | 4434 | 5215.0 | 5.4 |
 | TSON | 14448 | 5433 | 6229 | 4845 | 4483 | 5247.5 | 5.3 |
-| minemizer | 14462 | 5156 | 6046 | 4978 | 4521 | 5175.2 | 5.4 |
+| minemizer | 14460 | 5154 | 6044 | 4976 | 4519 | 5173.2 | 5.4 |
 | minemizer (compact) | 13755 | 5262 | 6058 | 4847 | 4386 | 5138.2 | 5.4 |
-| minemizer (33%) | 14462 | 5156 | 6046 | 4978 | 4521 | 5175.2 | 5.4 |
-| compact (33%) | 13755 | 5262 | 6058 | 4847 | 4386 | 5138.2 | 5.4 |
 
 ### Serialized outputs
 
@@ -1070,7 +942,7 @@ Jorge Luis Borges	Argentina	images/ficciones.jpg	Spanish	"https://en.wikipedia.o
 ... (truncated)
 ```
 
-**minemizer** (14462 chars, 5175 tokens):
+**minemizer** (14460 chars, 5173 tokens):
 ```txt
 author; country; imageLink; language; link; pages; title; year
 Chinua Achebe; Nigeria; images/things-fall-apart.jpg; English; https://en.wikipedia.org/wiki/Things_Fall_Apart
@@ -1130,66 +1002,6 @@ Jorge Luis Borges;Argentina;images/ficciones.jpg;Spanish;https://en.wikipedia.or
 ... (truncated)
 ```
 
-**minemizer (33%)** (14462 chars, 5175 tokens):
-```txt
-author; country; imageLink; language; link; pages; title; year
-Chinua Achebe; Nigeria; images/things-fall-apart.jpg; English; https://en.wikipedia.org/wiki/Things_Fall_Apart
-; 209; Things Fall Apart; 1958
-Hans Christian Andersen; Denmark; images/fairy-tales.jpg; Danish; https://en.wikipedia.org/wiki/Fairy_Tales_Told_for_Children._First_Collection.
-; 784; Fairy tales; 1836
-Dante Alighieri; Italy; images/the-divine-comedy.jpg; Italian; https://en.wikipedia.org/wiki/Divine_Comedy
-; 928; The Divine Comedy; 1315
-Unknown; Sumer and Akkadian Empire; images/the-epic-of-gilgamesh.jpg; Akkadian; https://en.wikipedia.org/wiki/Epic_of_Gilgamesh
-; 160; The Epic Of Gilgamesh; -1700
-Unknown; Achaemenid Empire; images/the-book-of-job.jpg; Hebrew; https://en.wikipedia.org/wiki/Book_of_Job
-; 176; The Book Of Job; -600
-Unknown; India/Iran/Iraq/Egypt/Tajikistan; images/one-thousand-and-one-nights.jpg; Arabic; https://en.wikipedia.org/wiki/One_Thousand_and_One_Nights
-; 288; One Thousand and One Nights; 1200
-Unknown; Iceland; images/njals-saga.jpg; Old Norse; https://en.wikipedia.org/wiki/Nj%C3%A1ls_saga
-; 384; Njál's Saga; 1350
-Jane Austen; United Kingdom; images/pride-and-prejudice.jpg; English; https://en.wikipedia.org/wiki/Pride_and_Prejudice
-; 226; Pride and Prejudice; 1813
-Honoré de Balzac; France; images/le-pere-goriot.jpg; French; https://en.wikipedia.org/wiki/Le_P%C3%A8re_Goriot
-; 443; Le Père Goriot; 1835
-Samuel Beckett; Republic of Ireland; images/molloy-malone-dies-the-unnamable.jpg; French, English; https://en.wikipedia.org/wiki/Molloy_(novel)
-; 256; Molloy, Malone Dies, The Unnamable, the trilogy; 1952
-Giovanni Boccaccio; Italy; images/the-decameron.jpg; Italian; https://en.wikipedia.org/wiki/The_Decameron
-; 1024; The Decameron; 1351
-Jorge Luis Borges; Argentina; images/ficciones.jpg; Spanish; https://en.wikipedia.org/wiki/Ficciones
-; 224; Ficciones; 1965
-... (truncated)
-```
-
-**compact (33%)** (13755 chars, 5138 tokens):
-```txt
-author;country;imageLink;language;link;pages;title;year
-Chinua Achebe;Nigeria;images/things-fall-apart.jpg;English;https://en.wikipedia.org/wiki/Things_Fall_Apart
-;209;Things Fall Apart;1958
-Hans Christian Andersen;Denmark;images/fairy-tales.jpg;Danish;https://en.wikipedia.org/wiki/Fairy_Tales_Told_for_Children._First_Collection.
-;784;Fairy tales;1836
-Dante Alighieri;Italy;images/the-divine-comedy.jpg;Italian;https://en.wikipedia.org/wiki/Divine_Comedy
-;928;The Divine Comedy;1315
-Unknown;Sumer and Akkadian Empire;images/the-epic-of-gilgamesh.jpg;Akkadian;https://en.wikipedia.org/wiki/Epic_of_Gilgamesh
-;160;The Epic Of Gilgamesh;-1700
-Unknown;Achaemenid Empire;images/the-book-of-job.jpg;Hebrew;https://en.wikipedia.org/wiki/Book_of_Job
-;176;The Book Of Job;-600
-Unknown;India/Iran/Iraq/Egypt/Tajikistan;images/one-thousand-and-one-nights.jpg;Arabic;https://en.wikipedia.org/wiki/One_Thousand_and_One_Nights
-;288;One Thousand and One Nights;1200
-Unknown;Iceland;images/njals-saga.jpg;Old Norse;https://en.wikipedia.org/wiki/Nj%C3%A1ls_saga
-;384;Njál's Saga;1350
-Jane Austen;United Kingdom;images/pride-and-prejudice.jpg;English;https://en.wikipedia.org/wiki/Pride_and_Prejudice
-;226;Pride and Prejudice;1813
-Honoré de Balzac;France;images/le-pere-goriot.jpg;French;https://en.wikipedia.org/wiki/Le_P%C3%A8re_Goriot
-;443;Le Père Goriot;1835
-Samuel Beckett;Republic of Ireland;images/molloy-malone-dies-the-unnamable.jpg;French, English;https://en.wikipedia.org/wiki/Molloy_(novel)
-;256;Molloy, Malone Dies, The Unnamable, the trilogy;1952
-Giovanni Boccaccio;Italy;images/the-decameron.jpg;Italian;https://en.wikipedia.org/wiki/The_Decameron
-;1024;The Decameron;1351
-Jorge Luis Borges;Argentina;images/ficciones.jpg;Spanish;https://en.wikipedia.org/wiki/Ficciones
-;224;Ficciones;1965
-... (truncated)
-```
-
 ---
 
 ## countries.json
@@ -1205,10 +1017,8 @@ Original size (JSON pretty): **1133948 chars**
 | YAML | 641939 | 345580 | 251610 | 219269 | 206630 | 255772.2 | 4.4 |
 | TOON | 691140 | 397301 | 246360 | 215450 | 202874 | 265496.2 | 4.3 |
 | TSON | 423383 | 210056 | 196499 | 158349 | 158553 | 180864.2 | 6.3 |
-| minemizer | 323309 | 166528 | 152319 | 133622 | 120164 | 143158.2 | 7.9 |
+| minemizer | 323130 | 166573 | 152369 | 133672 | 120114 | 143182.0 | 7.9 |
 | minemizer (compact) | 299485 | 170841 | 156354 | 133597 | 124199 | 146247.8 | 7.8 |
-| minemizer (33%) | 321447 | 166131 | 151922 | 133225 | 119767 | 142761.2 | 7.9 |
-| compact (33%) | 297663 | 170444 | 155868 | 133230 | 123829 | 145842.8 | 7.8 |
 
 ### Serialized outputs
 
@@ -1324,24 +1134,24 @@ N/A - format cannot represent this data
 ... (truncated)
 ```
 
-**minemizer** (323309 chars, 143158 tokens):
+**minemizer** (323130 chars, 143182 tokens):
 ```txt
 name{ common; official; native{ ...}}; tld[]; cca2; ccn3; cca3; cioc; independent; status; unMember; unRegionalGroup; currencies{ ...}; idd{ root; suffixes[]}; capital[]; altSpellings[]; region; subregion; languages{ ...}; translations{ ara{ official; common}; bre{ official; common}; ces{ official; common}; deu{ official; common}; est{ official; common}; fin{ official; common}; fra{ official; common}; hrv{ official; common}; hun{ official; common}; ita{ official; common}; jpn{ official; common}; kor{ official; common}; nld{ official; common}; per{ official; common}; pol{ official; common}; por{ official; common}; rus{ official; common}; slk{ official; common}; spa{ official; common}; srp{ official; common}; swe{ official; common}; tur{ official; common}; urd{ official; common}; zho{ official; common}}; latlng[]; landlocked; borders[]; area; flag; demonyms{ eng{ f; m}; fra{ f; m}}
-{ Aruba; Aruba;{ nld:{ official: Aruba; common: Aruba}; pap:{ official: Aruba; common: Aruba}}};[ .aw]; AW; 533; ABW; ARU;false; officially-assigned;false;;{ AWG:{ name: Aruban florin; symbol: ƒ}};{ +2;[ 97]};[ Oranjestad];[ AW]; Americas; Caribbean;{ nld: Dutch; pap: Papiamento};{{ أروبا; أروبا};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ アルバ; アルバ};{ 아루바; 아루바};{ Aruba; Aruba};{ آروبا; آروبا};{ Aruba; Aruba};{ Aruba; Aruba};{ Аруба; Аруба};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ اروبا; اروبا};{ 阿鲁巴; 阿鲁巴}};[ 12.5; -69.96666666];false; []; 180; 🇦🇼;{{ Aruban; Aruban};{ Arubaise; Arubais}}
+{ Aruba; Aruba;{ nld:{ official: Aruba; common: Aruba}; pap:{ official: Aruba; common: Aruba}}};[ .aw]; AW; 533; ABW; ARU;false; officially-assigned;false;;{ AWG:{ name: Aruban florin; symbol: ƒ}};{ +2;[ 97]};[ Oranjestad];[ AW]; Americas; Caribbean;{ nld: Dutch; pap: Papiamento};{{ أروبا; أروبا};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ アルバ; アルバ};{ 아루바; 아루바};{ Aruba; Aruba};{ آروبا; آروبا};{ Aruba; Aruba};{ Aruba; Aruba};{ Аруба; Аруба};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ اروبا; اروبا};{ 阿鲁巴; 阿鲁巴}};[ 12.5; -69.96666666];false;[]; 180; 🇦🇼;{{ Aruban; Aruban};{ Arubaise; Arubais}}
 { Afghanistan; Islamic Republic of Afghanistan;{ prs:{ official: جمهوری اسلامی افغانستان; common: افغانستان}; pus:{ official: د افغانستان اسلامي جمهوریت; common: افغانستان}; tuk:{ official: Owganystan Yslam Respublikasy; common: Owganystan}}};[ .af]; AF; 004; AFG; AFG;true; officially-assigned;true; Asia and the Pacific Group;{ AFN:{ name: Afghan afghani; symbol: ؋}};{ +9;[ 3]};[ Kabul];[ AF; Afġānistān]; Asia; Southern Asia;{ prs: Dari; pus: Pashto; tuk: Turkmen};{{ جمهورية أففانستان الإسلامية; أفغانستان};{ Republik Islamek Afghanistan; Afghanistan};{ Afghánská islámská republika; Afghánistán};{ Islamische Republik Afghanistan; Afghanistan};{ Afganistani Islamivabariik; Afganistan};{ Afganistanin islamilainen tasavalta; Afganistan};{ République islamique d'Afghanistan; Afghanistan};{ Islamska Republika Afganistan; Afganistan};{ Afganisztáni Iszlám Köztársaság; Afganisztán};{ Repubblica islamica dell'Afghanistan; Afghanistan};{ アフガニスタン・イスラム共和国; アフガニスタン};{ 아프가니스탄 이슬람 공화국; 아프가니스탄};{ Islamitische Republiek Afghanistan; Afghanistan};{ جمهوری اسلامی افغانستان; افغانستان};{ Islamska Republika Afganistanu; Afganistan};{ República Islâmica do Afeganistão; Afeganistão};{ Исламская Республика Афганистан; Афганистан};{ Afgánsky islamský štát; Afganistan};{ República Islámica de Afganistán; Afganistán};{ Islamska Republika Avganistan; Avganistan};{ Islamiska republiken Afghanistan; Afghanistan};{ Afganistan İslam Cumhuriyeti; Afganistan};{ اسلامی جمہوریہ افغانستان; افغانستان};{ 阿富汗伊斯兰共和国; 阿富汗}};[ 33; 65];true;[ IRN; PAK; TKM; UZB; TJK; CHN]; 652230; 🇦🇫;{{ Afghan; Afghan};{ Afghane; Afghan}}
 { Angola; Republic of Angola;{ por:{ official: República de Angola; common: Angola}}};[ .ao]; AO; 024; AGO; ANG;true; officially-assigned;true; African Group;{ AOA:{ name: Angolan kwanza; symbol: Kz}};{ +2;[ 44]};[ Luanda];[ AO; República de Angola; ʁɛpublika de an'ɡɔla]; Africa; Middle Africa;{ por: Portuguese};{{ أنغولا; جمهورية أنغولا};{ Republik Angola; Angola};{ Angolská republika; Angola};{ Republik Angola; Angola};{ Angola Vabariik; Angola};{ Angolan tasavalta; Angola};{ République d'Angola; Angola};{ Republika Angola; Angola};{ Angola; Angola};{ Repubblica dell'Angola; Angola};{ アンゴラ共和国; アンゴラ};{ 앙골라 공화국; 앙골라};{ Republiek Angola; Angola};{ جمهوری آنگولا; آنگولا};{ Republika Angoli; Angola};{ República de Angola; Angola};{ Республика Ангола; Ангола};{ Angolská republika; Angola};{ República de Angola; Angola};{ Republika Angola; Angola};{ Republiken Angola; Angola};{ Angola Cumhuriyeti; Angola};{ جمہوریہ انگولہ; انگولہ};{ 安哥拉共和国; 安哥拉}};[ -12.5; 18.5];false;[ COG; COD; ZMB; NAM]; 1246700; 🇦🇴;{{ Angolan; Angolan};{ Angolaise; Angolais}}
-{ Anguilla; Anguilla;{ eng:{ official: Anguilla; common: Anguilla}}};[ .ai]; AI; 660; AIA; ;false; officially-assigned;false;;{ XCD:{ name: Eastern Caribbean dollar; symbol: $}};{ +1;[ 264]};[ The Valley];[ AI]; Americas; Caribbean;{ eng: English};{{ أنغويلا; أنغويلا};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Angvila};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ アンギラ; アンギラ};{ 앵귈라; 앵귈라};{ Anguilla; Anguilla};{ آنگویلا; آنگویلا};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Ангилья; Ангилья};{ Anguilla; Anguilla};{ Anguila; Anguilla};{ Angvila; Angvila};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ اینگویلا; اینگویلا};{ 安圭拉; 安圭拉}};[ 18.25; -63.16666666];false; []; 91; 🇦🇮;{{ Anguillian; Anguillian};{ Anguillane; Anguillan}}
-{ Åland Islands; Åland Islands;{ swe:{ official: Landskapet Åland; common: Åland}}};[ .ax]; AX; 248; ALA; ;false; officially-assigned;false;;{ EUR:{ name: Euro; symbol: €}};{ +3;[ 5818]};[ Mariehamn];[ AX; Aaland; Aland; Ahvenanmaa]; Europe; Northern Europe;{ swe: Swedish};{{ جزر أولاند; جزر أولاند};{ Inizi Åland; Åland};{ Ålandské ostrovy; Ålandy};{ Åland-Inseln; Åland};{ Ahvenamaa maakond; Ahvenamaa};{ Ahvenanmaan maakunta; Ahvenanmaa};{ Ahvenanmaa; Ahvenanmaa};{ Aland Islands; Ålandski otoci};{ Åland-szigetek; Åland-szigetek};{ Isole Åland; Isole Aland};{ オーランド諸島; オーランド};{ 올란드 제도; 올란드 제도};{ Åland eilanden; Ålandeilanden};{ جزایر الند; جزایر الند};{ Wyspy Alandzkie; Wyspy Alandzkie};{ Ilhas Åland; Alândia};{ Аландские острова; Аландские острова};{ Alandské ostrovy; Alandy};{ Islas Åland; Alandia};{ Olandska Ostrva; Olandska Ostrva};{ Åland; Åland};{ Åland Adaları; Åland};{ جزائر اولند; جزائر اولند};{ 奥兰群岛; 奥兰群岛}};[ 60.116667; 19.9];false; []; 1580; 🇦🇽;{{ Ålandish; Ålandish};{ Ålandaise; Ålandais}}
+{ Anguilla; Anguilla;{ eng:{ official: Anguilla; common: Anguilla}}};[ .ai]; AI; 660; AIA;;false; officially-assigned;false;;{ XCD:{ name: Eastern Caribbean dollar; symbol: $}};{ +1;[ 264]};[ The Valley];[ AI]; Americas; Caribbean;{ eng: English};{{ أنغويلا; أنغويلا};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Angvila};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ アンギラ; アンギラ};{ 앵귈라; 앵귈라};{ Anguilla; Anguilla};{ آنگویلا; آنگویلا};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Ангилья; Ангилья};{ Anguilla; Anguilla};{ Anguila; Anguilla};{ Angvila; Angvila};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ اینگویلا; اینگویلا};{ 安圭拉; 安圭拉}};[ 18.25; -63.16666666];false;[]; 91; 🇦🇮;{{ Anguillian; Anguillian};{ Anguillane; Anguillan}}
+{ Åland Islands; Åland Islands;{ swe:{ official: Landskapet Åland; common: Åland}}};[ .ax]; AX; 248; ALA;;false; officially-assigned;false;;{ EUR:{ name: Euro; symbol: €}};{ +3;[ 5818]};[ Mariehamn];[ AX; Aaland; Aland; Ahvenanmaa]; Europe; Northern Europe;{ swe: Swedish};{{ جزر أولاند; جزر أولاند};{ Inizi Åland; Åland};{ Ålandské ostrovy; Ålandy};{ Åland-Inseln; Åland};{ Ahvenamaa maakond; Ahvenamaa};{ Ahvenanmaan maakunta; Ahvenanmaa};{ Ahvenanmaa; Ahvenanmaa};{ Aland Islands; Ålandski otoci};{ Åland-szigetek; Åland-szigetek};{ Isole Åland; Isole Aland};{ オーランド諸島; オーランド};{ 올란드 제도; 올란드 제도};{ Åland eilanden; Ålandeilanden};{ جزایر الند; جزایر الند};{ Wyspy Alandzkie; Wyspy Alandzkie};{ Ilhas Åland; Alândia};{ Аландские острова; Аландские острова};{ Alandské ostrovy; Alandy};{ Islas Åland; Alandia};{ Olandska Ostrva; Olandska Ostrva};{ Åland; Åland};{ Åland Adaları; Åland};{ جزائر اولند; جزائر اولند};{ 奥兰群岛; 奥兰群岛}};[ 60.116667; 19.9];false;[]; 1580; 🇦🇽;{{ Ålandish; Ålandish};{ Ålandaise; Ålandais}}
 { Albania; Republic of Albania;{ sqi:{ official: Republika e Shqipërisë; common: Shqipëria}}};[ .al]; AL; 008; ALB; ALB;true; officially-assigned;true; Eastern European Group;{ ALL:{ name: Albanian lek; symbol: L}};{ +3;[ 55]};[ Tirana];[ AL; Shqipëri; Shqipëria; Shqipnia]; Europe; Southeast Europe;{ sqi: Albanian};{{ جمهورية ألبانيا; ألبانيا};{ Republik Albania; Albania};{ Albánská republika; Albánie};{ Republik Albanien; Albanien};{ Albaania Vabariik; Albaania};{ Albanian tasavalta; Albania};{ République d'Albanie; Albanie};{ Republika Albanija; Albanija};{ Albán Köztársaság; Albánia};{ Repubblica d'Albania; Albania};{ アルバニア共和国; アルバニア};{ 알바니아 공화국; 알바니아};{ Republiek Albanië; Albanië};{ جمهوری آلبانی; آلبانی};{ Republika Albanii; Albania};{ República da Albânia; Albânia};{ Республика Албания; Албания};{ Albánska republika; Albánsko};{ República de Albania; Albania};{ Republika Albanija; Albanija};{ Republiken Albanien; Albanien};{ Arnavutluk Cumhuriyeti; Arnavutluk};{ جمہوریہ البانیا; البانیا};{ 阿尔巴尼亚共和国; 阿尔巴尼亚}};[ 41; 20];false;[ MNE; GRC; MKD; UNK]; 28748; 🇦🇱;{{ Albanian; Albanian};{ Albanaise; Albanais}}
 { Andorra; Principality of Andorra;{ cat:{ official: Principat d'Andorra; common: Andorra}}};[ .ad]; AD; 020; AND; AND;true; officially-assigned;true; Western European and Others Group;{ EUR:{ name: Euro; symbol: €}};{ +3;[ 76]};[ Andorra la Vella];[ AD; Principality of Andorra; Principat d'Andorra]; Europe; Southern Europe;{ cat: Catalan};{{ إمارة أندورا; أندورا};{ Priñselezh Andorra; Andorra};{ Andorrské knížectví; Andorra};{ Fürstentum Andorra; Andorra};{ Andorra Vürstiriik; Andorra};{ Andorran ruhtinaskunta; Andorra};{ Principauté d'Andorre; Andorre};{ Kneževina Andora; Andora};{ Andorra; Andorra};{ Principato di Andorra; Andorra};{ アンドラ公国; アンドラ};{ 안도라 공국; 안도라};{ Prinsdom Andorra; Andorra};{ شاهزاده‌نشین آندورا; آندورا};{ Księstwo Andory; Andora};{ Principado de Andorra; Andorra};{ Княжество Андорра; Андорра};{ Andorrské kniežatstvo; Andorra};{ Principado de Andorra; Andorra};{ Kneževina Andora; Andora};{ Furstendömet Andorra; Andorra};{ Andorra Prensliği; Andorra};{ اماراتِ انڈورا; انڈورا};{ 安道尔公国; 安道尔}};[ 42.5; 1.5];true;[ FRA; ESP]; 468; 🇦🇩;{{ Andorran; Andorran};{ Andorrane; Andorran}}
 { United Arab Emirates; United Arab Emirates;{ ara:{ official: الإمارات العربية المتحدة; common: الإمارات}}};[ .ae; امارات.]; AE; 784; ARE; UAE;true; officially-assigned;true; Asia and the Pacific Group;{ AED:{ name: United Arab Emirates dirham; symbol: د.إ}};{ +9;[ 71]};[ Abu Dhabi];[ AE; UAE; Emirates]; Asia; Western Asia;{ ara: Arabic};{{ الإمارات العربية المتحدة; الإمارات};{ Emirelezhioù Arab Unanet; Emirelezhioù Arab Unanet};{ Spojené arabské emiráty; Spojené arabské emiráty};{ Vereinigte Arabische Emirate; Vereinigte Arabische Emirate};{ Araabia Ühendemiraadid; Araabia Ühendemiraadid};{ Yhdistyneet arabiemiirikunnat; Arabiemiraatit};{ Émirats arabes unis; Émirats arabes unis};{ Ujedinjeni Arapski Emirati; Ujedinjeni Arapski Emirati};{ Egyesült Arab Emírségek; Egyesült Arab Emírségek};{ Emirati Arabi Uniti; Emirati Arabi Uniti};{ アラブ首長国連邦; UAE};{ 아랍 토후국 연방; 아랍에미리트};{ Verenigde Arabische Emiraten; Verenigde Arabische Emiraten};{ امارات متحده عربی; امارات};{ Zjednoczone Emiraty Arabskie; Zjednoczone Emiraty Arabskie};{ Emirados Árabes Unidos; Emirados Árabes Unidos};{ Объединенные Арабские Эмираты; Объединённые Арабские Эмираты};{ Spojené arabské emiráty; Spojené arabské emiráty};{ Emiratos Árabes Unidos; Emiratos Árabes Unidos};{ Ujedinjeni Arapski Emirati; Ujedinjeni Arapski Emirati};{ Förenade Arabemiraten; Förenade Arabemiraten};{ Birleşik Arap Emirlikleri; Birleşik Arap Emirlikleri};{ متحدہ عرب امارات; متحدہ عرب امارات};{ 阿拉伯联合酋长国; 阿拉伯联合酋长国}};[ 24; 54];false;[ OMN; SAU]; 83600; 🇦🇪;{{ Emirati; Emirati};{ Emirienne; Emirien}}
 { Argentina; Argentine Republic;{ grn:{ official: Argentine Republic; common: Argentina}; spa:{ official: República Argentina; common: Argentina}}};[ .ar]; AR; 032; ARG; ARG;true; officially-assigned;true; Latin American and Caribbean Group;{ ARS:{ name: Argentine peso; symbol: $}};{ +5;[ 4]};[ Buenos Aires];[ AR; Argentine Republic; República Argentina]; Americas; South America;{ grn: Guaraní; spa: Spanish};{{ جمهورية الأرجنتين; الأرجنتين};{ Republik Arc'hantina; Arc'hantina};{ Argentinská republika; Argentina};{ Argentinische Republik; Argentinien};{ Argentina Vabariik; Argentina};{ Argentiinan tasavalta; Argentiina};{ République argentine; Argentine};{ Argentinski Republika; Argentina};{ Argentin Köztársaság; Argentína};{ Repubblica Argentina; Argentina};{ アルゼンチン共和国; アルゼンチン};{ 아르헨티나 공화국; 아르헨티나};{ Argentijnse Republiek; Argentinië};{ جمهوری آرژانتین; آرژانتین};{ Republika Argentyńska; Argentyna};{ República Argentina; Argentina};{ Аргентинская Республика; Аргентина};{ Argentínska republika; Argentína};{ República Argentina; Argentina};{ Republika Argentina; Argentina};{ Republiken Argentina; Argentina};{ Arjantin Cumhuriyeti; Arjantin};{ جمہوریہ ارجنٹائن; ارجنٹائن};{ 阿根廷共和国; 阿根廷}};[ -34; -64];false;[ BOL; BRA; CHL; PRY; URY]; 2780400; 🇦🇷;{{ Argentine; Argentine};{ Argentine; Argentin}}
 { Armenia; Republic of Armenia;{ hye:{ official: Հայաստանի Հանրապետություն; common: Հայաստան}}};[ .am]; AM; 051; ARM; ARM;true; officially-assigned;true; Eastern European Group;{ AMD:{ name: Armenian dram; symbol: ֏}};{ +3;[ 74]};[ Yerevan];[ AM; Hayastan; Republic of Armenia; Հայաստանի Հանրապետություն]; Asia; Western Asia;{ hye: Armenian};{{ جمهورية أرمينيا; أرمينيا};{ Republik Armenia; Armenia};{ Arménská republika; Arménie};{ Republik Armenien; Armenien};{ Armeenia Vabariik; Armeenia};{ Armenian tasavalta; Armenia};{ République d'Arménie; Arménie};{ Republika Armenija; Armenija};{ Örményország; Örményország};{ Repubblica di Armenia; Armenia};{ アルメニア共和国; アルメニア};{ 아르메니아 공화국; 아르메니아};{ Republiek Armenië; Armenië};{ جمهوری ارمنستان; ارمنستان};{ Republika Armenii; Armenia};{ República da Arménia; Arménia};{ Республика Армения; Армения};{ Arménska republika; Arménsko};{ República de Armenia; Armenia};{ Republika Jermenija; Jermenija};{ Republiken Armenien; Armenien};{ Ermenistan Cumhuriyeti; Ermenistan};{ جمہوریہ آرمینیا; آرمینیا};{ 亚美尼亚共和国; 亚美尼亚}};[ 40; 45];true;[ AZE; GEO; IRN; TUR]; 29743; 🇦🇲;{{ Armenian; Armenian};{ Arménienne; Arménien}}
-{ American Samoa; American Samoa;{ eng:{ official: American Samoa; common: American Samoa}; smo:{ official: Sāmoa Amelika; common: Sāmoa Amelika}}};[ .as]; AS; 016; ASM; ASA;false; officially-assigned;false;;{ USD:{ name: United States dollar; symbol: $}};{ +1;[ 684]};[ Pago Pago];[ AS; Amerika Sāmoa; Amelika Sāmoa; Sāmoa Amelika]; Oceania; Polynesia;{ eng: English; smo: Samoan};{{ ساموا الأمريكية; ساموا الأمريكية};{ Samoa Amerikan; Samoa Amerikan};{ Americká Samoa; Americká Samoa};{ Amerikanisch-Samoa; Amerikanisch-Samoa};{ Ameerika Samoa; Ameerika Samoa};{ Amerikan Samoa; Amerikan Samoa};{ Samoa américaines; Samoa américaines};{ američka Samoa; Američka Samoa};{ Szamoa; Szamoa};{ Samoa americane; Samoa Americane};{ 米領サモア; アメリカ領サモア};{ 아메리칸사모아; 아메리칸사모아};{ Amerikaans Samoa; Amerikaans Samoa};{ ساموآی آمریکا; ساموآی آمریکا};{ Samoa Amerykańskie; Samoa Amerykańskie};{ Samoa americana; Samoa Americana};{ американское Самоа; Американское Самоа};{ Americká Samoa; Americká Samoa};{ Samoa Americana; Samoa Americana};{ Američka Samoa; Američka Samoa};{ Amerikanska Samoa; Amerikanska Samoa};{ Amerikan Samoası; Amerikan Samoası};{ امریکی سمووا; امریکی سمووا};{ 美属萨摩亚; 美属萨摩亚}};[ -14.33333333; -170];false; []; 199; 🇦🇸;{{ American Samoan; American Samoan};{ Samoane; Samoan}}
-{ Antarctica; Antarctica; {}};[ .aq]; AQ; 010; ATA; ;false; officially-assigned;false;; {};{ ; []}; [];[ AQ]; Antarctic;; {};{{ أنتارتيكا; أنتارتيكا};{ Antarktika; Antarktika};{ Antarktida; Antarktida};{ Antarktika; Antarktis};{ Antarktika; Antarktika};{ Etelämanner; Etelämanner};{ Antarctique; Antarctique};{ Antarktika; Antarktika};{ Antarktisz; Antarktisz};{ Antartide; Antartide};{ 南極; 南極大陸};{ 남극; 남극};{ Antarctica; Antarctica};{ جنوبگان; جنوبگان};{ Antarktyka; Antarktyka};{ Antártica; Antártida};{ Антарктида; Антарктида};{ Antarktída; Antarktída};{ Antártida; Antártida};{ Antarktik; Antarktik};{ Antarktis; Antarktis};{ Antarktika; Antarktika};{ انٹارکٹکا; انٹارکٹکا};{ 南极洲; 南极洲}};[ -90; 0];false; []; 14000000; 🇦🇶;{{ Antarctican; Antarctican};{ Antarcticaine; Antarcticain}}
-{ French Southern and Antarctic Lands; Territory of the French Southern and Antarctic Lands;{ fra:{ official: Territoire des Terres australes et antarctiques françaises; common: Terres australes et antarctiques françaises}}};[ .tf]; TF; 260; ATF; ;false; officially-assigned;false;;{ EUR:{ name: Euro; symbol: €}};{ +2;[ 62]};[ Port-aux-Français];[ TF; French Southern Territories]; Antarctic;;{ fra: French};{{ مقاطعات وأقاليم ما وراء البحار الفرنسية; أراض فرنسية جنوبية وأنتارتيكية};{ Tiriad Douaroù Aostral hag Antarktikel Frañs; Douaroù Aostral hag Antarktikel Frañs};{ Teritorium Francouzská jižní a antarktická území; Francouzská jižní a antarktická území};{ Gebiet der Französisch Süd- und Antarktisgebiete; Französische Süd- und Antarktisgebiete};{ Prantsuse Lõunaalad; Prantsuse Lõunaalad};{ Ranskan eteläiset ja antarktiset alueet; Ranskan eteläiset ja antarktiset alueet};{ Territoire des Terres australes et antarctiques françaises; Terres australes et antarctiques françaises};{ Teritoriju Francuski južni i antarktički teritoriji; Francuski južni i antarktički teritoriji};{ Francia déli és antarktiszi területek; Francia déli és antarktiszi területek};{ Territorio della australi e antartiche francesi Terre; Territori Francesi del Sud};{ フランス領極南諸島; フランス領南方・南極地域};{ 프랑스령 남부와 남극 지역; 프랑스령 남부와 남극 지역};{ Grondgebied van de Franse Zuidelijke en Antarctische gebieden; Franse Gebieden in de zuidelijke Indische Oceaan};{ سرزمین‌های جنوبی و جنوبگانی فرانسه; سرزمین‌های جنوبی و جنوبگانی فرانسه};{ Francuskie Terytoria Południowe i Antarktyczne; Francuskie Terytoria Południowe i Antarktyczne};{ Território do Sul e Antártica Francesa; Terras Austrais e Antárticas Francesas};{ Территория Французские Южные и Антарктические земли; Французские Южные и Антарктические территории};{ Francúzske južné a antarktické územia; Francúzske juŽné a antarktické územia};{ Territorio del Francés Tierras australes y antárticas; Tierras Australes y Antárticas Francesas};{ Francuske južne i antarktičke zemlje; Francuske južne i antarktičke zemlje};{ Franska syd- och Antarktisterritorierna; Franska södra territorierna};{ Fransız Güney ve Antarktika Toprakları; Fransız Güney ve Antarktika Toprakları};{ سرزمینِ جنوبی فرانسیسیہ و انٹارکٹیکہ; سرزمین جنوبی فرانسیسیہ و انٹارکٹیکا};{ 法国南部和南极土地; 法国南部和南极土地}};[ -49.25; 69.167];false; []; 7747; 🇹🇫;{{ French; French};{ Française; Français}}
-{ Antigua and Barbuda; Antigua and Barbuda;{ eng:{ official: Antigua and Barbuda; common: Antigua and Barbuda}}};[ .ag]; AG; 028; ATG; ANT;true; officially-assigned;true; Latin American and Caribbean Group;{ XCD:{ name: Eastern Caribbean dollar; symbol: $}};{ +1;[ 268]};[ Saint John's];[ AG]; Americas; Caribbean;{ eng: English};{{ أنتيغوا وباربودا; أنتيغوا وباربودا};{ Antigua ha Barbuda; Antigua ha Barbuda};{ Antigua a Barbuda; Antigua a Barbuda};{ Antigua und Barbuda; Antigua und Barbuda};{ Antigua ja Barbuda; Antigua ja Barbuda};{ Antigua ja Barbuda; Antigua ja Barbuda};{ Antigua -et-Barbuda; Antigua-et-Barbuda};{ Antigva i Barbuda; Antigva i Barbuda};{ Antigua és Barbuda; Antigua és Barbuda};{ Antigua e Barbuda; Antigua e Barbuda};{ アンティグア・バーブーダ; アンティグア・バーブーダ};{ 앤티가 바부다; 앤티가 바부다};{ Antigua en Barbuda; Antigua en Barbuda};{ آنتیگوا و باربودا; آنتیگوا و باربودا};{ Antigua i Barbuda; Antigua i Barbuda};{ Antigua e Barbuda; Antígua e Barbuda};{ Антигуа и Барбуда; Антигуа и Барбуда};{ Antigua a Barbuda; Antigua a Barbuda};{ Antigua y Barbuda; Antigua y Barbuda};{ Antigva i Barbuda; Antigva i Barbuda};{ Antigua och Barbuda; Antigua och Barbuda};{ Antigua ve Barbuda; Antigua ve Barbuda};{ اینٹیگوا و باربوڈا; اینٹیگوا و باربوڈا};{ 安提瓜和巴布达; 安提瓜和巴布达}};[ 17.05; -61.8];false; []; 442; 🇦🇬;{{ Antiguan, Barbudan; Antiguan, Barbudan};{ Antiguaise et barbudienne; Antiguaise et barbudien}}
-{ Australia; Commonwealth of Australia;{ eng:{ official: Commonwealth of Australia; common: Australia}}};[ .au]; AU; 036; AUS; AUS;true; officially-assigned;true; Western European and Others Group;{ AUD:{ name: Australian dollar; symbol: $}};{ +6;[ 1]};[ Canberra];[ AU]; Oceania; Australia and New Zealand;{ eng: English};{{ كومونولث أستراليا; أستراليا};{ Kenglad Aostralia; Aostralia};{ Australské společenství; Austrálie};{ Commonwealth Australien; Australien};{ Austraalia Ühendus; Austraalia};{ Australian liittovaltio; Australia};{ Australie; Australie};{ Commonwealth of Australia; Australija};{ Ausztrál Államszövetség; Ausztrália};{ Commonwealth dell'Australia; Australia};{ オーストラリア連邦; オーストラリア};{ 오스트레일리아 연방; 호주};{ Gemenebest van Australië; Australië};{ قلمرو همسود استرالیا; استرالیا};{ Związek Australijski; Australia};{ Comunidade da Austrália; Austrália};{ Содружество Австралии; Австралия};{ Austrálsky zväz; Austrália};{ Mancomunidad de Australia; Australia};{ Komonvelt Australija; Australija};{ Australiska statsförbundet; Australien};{ Avustralya Federal Devleti; Avustralya};{ دولتِ مشترکہ آسٹریلیا; آسٹریلیا};{ 澳大利亚联邦; 澳大利亚}};[ -27; 133];false; []; 7692024; 🇦🇺;{{ Australian; Australian};{ Australienne; Australien}}
+{ American Samoa; American Samoa;{ eng:{ official: American Samoa; common: American Samoa}; smo:{ official: Sāmoa Amelika; common: Sāmoa Amelika}}};[ .as]; AS; 016; ASM; ASA;false; officially-assigned;false;;{ USD:{ name: United States dollar; symbol: $}};{ +1;[ 684]};[ Pago Pago];[ AS; Amerika Sāmoa; Amelika Sāmoa; Sāmoa Amelika]; Oceania; Polynesia;{ eng: English; smo: Samoan};{{ ساموا الأمريكية; ساموا الأمريكية};{ Samoa Amerikan; Samoa Amerikan};{ Americká Samoa; Americká Samoa};{ Amerikanisch-Samoa; Amerikanisch-Samoa};{ Ameerika Samoa; Ameerika Samoa};{ Amerikan Samoa; Amerikan Samoa};{ Samoa américaines; Samoa américaines};{ američka Samoa; Američka Samoa};{ Szamoa; Szamoa};{ Samoa americane; Samoa Americane};{ 米領サモア; アメリカ領サモア};{ 아메리칸사모아; 아메리칸사모아};{ Amerikaans Samoa; Amerikaans Samoa};{ ساموآی آمریکا; ساموآی آمریکا};{ Samoa Amerykańskie; Samoa Amerykańskie};{ Samoa americana; Samoa Americana};{ американское Самоа; Американское Самоа};{ Americká Samoa; Americká Samoa};{ Samoa Americana; Samoa Americana};{ Američka Samoa; Američka Samoa};{ Amerikanska Samoa; Amerikanska Samoa};{ Amerikan Samoası; Amerikan Samoası};{ امریکی سمووا; امریکی سمووا};{ 美属萨摩亚; 美属萨摩亚}};[ -14.33333333; -170];false;[]; 199; 🇦🇸;{{ American Samoan; American Samoan};{ Samoane; Samoan}}
+{ Antarctica; Antarctica;{}};[ .aq]; AQ; 010; ATA;;false; officially-assigned;false;;{};{;[]};[];[ AQ]; Antarctic;;{};{{ أنتارتيكا; أنتارتيكا};{ Antarktika; Antarktika};{ Antarktida; Antarktida};{ Antarktika; Antarktis};{ Antarktika; Antarktika};{ Etelämanner; Etelämanner};{ Antarctique; Antarctique};{ Antarktika; Antarktika};{ Antarktisz; Antarktisz};{ Antartide; Antartide};{ 南極; 南極大陸};{ 남극; 남극};{ Antarctica; Antarctica};{ جنوبگان; جنوبگان};{ Antarktyka; Antarktyka};{ Antártica; Antártida};{ Антарктида; Антарктида};{ Antarktída; Antarktída};{ Antártida; Antártida};{ Antarktik; Antarktik};{ Antarktis; Antarktis};{ Antarktika; Antarktika};{ انٹارکٹکا; انٹارکٹکا};{ 南极洲; 南极洲}};[ -90; 0];false;[]; 14000000; 🇦🇶;{{ Antarctican; Antarctican};{ Antarcticaine; Antarcticain}}
+{ French Southern and Antarctic Lands; Territory of the French Southern and Antarctic Lands;{ fra:{ official: Territoire des Terres australes et antarctiques françaises; common: Terres australes et antarctiques françaises}}};[ .tf]; TF; 260; ATF;;false; officially-assigned;false;;{ EUR:{ name: Euro; symbol: €}};{ +2;[ 62]};[ Port-aux-Français];[ TF; French Southern Territories]; Antarctic;;{ fra: French};{{ مقاطعات وأقاليم ما وراء البحار الفرنسية; أراض فرنسية جنوبية وأنتارتيكية};{ Tiriad Douaroù Aostral hag Antarktikel Frañs; Douaroù Aostral hag Antarktikel Frañs};{ Teritorium Francouzská jižní a antarktická území; Francouzská jižní a antarktická území};{ Gebiet der Französisch Süd- und Antarktisgebiete; Französische Süd- und Antarktisgebiete};{ Prantsuse Lõunaalad; Prantsuse Lõunaalad};{ Ranskan eteläiset ja antarktiset alueet; Ranskan eteläiset ja antarktiset alueet};{ Territoire des Terres australes et antarctiques françaises; Terres australes et antarctiques françaises};{ Teritoriju Francuski južni i antarktički teritoriji; Francuski južni i antarktički teritoriji};{ Francia déli és antarktiszi területek; Francia déli és antarktiszi területek};{ Territorio della australi e antartiche francesi Terre; Territori Francesi del Sud};{ フランス領極南諸島; フランス領南方・南極地域};{ 프랑스령 남부와 남극 지역; 프랑스령 남부와 남극 지역};{ Grondgebied van de Franse Zuidelijke en Antarctische gebieden; Franse Gebieden in de zuidelijke Indische Oceaan};{ سرزمین‌های جنوبی و جنوبگانی فرانسه; سرزمین‌های جنوبی و جنوبگانی فرانسه};{ Francuskie Terytoria Południowe i Antarktyczne; Francuskie Terytoria Południowe i Antarktyczne};{ Território do Sul e Antártica Francesa; Terras Austrais e Antárticas Francesas};{ Территория Французские Южные и Антарктические земли; Французские Южные и Антарктические территории};{ Francúzske južné a antarktické územia; Francúzske juŽné a antarktické územia};{ Territorio del Francés Tierras australes y antárticas; Tierras Australes y Antárticas Francesas};{ Francuske južne i antarktičke zemlje; Francuske južne i antarktičke zemlje};{ Franska syd- och Antarktisterritorierna; Franska södra territorierna};{ Fransız Güney ve Antarktika Toprakları; Fransız Güney ve Antarktika Toprakları};{ سرزمینِ جنوبی فرانسیسیہ و انٹارکٹیکہ; سرزمین جنوبی فرانسیسیہ و انٹارکٹیکا};{ 法国南部和南极土地; 法国南部和南极土地}};[ -49.25; 69.167];false;[]; 7747; 🇹🇫;{{ French; French};{ Française; Français}}
+{ Antigua and Barbuda; Antigua and Barbuda;{ eng:{ official: Antigua and Barbuda; common: Antigua and Barbuda}}};[ .ag]; AG; 028; ATG; ANT;true; officially-assigned;true; Latin American and Caribbean Group;{ XCD:{ name: Eastern Caribbean dollar; symbol: $}};{ +1;[ 268]};[ Saint John's];[ AG]; Americas; Caribbean;{ eng: English};{{ أنتيغوا وباربودا; أنتيغوا وباربودا};{ Antigua ha Barbuda; Antigua ha Barbuda};{ Antigua a Barbuda; Antigua a Barbuda};{ Antigua und Barbuda; Antigua und Barbuda};{ Antigua ja Barbuda; Antigua ja Barbuda};{ Antigua ja Barbuda; Antigua ja Barbuda};{ Antigua -et-Barbuda; Antigua-et-Barbuda};{ Antigva i Barbuda; Antigva i Barbuda};{ Antigua és Barbuda; Antigua és Barbuda};{ Antigua e Barbuda; Antigua e Barbuda};{ アンティグア・バーブーダ; アンティグア・バーブーダ};{ 앤티가 바부다; 앤티가 바부다};{ Antigua en Barbuda; Antigua en Barbuda};{ آنتیگوا و باربودا; آنتیگوا و باربودا};{ Antigua i Barbuda; Antigua i Barbuda};{ Antigua e Barbuda; Antígua e Barbuda};{ Антигуа и Барбуда; Антигуа и Барбуда};{ Antigua a Barbuda; Antigua a Barbuda};{ Antigua y Barbuda; Antigua y Barbuda};{ Antigva i Barbuda; Antigva i Barbuda};{ Antigua och Barbuda; Antigua och Barbuda};{ Antigua ve Barbuda; Antigua ve Barbuda};{ اینٹیگوا و باربوڈا; اینٹیگوا و باربوڈا};{ 安提瓜和巴布达; 安提瓜和巴布达}};[ 17.05; -61.8];false;[]; 442; 🇦🇬;{{ Antiguan, Barbudan; Antiguan, Barbudan};{ Antiguaise et barbudienne; Antiguaise et barbudien}}
+{ Australia; Commonwealth of Australia;{ eng:{ official: Commonwealth of Australia; common: Australia}}};[ .au]; AU; 036; AUS; AUS;true; officially-assigned;true; Western European and Others Group;{ AUD:{ name: Australian dollar; symbol: $}};{ +6;[ 1]};[ Canberra];[ AU]; Oceania; Australia and New Zealand;{ eng: English};{{ كومونولث أستراليا; أستراليا};{ Kenglad Aostralia; Aostralia};{ Australské společenství; Austrálie};{ Commonwealth Australien; Australien};{ Austraalia Ühendus; Austraalia};{ Australian liittovaltio; Australia};{ Australie; Australie};{ Commonwealth of Australia; Australija};{ Ausztrál Államszövetség; Ausztrália};{ Commonwealth dell'Australia; Australia};{ オーストラリア連邦; オーストラリア};{ 오스트레일리아 연방; 호주};{ Gemenebest van Australië; Australië};{ قلمرو همسود استرالیا; استرالیا};{ Związek Australijski; Australia};{ Comunidade da Austrália; Austrália};{ Содружество Австралии; Австралия};{ Austrálsky zväz; Austrália};{ Mancomunidad de Australia; Australia};{ Komonvelt Australija; Australija};{ Australiska statsförbundet; Australien};{ Avustralya Federal Devleti; Avustralya};{ دولتِ مشترکہ آسٹریلیا; آسٹریلیا};{ 澳大利亚联邦; 澳大利亚}};[ -27; 133];false;[]; 7692024; 🇦🇺;{{ Australian; Australian};{ Australienne; Australien}}
 { Austria; Republic of Austria;{ bar:{ official: Republik Österreich; common: Österreich}}};[ .at]; AT; 040; AUT; AUT;true; officially-assigned;true; Western European and Others Group;{ EUR:{ name: Euro; symbol: €}};{ +4;[ 3]};[ Vienna];[ AT; Osterreich; Oesterreich]; Europe; Central Europe;{ bar: Austro-Bavarian German};{{ جمهورية النمسا; النمسا};{ Republik Aostria; Aostria};{ Rakouská republika; Rakousko};{ Republik Österreich; Österreich};{ Austria Vabariik; Austria};{ Itävallan tasavalta; Itävalta};{ République d'Autriche; Autriche};{ Republika Austrija; Austrija};{ Ausztria; Ausztria};{ Repubblica d'Austria; Austria};{ オーストリア共和国; オーストリア};{ 오스트리아 공화국; 오스트리아};{ Republiek Oostenrijk; Oostenrijk};{ جمهوری اتریش; اتریش};{ Republika Austrii; Austria};{ República da Áustria; Áustria};{ Австрийская Республика; Австрия};{ Rakúska republika; Rakúsko};{ República de Austria; Austria};{ Republika Austrija; Austrija};{ Republiken Österrike; Österrike};{ Avusturya Cumhuriyeti; Avusturya};{ جمہوریہ آسٹریا; آسٹریا};{ 奥地利共和国; 奥地利}};[ 47.33333333; 13.33333333];true;[ CZE; DEU; HUN; ITA; LIE; SVK; SVN; CHE]; 83871; 🇦🇹;{{ Austrian; Austrian};{ Autrichienne; Autrichien}}
 { Azerbaijan; Republic of Azerbaijan;{ aze:{ official: Azərbaycan Respublikası; common: Azərbaycan}; rus:{ official: Азербайджанская Республика; common: Азербайджан}}};[ .az]; AZ; 031; AZE; AZE;true; officially-assigned;true; Eastern European Group;{ AZN:{ name: Azerbaijani manat; symbol: ₼}};{ +9;[ 94]};[ Baku];[ AZ; Republic of Azerbaijan; Azərbaycan Respublikası]; Asia; Western Asia;{ aze: Azerbaijani; rus: Russian};{{ جمهورية أذربيجان; أذربيجان};{ Republik Azerbaidjan; Azerbaidjan};{ Ázerbájdžánská republika; Ázerbájdžán};{ Republik Aserbaidschan; Aserbaidschan};{ Aserbaidžaani Vabariik; Aserbaidžaan};{ Azerbaidzanin tasavalta; Azerbaidzan};{ République d'Azerbaïdjan; Azerbaïdjan};{ Republika Azerbajdžan; Azerbajdžan};{ Azerbajdzsán; Azerbajdzsán};{ Repubblica dell'Azerbaigian; Azerbaijan};{ アゼルバイジャン共和国; アゼルバイジャン};{ 아제르바이잔 공화국; 아제르바이잔};{ Republiek Azerbeidzjan; Azerbeidzjan};{ جمهوری آذربایجان; جمهوری آذربایجان};{ Republika Azerbejdżanu; Azerbejdżan};{ República do Azerbaijão; Azerbeijão};{ Азербайджанская Республика; Азербайджан};{ Azerbajǆanská republika; AzerbajǇan};{ República de Azerbaiyán; Azerbaiyán};{ Republika Azerbejdžan; Azerbejdžan};{ Republiken Azerbajdzjan; Azerbajdzjan};{ Azerbaycan Cumhuriyeti; Azerbaycan};{ جمہوریہ آذربائیجان; آذربائیجان};{ 阿塞拜疆共和国; 阿塞拜疆}};[ 40.5; 47.5];true;[ ARM; GEO; IRN; RUS; TUR]; 86600; 🇦🇿;{{ Azerbaijani; Azerbaijani};{ Azerbaïdjanaise; Azerbaïdjanais}}
 { Burundi; Republic of Burundi;{ fra:{ official: République du Burundi; common: Burundi}; run:{ official: Republika y'Uburundi ; common: Uburundi}}};[ .bi]; BI; 108; BDI; BDI;true; officially-assigned;true; African Group;{ BIF:{ name: Burundian franc; symbol: Fr}};{ +2;[ 57]};[ Gitega];[ BI; Republic of Burundi; Republika y'Uburundi; République du Burundi]; Africa; Eastern Africa;{ fra: French; run: Kirundi};{{ جمهورية بوروندي; بوروندي};{ Republik Burundi; Burundi};{ Burundská republika; Burundi};{ Republik Burundi; Burundi};{ Burundi Vabariik; Burundi};{ Burundin tasavalta; Burundi};{ République du Burundi; Burundi};{ Burundi; Burundi};{ Burundi; Burundi};{ Repubblica del Burundi; Burundi};{ ブルンジ共和国; ブルンジ};{ 부룬디; 부룬디};{ Republiek Burundi; Burundi};{ جمهوری بوروندی; بوروندی};{ Republika Burundi; Burundi};{ República do Burundi; Burundi};{ Республика Бурунди; Бурунди};{ Burundská republika; Burundi};{ República de Burundi; Burundi};{ Republika Burundi; Burundi};{ Republiken Burundi; Burundi};{ Burundi Cumhuriyeti; Burundi};{ جمہوریہ برونڈی; برونڈی};{ 布隆迪共和国; 布隆迪}};[ -3.5; 30];true;[ COD; RWA; TZA]; 27834; 🇧🇮;{{ Burundian; Burundian};{ Burundaise; Burundais}}
@@ -1350,7 +1160,7 @@ name{ common; official; native{ ...}}; tld[]; cca2; ccn3; cca3; cioc; independen
 { Burkina Faso; Burkina Faso;{ fra:{ official: République du Burkina; common: Burkina Faso}}};[ .bf]; BF; 854; BFA; BUR;true; officially-assigned;true; African Group;{ XOF:{ name: West African CFA franc; symbol: Fr}};{ +2;[ 26]};[ Ouagadougou];[ BF]; Africa; Western Africa;{ fra: French};{{ بوركينا فاسو; بوركينا فاسو};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ République du Burkina; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina};{ Burkina Faso; Burkina Faso};{ ブルキナファソ; ブルキナファソ};{ 부르키나파소; 부르키나파소};{ Burkina Faso; Burkina Faso};{ بورکینافاسو; بورکینافاسو};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Буркина -Фасо; Буркина-Фасо};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ برکینا فاسو; برکینا فاسو};{ 布基纳法索; 布基纳法索}};[ 13; -2];true;[ BEN; CIV; GHA; MLI; NER; TGO]; 272967; 🇧🇫;{{ Burkinabe; Burkinabe};{ Burkinabée; Burkinabé}}
 { Bangladesh; People's Republic of Bangladesh;{ ben:{ official: বাংলাদেশ গণপ্রজাতন্ত্রী; common: বাংলাদেশ}}};[ .bd]; BD; 050; BGD; BAN;true; officially-assigned;true; Asia and the Pacific Group;{ BDT:{ name: Bangladeshi taka; symbol: ৳}};{ +8;[ 80]};[ Dhaka];[ BD; People's Republic of Bangladesh; Gônôprôjatôntri Bangladesh]; Asia; Southern Asia;{ ben: Bengali};{{ جمهورية بنغلاديش الشعبية; بنغلاديش};{ Republik pobl Bangladesh; Bangladesh};{ Bangladéšská lidová republika; Bangladéš};{ Volksrepublik Bangladesch; Bangladesch};{ Bangladeshi Rahvavabariik; Bangladesh};{ Bangladeshin kansantasavalta; Bangladesh};{ La République populaire du Bangladesh; Bangladesh};{ Narodna Republika Bangladeš; Bangladeš};{ Banglades; Banglades};{ Repubblica popolare del Bangladesh; Bangladesh};{ バングラデシュ人民共和国; バングラデシュ};{ 방글라데시 인민 공화국; 방글라데시};{ Volksrepubliek Bangladesh; Bangladesh};{ جمهوری خلق بنگلادش; بنگلادش};{ Ludowa Republika Bangladeszu; Bangladesz};{ República Popular do Bangladesh; Bangladesh};{ Народная Республика Бангладеш; Бангладеш};{ Bangladéšska ľudová republika; Bangladéš};{ República Popular de Bangladesh; Bangladesh};{ Narodna Republika Bangladeš; Bangladeš};{ Folkrepubliken Bangladesh; Bangladesh};{ Bangladeş Halk Cumhuriyeti; Bangladeş};{ عوامی جمہوریہ بنگلہ دیش; بنگلہ دیش};{ 孟加拉人民共和国; 孟加拉国}};[ 24; 90];false;[ MMR; IND]; 147570; 🇧🇩;{{ Bangladeshi; Bangladeshi};{ Bangladaise; Bangladais}}
 { Bulgaria; Republic of Bulgaria;{ bul:{ official: Република България; common: България}}};[ .bg]; BG; 100; BGR; BUL;true; officially-assigned;true; Eastern European Group;{ BGN:{ name: Bulgarian lev; symbol: лв}};{ +3;[ 59]};[ Sofia];[ BG; Republic of Bulgaria; Република България]; Europe; Southeast Europe;{ bul: Bulgarian};{{ جمهورية بلغاريا; بلغاريا};{ Republik Bulgaria; Bulgaria};{ Bulharská republika; Bulharsko};{ Republik Bulgarien; Bulgarien};{ Bulgaaria Vabariik; Bulgaaria};{ Bulgarian tasavalta; Bulgaria};{ République de Bulgarie; Bulgarie};{ Republika Bugarska; Bugarska};{ Bolgár Köztársaság; Bulgária};{ Repubblica di Bulgaria; Bulgaria};{ ブルガリア共和国; ブルガリア};{ 불가리아 공화국; 불가리아};{ Republiek Bulgarije; Bulgarije};{ جمهوری بلغارستان; بلغارستان};{ Republika Bułgarii; Bułgaria};{ República da Bulgária; Bulgária};{ Республика Болгария; Болгария};{ Bulharská republika; Bulharsko};{ República de Bulgaria; Bulgaria};{ Republika Bugarska; Bugarska};{ Republiken Bulgarien; Bulgarien};{ Bulgaristan Cumhuriyeti; Bulgaristan};{ جمہوریہ بلغاریہ; بلغاریہ};{ 保加利亚共和国; 保加利亚}};[ 43; 25];false;[ GRC; MKD; ROU; SRB; TUR]; 110879; 🇧🇬;{{ Bulgarian; Bulgarian};{ Bulgare; Bulgare}}
-{ Bahrain; Kingdom of Bahrain;{ ara:{ official: مملكة البحرين; common: البحرين}}};[ .bh]; BH; 048; BHR; BRN;true; officially-assigned;true; Asia and the Pacific Group;{ BHD:{ name: Bahraini dinar; symbol: .د.ب}};{ +9;[ 73]};[ Manama];[ BH; Kingdom of Bahrain; Mamlakat al-Baḥrayn]; Asia; Western Asia;{ ara: Arabic};{{ مملكة البحرين; البحرين};{ Rouantelezh Bahrein; Bahrein};{ Království Bahrajn; Bahrajn};{ Königreich Bahrain; Bahrain};{ Bahreini Kuningriik; Bahrein};{ Bahrainin kuningaskunta; Bahrain};{ Royaume de Bahreïn; Bahreïn};{ Kraljevina Bahrein; Bahrein};{ Bahreini Királyság; Bahrein};{ Regno del Bahrain; Bahrein};{ バーレーン王国; バーレーン};{ 바레인 왕국; 바레인};{ Koninkrijk Bahrein; Bahrein};{ پادشاهی بحرین; بحرین};{ Królestwo Bahrajnu; Bahrajn};{ Reino do Bahrein; Bahrein};{ Королевство Бахрейн; Бахрейн};{ Bahrajnské kráľovstvo; Bahrajn};{ Reino de Bahrein; Bahrein};{ Kraljevina Bahrein; Bahrein};{ Konungariket Bahrain; Bahrain};{ Bahreyn Krallığı; Bahreyn};{ مملکتِ بحرین; بحرین};{ 巴林王国; 巴林}};[ 26; 50.55];false; []; 765; 🇧🇭;{{ Bahraini; Bahraini};{ Bahreïnienne; Bahreïnien}}
+{ Bahrain; Kingdom of Bahrain;{ ara:{ official: مملكة البحرين; common: البحرين}}};[ .bh]; BH; 048; BHR; BRN;true; officially-assigned;true; Asia and the Pacific Group;{ BHD:{ name: Bahraini dinar; symbol: .د.ب}};{ +9;[ 73]};[ Manama];[ BH; Kingdom of Bahrain; Mamlakat al-Baḥrayn]; Asia; Western Asia;{ ara: Arabic};{{ مملكة البحرين; البحرين};{ Rouantelezh Bahrein; Bahrein};{ Království Bahrajn; Bahrajn};{ Königreich Bahrain; Bahrain};{ Bahreini Kuningriik; Bahrein};{ Bahrainin kuningaskunta; Bahrain};{ Royaume de Bahreïn; Bahreïn};{ Kraljevina Bahrein; Bahrein};{ Bahreini Királyság; Bahrein};{ Regno del Bahrain; Bahrein};{ バーレーン王国; バーレーン};{ 바레인 왕국; 바레인};{ Koninkrijk Bahrein; Bahrein};{ پادشاهی بحرین; بحرین};{ Królestwo Bahrajnu; Bahrajn};{ Reino do Bahrein; Bahrein};{ Королевство Бахрейн; Бахрейн};{ Bahrajnské kráľovstvo; Bahrajn};{ Reino de Bahrein; Bahrein};{ Kraljevina Bahrein; Bahrein};{ Konungariket Bahrain; Bahrain};{ Bahreyn Krallığı; Bahreyn};{ مملکتِ بحرین; بحرین};{ 巴林王国; 巴林}};[ 26; 50.55];false;[]; 765; 🇧🇭;{{ Bahraini; Bahraini};{ Bahreïnienne; Bahreïnien}}
 ... (truncated)
 ```
 
@@ -1384,66 +1194,6 @@ name{common;official;native{...}};tld[];cca2;ccn3;cca3;cioc;independent;status;u
 ... (truncated)
 ```
 
-**minemizer (33%)** (321447 chars, 142761 tokens):
-```txt
-name{ common; official; native{ eng{ official; common}; ...}}; tld[]; cca2; ccn3; cca3; cioc; independent; status; unMember; unRegionalGroup; currencies{ ...}; idd{ root; suffixes[]}; capital[]; altSpellings[]; region; subregion; languages{ eng; ...}; translations{ ara{ official; common}; bre{ official; common}; ces{ official; common}; deu{ official; common}; est{ official; common}; fin{ official; common}; fra{ official; common}; hrv{ official; common}; hun{ official; common}; ita{ official; common}; jpn{ official; common}; kor{ official; common}; nld{ official; common}; per{ official; common}; pol{ official; common}; por{ official; common}; rus{ official; common}; slk{ official; common}; spa{ official; common}; srp{ official; common}; swe{ official; common}; tur{ official; common}; urd{ official; common}; zho{ official; common}}; latlng[]; landlocked; borders[]; area; flag; demonyms{ eng{ f; m}; fra{ f; m}}
-{ Aruba; Aruba;{ ; nld:{ official: Aruba; common: Aruba}; pap:{ official: Aruba; common: Aruba}}};[ .aw]; AW; 533; ABW; ARU;false; officially-assigned;false;;{ AWG:{ name: Aruban florin; symbol: ƒ}};{ +2;[ 97]};[ Oranjestad];[ AW]; Americas; Caribbean;{ ; nld: Dutch; pap: Papiamento};{{ أروبا; أروبا};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ アルバ; アルバ};{ 아루바; 아루바};{ Aruba; Aruba};{ آروبا; آروبا};{ Aruba; Aruba};{ Aruba; Aruba};{ Аруба; Аруба};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ Aruba; Aruba};{ اروبا; اروبا};{ 阿鲁巴; 阿鲁巴}};[ 12.5; -69.96666666];false; []; 180; 🇦🇼;{{ Aruban; Aruban};{ Arubaise; Arubais}}
-{ Afghanistan; Islamic Republic of Afghanistan;{ ; prs:{ official: جمهوری اسلامی افغانستان; common: افغانستان}; pus:{ official: د افغانستان اسلامي جمهوریت; common: افغانستان}; tuk:{ official: Owganystan Yslam Respublikasy; common: Owganystan}}};[ .af]; AF; 004; AFG; AFG;true; officially-assigned;true; Asia and the Pacific Group;{ AFN:{ name: Afghan afghani; symbol: ؋}};{ +9;[ 3]};[ Kabul];[ AF; Afġānistān]; Asia; Southern Asia;{ ; prs: Dari; pus: Pashto; tuk: Turkmen};{{ جمهورية أففانستان الإسلامية; أفغانستان};{ Republik Islamek Afghanistan; Afghanistan};{ Afghánská islámská republika; Afghánistán};{ Islamische Republik Afghanistan; Afghanistan};{ Afganistani Islamivabariik; Afganistan};{ Afganistanin islamilainen tasavalta; Afganistan};{ République islamique d'Afghanistan; Afghanistan};{ Islamska Republika Afganistan; Afganistan};{ Afganisztáni Iszlám Köztársaság; Afganisztán};{ Repubblica islamica dell'Afghanistan; Afghanistan};{ アフガニスタン・イスラム共和国; アフガニスタン};{ 아프가니스탄 이슬람 공화국; 아프가니스탄};{ Islamitische Republiek Afghanistan; Afghanistan};{ جمهوری اسلامی افغانستان; افغانستان};{ Islamska Republika Afganistanu; Afganistan};{ República Islâmica do Afeganistão; Afeganistão};{ Исламская Республика Афганистан; Афганистан};{ Afgánsky islamský štát; Afganistan};{ República Islámica de Afganistán; Afganistán};{ Islamska Republika Avganistan; Avganistan};{ Islamiska republiken Afghanistan; Afghanistan};{ Afganistan İslam Cumhuriyeti; Afganistan};{ اسلامی جمہوریہ افغانستان; افغانستان};{ 阿富汗伊斯兰共和国; 阿富汗}};[ 33; 65];true;[ IRN; PAK; TKM; UZB; TJK; CHN]; 652230; 🇦🇫;{{ Afghan; Afghan};{ Afghane; Afghan}}
-{ Angola; Republic of Angola;{ ; por:{ official: República de Angola; common: Angola}}};[ .ao]; AO; 024; AGO; ANG;true; officially-assigned;true; African Group;{ AOA:{ name: Angolan kwanza; symbol: Kz}};{ +2;[ 44]};[ Luanda];[ AO; República de Angola; ʁɛpublika de an'ɡɔla]; Africa; Middle Africa;{ ; por: Portuguese};{{ أنغولا; جمهورية أنغولا};{ Republik Angola; Angola};{ Angolská republika; Angola};{ Republik Angola; Angola};{ Angola Vabariik; Angola};{ Angolan tasavalta; Angola};{ République d'Angola; Angola};{ Republika Angola; Angola};{ Angola; Angola};{ Repubblica dell'Angola; Angola};{ アンゴラ共和国; アンゴラ};{ 앙골라 공화국; 앙골라};{ Republiek Angola; Angola};{ جمهوری آنگولا; آنگولا};{ Republika Angoli; Angola};{ República de Angola; Angola};{ Республика Ангола; Ангола};{ Angolská republika; Angola};{ República de Angola; Angola};{ Republika Angola; Angola};{ Republiken Angola; Angola};{ Angola Cumhuriyeti; Angola};{ جمہوریہ انگولہ; انگولہ};{ 安哥拉共和国; 安哥拉}};[ -12.5; 18.5];false;[ COG; COD; ZMB; NAM]; 1246700; 🇦🇴;{{ Angolan; Angolan};{ Angolaise; Angolais}}
-{ Anguilla; Anguilla;{{ Anguilla; Anguilla}}};[ .ai]; AI; 660; AIA; ;false; officially-assigned;false;;{ XCD:{ name: Eastern Caribbean dollar; symbol: $}};{ +1;[ 264]};[ The Valley];[ AI]; Americas; Caribbean;{ English};{{ أنغويلا; أنغويلا};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Anguilla; Angvila};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ アンギラ; アンギラ};{ 앵귈라; 앵귈라};{ Anguilla; Anguilla};{ آنگویلا; آنگویلا};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ Ангилья; Ангилья};{ Anguilla; Anguilla};{ Anguila; Anguilla};{ Angvila; Angvila};{ Anguilla; Anguilla};{ Anguilla; Anguilla};{ اینگویلا; اینگویلا};{ 安圭拉; 安圭拉}};[ 18.25; -63.16666666];false; []; 91; 🇦🇮;{{ Anguillian; Anguillian};{ Anguillane; Anguillan}}
-{ Åland Islands; Åland Islands;{ ; swe:{ official: Landskapet Åland; common: Åland}}};[ .ax]; AX; 248; ALA; ;false; officially-assigned;false;;{ EUR:{ name: Euro; symbol: €}};{ +3;[ 5818]};[ Mariehamn];[ AX; Aaland; Aland; Ahvenanmaa]; Europe; Northern Europe;{ ; swe: Swedish};{{ جزر أولاند; جزر أولاند};{ Inizi Åland; Åland};{ Ålandské ostrovy; Ålandy};{ Åland-Inseln; Åland};{ Ahvenamaa maakond; Ahvenamaa};{ Ahvenanmaan maakunta; Ahvenanmaa};{ Ahvenanmaa; Ahvenanmaa};{ Aland Islands; Ålandski otoci};{ Åland-szigetek; Åland-szigetek};{ Isole Åland; Isole Aland};{ オーランド諸島; オーランド};{ 올란드 제도; 올란드 제도};{ Åland eilanden; Ålandeilanden};{ جزایر الند; جزایر الند};{ Wyspy Alandzkie; Wyspy Alandzkie};{ Ilhas Åland; Alândia};{ Аландские острова; Аландские острова};{ Alandské ostrovy; Alandy};{ Islas Åland; Alandia};{ Olandska Ostrva; Olandska Ostrva};{ Åland; Åland};{ Åland Adaları; Åland};{ جزائر اولند; جزائر اولند};{ 奥兰群岛; 奥兰群岛}};[ 60.116667; 19.9];false; []; 1580; 🇦🇽;{{ Ålandish; Ålandish};{ Ålandaise; Ålandais}}
-{ Albania; Republic of Albania;{ ; sqi:{ official: Republika e Shqipërisë; common: Shqipëria}}};[ .al]; AL; 008; ALB; ALB;true; officially-assigned;true; Eastern European Group;{ ALL:{ name: Albanian lek; symbol: L}};{ +3;[ 55]};[ Tirana];[ AL; Shqipëri; Shqipëria; Shqipnia]; Europe; Southeast Europe;{ ; sqi: Albanian};{{ جمهورية ألبانيا; ألبانيا};{ Republik Albania; Albania};{ Albánská republika; Albánie};{ Republik Albanien; Albanien};{ Albaania Vabariik; Albaania};{ Albanian tasavalta; Albania};{ République d'Albanie; Albanie};{ Republika Albanija; Albanija};{ Albán Köztársaság; Albánia};{ Repubblica d'Albania; Albania};{ アルバニア共和国; アルバニア};{ 알바니아 공화국; 알바니아};{ Republiek Albanië; Albanië};{ جمهوری آلبانی; آلبانی};{ Republika Albanii; Albania};{ República da Albânia; Albânia};{ Республика Албания; Албания};{ Albánska republika; Albánsko};{ República de Albania; Albania};{ Republika Albanija; Albanija};{ Republiken Albanien; Albanien};{ Arnavutluk Cumhuriyeti; Arnavutluk};{ جمہوریہ البانیا; البانیا};{ 阿尔巴尼亚共和国; 阿尔巴尼亚}};[ 41; 20];false;[ MNE; GRC; MKD; UNK]; 28748; 🇦🇱;{{ Albanian; Albanian};{ Albanaise; Albanais}}
-{ Andorra; Principality of Andorra;{ ; cat:{ official: Principat d'Andorra; common: Andorra}}};[ .ad]; AD; 020; AND; AND;true; officially-assigned;true; Western European and Others Group;{ EUR:{ name: Euro; symbol: €}};{ +3;[ 76]};[ Andorra la Vella];[ AD; Principality of Andorra; Principat d'Andorra]; Europe; Southern Europe;{ ; cat: Catalan};{{ إمارة أندورا; أندورا};{ Priñselezh Andorra; Andorra};{ Andorrské knížectví; Andorra};{ Fürstentum Andorra; Andorra};{ Andorra Vürstiriik; Andorra};{ Andorran ruhtinaskunta; Andorra};{ Principauté d'Andorre; Andorre};{ Kneževina Andora; Andora};{ Andorra; Andorra};{ Principato di Andorra; Andorra};{ アンドラ公国; アンドラ};{ 안도라 공국; 안도라};{ Prinsdom Andorra; Andorra};{ شاهزاده‌نشین آندورا; آندورا};{ Księstwo Andory; Andora};{ Principado de Andorra; Andorra};{ Княжество Андорра; Андорра};{ Andorrské kniežatstvo; Andorra};{ Principado de Andorra; Andorra};{ Kneževina Andora; Andora};{ Furstendömet Andorra; Andorra};{ Andorra Prensliği; Andorra};{ اماراتِ انڈورا; انڈورا};{ 安道尔公国; 安道尔}};[ 42.5; 1.5];true;[ FRA; ESP]; 468; 🇦🇩;{{ Andorran; Andorran};{ Andorrane; Andorran}}
-{ United Arab Emirates; United Arab Emirates;{ ; ara:{ official: الإمارات العربية المتحدة; common: الإمارات}}};[ .ae; امارات.]; AE; 784; ARE; UAE;true; officially-assigned;true; Asia and the Pacific Group;{ AED:{ name: United Arab Emirates dirham; symbol: د.إ}};{ +9;[ 71]};[ Abu Dhabi];[ AE; UAE; Emirates]; Asia; Western Asia;{ ; ara: Arabic};{{ الإمارات العربية المتحدة; الإمارات};{ Emirelezhioù Arab Unanet; Emirelezhioù Arab Unanet};{ Spojené arabské emiráty; Spojené arabské emiráty};{ Vereinigte Arabische Emirate; Vereinigte Arabische Emirate};{ Araabia Ühendemiraadid; Araabia Ühendemiraadid};{ Yhdistyneet arabiemiirikunnat; Arabiemiraatit};{ Émirats arabes unis; Émirats arabes unis};{ Ujedinjeni Arapski Emirati; Ujedinjeni Arapski Emirati};{ Egyesült Arab Emírségek; Egyesült Arab Emírségek};{ Emirati Arabi Uniti; Emirati Arabi Uniti};{ アラブ首長国連邦; UAE};{ 아랍 토후국 연방; 아랍에미리트};{ Verenigde Arabische Emiraten; Verenigde Arabische Emiraten};{ امارات متحده عربی; امارات};{ Zjednoczone Emiraty Arabskie; Zjednoczone Emiraty Arabskie};{ Emirados Árabes Unidos; Emirados Árabes Unidos};{ Объединенные Арабские Эмираты; Объединённые Арабские Эмираты};{ Spojené arabské emiráty; Spojené arabské emiráty};{ Emiratos Árabes Unidos; Emiratos Árabes Unidos};{ Ujedinjeni Arapski Emirati; Ujedinjeni Arapski Emirati};{ Förenade Arabemiraten; Förenade Arabemiraten};{ Birleşik Arap Emirlikleri; Birleşik Arap Emirlikleri};{ متحدہ عرب امارات; متحدہ عرب امارات};{ 阿拉伯联合酋长国; 阿拉伯联合酋长国}};[ 24; 54];false;[ OMN; SAU]; 83600; 🇦🇪;{{ Emirati; Emirati};{ Emirienne; Emirien}}
-{ Argentina; Argentine Republic;{ ; grn:{ official: Argentine Republic; common: Argentina}; spa:{ official: República Argentina; common: Argentina}}};[ .ar]; AR; 032; ARG; ARG;true; officially-assigned;true; Latin American and Caribbean Group;{ ARS:{ name: Argentine peso; symbol: $}};{ +5;[ 4]};[ Buenos Aires];[ AR; Argentine Republic; República Argentina]; Americas; South America;{ ; grn: Guaraní; spa: Spanish};{{ جمهورية الأرجنتين; الأرجنتين};{ Republik Arc'hantina; Arc'hantina};{ Argentinská republika; Argentina};{ Argentinische Republik; Argentinien};{ Argentina Vabariik; Argentina};{ Argentiinan tasavalta; Argentiina};{ République argentine; Argentine};{ Argentinski Republika; Argentina};{ Argentin Köztársaság; Argentína};{ Repubblica Argentina; Argentina};{ アルゼンチン共和国; アルゼンチン};{ 아르헨티나 공화국; 아르헨티나};{ Argentijnse Republiek; Argentinië};{ جمهوری آرژانتین; آرژانتین};{ Republika Argentyńska; Argentyna};{ República Argentina; Argentina};{ Аргентинская Республика; Аргентина};{ Argentínska republika; Argentína};{ República Argentina; Argentina};{ Republika Argentina; Argentina};{ Republiken Argentina; Argentina};{ Arjantin Cumhuriyeti; Arjantin};{ جمہوریہ ارجنٹائن; ارجنٹائن};{ 阿根廷共和国; 阿根廷}};[ -34; -64];false;[ BOL; BRA; CHL; PRY; URY]; 2780400; 🇦🇷;{{ Argentine; Argentine};{ Argentine; Argentin}}
-{ Armenia; Republic of Armenia;{ ; hye:{ official: Հայաստանի Հանրապետություն; common: Հայաստան}}};[ .am]; AM; 051; ARM; ARM;true; officially-assigned;true; Eastern European Group;{ AMD:{ name: Armenian dram; symbol: ֏}};{ +3;[ 74]};[ Yerevan];[ AM; Hayastan; Republic of Armenia; Հայաստանի Հանրապետություն]; Asia; Western Asia;{ ; hye: Armenian};{{ جمهورية أرمينيا; أرمينيا};{ Republik Armenia; Armenia};{ Arménská republika; Arménie};{ Republik Armenien; Armenien};{ Armeenia Vabariik; Armeenia};{ Armenian tasavalta; Armenia};{ République d'Arménie; Arménie};{ Republika Armenija; Armenija};{ Örményország; Örményország};{ Repubblica di Armenia; Armenia};{ アルメニア共和国; アルメニア};{ 아르메니아 공화국; 아르메니아};{ Republiek Armenië; Armenië};{ جمهوری ارمنستان; ارمنستان};{ Republika Armenii; Armenia};{ República da Arménia; Arménia};{ Республика Армения; Армения};{ Arménska republika; Arménsko};{ República de Armenia; Armenia};{ Republika Jermenija; Jermenija};{ Republiken Armenien; Armenien};{ Ermenistan Cumhuriyeti; Ermenistan};{ جمہوریہ آرمینیا; آرمینیا};{ 亚美尼亚共和国; 亚美尼亚}};[ 40; 45];true;[ AZE; GEO; IRN; TUR]; 29743; 🇦🇲;{{ Armenian; Armenian};{ Arménienne; Arménien}}
-{ American Samoa; American Samoa;{{ American Samoa; American Samoa}; smo:{ official: Sāmoa Amelika; common: Sāmoa Amelika}}};[ .as]; AS; 016; ASM; ASA;false; officially-assigned;false;;{ USD:{ name: United States dollar; symbol: $}};{ +1;[ 684]};[ Pago Pago];[ AS; Amerika Sāmoa; Amelika Sāmoa; Sāmoa Amelika]; Oceania; Polynesia;{ English; smo: Samoan};{{ ساموا الأمريكية; ساموا الأمريكية};{ Samoa Amerikan; Samoa Amerikan};{ Americká Samoa; Americká Samoa};{ Amerikanisch-Samoa; Amerikanisch-Samoa};{ Ameerika Samoa; Ameerika Samoa};{ Amerikan Samoa; Amerikan Samoa};{ Samoa américaines; Samoa américaines};{ američka Samoa; Američka Samoa};{ Szamoa; Szamoa};{ Samoa americane; Samoa Americane};{ 米領サモア; アメリカ領サモア};{ 아메리칸사모아; 아메리칸사모아};{ Amerikaans Samoa; Amerikaans Samoa};{ ساموآی آمریکا; ساموآی آمریکا};{ Samoa Amerykańskie; Samoa Amerykańskie};{ Samoa americana; Samoa Americana};{ американское Самоа; Американское Самоа};{ Americká Samoa; Americká Samoa};{ Samoa Americana; Samoa Americana};{ Američka Samoa; Američka Samoa};{ Amerikanska Samoa; Amerikanska Samoa};{ Amerikan Samoası; Amerikan Samoası};{ امریکی سمووا; امریکی سمووا};{ 美属萨摩亚; 美属萨摩亚}};[ -14.33333333; -170];false; []; 199; 🇦🇸;{{ American Samoan; American Samoan};{ Samoane; Samoan}}
-{ Antarctica; Antarctica; {}};[ .aq]; AQ; 010; ATA; ;false; officially-assigned;false;; {};{ ; []}; [];[ AQ]; Antarctic;; {};{{ أنتارتيكا; أنتارتيكا};{ Antarktika; Antarktika};{ Antarktida; Antarktida};{ Antarktika; Antarktis};{ Antarktika; Antarktika};{ Etelämanner; Etelämanner};{ Antarctique; Antarctique};{ Antarktika; Antarktika};{ Antarktisz; Antarktisz};{ Antartide; Antartide};{ 南極; 南極大陸};{ 남극; 남극};{ Antarctica; Antarctica};{ جنوبگان; جنوبگان};{ Antarktyka; Antarktyka};{ Antártica; Antártida};{ Антарктида; Антарктида};{ Antarktída; Antarktída};{ Antártida; Antártida};{ Antarktik; Antarktik};{ Antarktis; Antarktis};{ Antarktika; Antarktika};{ انٹارکٹکا; انٹارکٹکا};{ 南极洲; 南极洲}};[ -90; 0];false; []; 14000000; 🇦🇶;{{ Antarctican; Antarctican};{ Antarcticaine; Antarcticain}}
-{ French Southern and Antarctic Lands; Territory of the French Southern and Antarctic Lands;{ ; fra:{ official: Territoire des Terres australes et antarctiques françaises; common: Terres australes et antarctiques françaises}}};[ .tf]; TF; 260; ATF; ;false; officially-assigned;false;;{ EUR:{ name: Euro; symbol: €}};{ +2;[ 62]};[ Port-aux-Français];[ TF; French Southern Territories]; Antarctic;;{ ; fra: French};{{ مقاطعات وأقاليم ما وراء البحار الفرنسية; أراض فرنسية جنوبية وأنتارتيكية};{ Tiriad Douaroù Aostral hag Antarktikel Frañs; Douaroù Aostral hag Antarktikel Frañs};{ Teritorium Francouzská jižní a antarktická území; Francouzská jižní a antarktická území};{ Gebiet der Französisch Süd- und Antarktisgebiete; Französische Süd- und Antarktisgebiete};{ Prantsuse Lõunaalad; Prantsuse Lõunaalad};{ Ranskan eteläiset ja antarktiset alueet; Ranskan eteläiset ja antarktiset alueet};{ Territoire des Terres australes et antarctiques françaises; Terres australes et antarctiques françaises};{ Teritoriju Francuski južni i antarktički teritoriji; Francuski južni i antarktički teritoriji};{ Francia déli és antarktiszi területek; Francia déli és antarktiszi területek};{ Territorio della australi e antartiche francesi Terre; Territori Francesi del Sud};{ フランス領極南諸島; フランス領南方・南極地域};{ 프랑스령 남부와 남극 지역; 프랑스령 남부와 남극 지역};{ Grondgebied van de Franse Zuidelijke en Antarctische gebieden; Franse Gebieden in de zuidelijke Indische Oceaan};{ سرزمین‌های جنوبی و جنوبگانی فرانسه; سرزمین‌های جنوبی و جنوبگانی فرانسه};{ Francuskie Terytoria Południowe i Antarktyczne; Francuskie Terytoria Południowe i Antarktyczne};{ Território do Sul e Antártica Francesa; Terras Austrais e Antárticas Francesas};{ Территория Французские Южные и Антарктические земли; Французские Южные и Антарктические территории};{ Francúzske južné a antarktické územia; Francúzske juŽné a antarktické územia};{ Territorio del Francés Tierras australes y antárticas; Tierras Australes y Antárticas Francesas};{ Francuske južne i antarktičke zemlje; Francuske južne i antarktičke zemlje};{ Franska syd- och Antarktisterritorierna; Franska södra territorierna};{ Fransız Güney ve Antarktika Toprakları; Fransız Güney ve Antarktika Toprakları};{ سرزمینِ جنوبی فرانسیسیہ و انٹارکٹیکہ; سرزمین جنوبی فرانسیسیہ و انٹارکٹیکا};{ 法国南部和南极土地; 法国南部和南极土地}};[ -49.25; 69.167];false; []; 7747; 🇹🇫;{{ French; French};{ Française; Français}}
-{ Antigua and Barbuda; Antigua and Barbuda;{{ Antigua and Barbuda; Antigua and Barbuda}}};[ .ag]; AG; 028; ATG; ANT;true; officially-assigned;true; Latin American and Caribbean Group;{ XCD:{ name: Eastern Caribbean dollar; symbol: $}};{ +1;[ 268]};[ Saint John's];[ AG]; Americas; Caribbean;{ English};{{ أنتيغوا وباربودا; أنتيغوا وباربودا};{ Antigua ha Barbuda; Antigua ha Barbuda};{ Antigua a Barbuda; Antigua a Barbuda};{ Antigua und Barbuda; Antigua und Barbuda};{ Antigua ja Barbuda; Antigua ja Barbuda};{ Antigua ja Barbuda; Antigua ja Barbuda};{ Antigua -et-Barbuda; Antigua-et-Barbuda};{ Antigva i Barbuda; Antigva i Barbuda};{ Antigua és Barbuda; Antigua és Barbuda};{ Antigua e Barbuda; Antigua e Barbuda};{ アンティグア・バーブーダ; アンティグア・バーブーダ};{ 앤티가 바부다; 앤티가 바부다};{ Antigua en Barbuda; Antigua en Barbuda};{ آنتیگوا و باربودا; آنتیگوا و باربودا};{ Antigua i Barbuda; Antigua i Barbuda};{ Antigua e Barbuda; Antígua e Barbuda};{ Антигуа и Барбуда; Антигуа и Барбуда};{ Antigua a Barbuda; Antigua a Barbuda};{ Antigua y Barbuda; Antigua y Barbuda};{ Antigva i Barbuda; Antigva i Barbuda};{ Antigua och Barbuda; Antigua och Barbuda};{ Antigua ve Barbuda; Antigua ve Barbuda};{ اینٹیگوا و باربوڈا; اینٹیگوا و باربوڈا};{ 安提瓜和巴布达; 安提瓜和巴布达}};[ 17.05; -61.8];false; []; 442; 🇦🇬;{{ Antiguan, Barbudan; Antiguan, Barbudan};{ Antiguaise et barbudienne; Antiguaise et barbudien}}
-{ Australia; Commonwealth of Australia;{{ Commonwealth of Australia; Australia}}};[ .au]; AU; 036; AUS; AUS;true; officially-assigned;true; Western European and Others Group;{ AUD:{ name: Australian dollar; symbol: $}};{ +6;[ 1]};[ Canberra];[ AU]; Oceania; Australia and New Zealand;{ English};{{ كومونولث أستراليا; أستراليا};{ Kenglad Aostralia; Aostralia};{ Australské společenství; Austrálie};{ Commonwealth Australien; Australien};{ Austraalia Ühendus; Austraalia};{ Australian liittovaltio; Australia};{ Australie; Australie};{ Commonwealth of Australia; Australija};{ Ausztrál Államszövetség; Ausztrália};{ Commonwealth dell'Australia; Australia};{ オーストラリア連邦; オーストラリア};{ 오스트레일리아 연방; 호주};{ Gemenebest van Australië; Australië};{ قلمرو همسود استرالیا; استرالیا};{ Związek Australijski; Australia};{ Comunidade da Austrália; Austrália};{ Содружество Австралии; Австралия};{ Austrálsky zväz; Austrália};{ Mancomunidad de Australia; Australia};{ Komonvelt Australija; Australija};{ Australiska statsförbundet; Australien};{ Avustralya Federal Devleti; Avustralya};{ دولتِ مشترکہ آسٹریلیا; آسٹریلیا};{ 澳大利亚联邦; 澳大利亚}};[ -27; 133];false; []; 7692024; 🇦🇺;{{ Australian; Australian};{ Australienne; Australien}}
-{ Austria; Republic of Austria;{ ; bar:{ official: Republik Österreich; common: Österreich}}};[ .at]; AT; 040; AUT; AUT;true; officially-assigned;true; Western European and Others Group;{ EUR:{ name: Euro; symbol: €}};{ +4;[ 3]};[ Vienna];[ AT; Osterreich; Oesterreich]; Europe; Central Europe;{ ; bar: Austro-Bavarian German};{{ جمهورية النمسا; النمسا};{ Republik Aostria; Aostria};{ Rakouská republika; Rakousko};{ Republik Österreich; Österreich};{ Austria Vabariik; Austria};{ Itävallan tasavalta; Itävalta};{ République d'Autriche; Autriche};{ Republika Austrija; Austrija};{ Ausztria; Ausztria};{ Repubblica d'Austria; Austria};{ オーストリア共和国; オーストリア};{ 오스트리아 공화국; 오스트리아};{ Republiek Oostenrijk; Oostenrijk};{ جمهوری اتریش; اتریش};{ Republika Austrii; Austria};{ República da Áustria; Áustria};{ Австрийская Республика; Австрия};{ Rakúska republika; Rakúsko};{ República de Austria; Austria};{ Republika Austrija; Austrija};{ Republiken Österrike; Österrike};{ Avusturya Cumhuriyeti; Avusturya};{ جمہوریہ آسٹریا; آسٹریا};{ 奥地利共和国; 奥地利}};[ 47.33333333; 13.33333333];true;[ CZE; DEU; HUN; ITA; LIE; SVK; SVN; CHE]; 83871; 🇦🇹;{{ Austrian; Austrian};{ Autrichienne; Autrichien}}
-{ Azerbaijan; Republic of Azerbaijan;{ ; aze:{ official: Azərbaycan Respublikası; common: Azərbaycan}; rus:{ official: Азербайджанская Республика; common: Азербайджан}}};[ .az]; AZ; 031; AZE; AZE;true; officially-assigned;true; Eastern European Group;{ AZN:{ name: Azerbaijani manat; symbol: ₼}};{ +9;[ 94]};[ Baku];[ AZ; Republic of Azerbaijan; Azərbaycan Respublikası]; Asia; Western Asia;{ ; aze: Azerbaijani; rus: Russian};{{ جمهورية أذربيجان; أذربيجان};{ Republik Azerbaidjan; Azerbaidjan};{ Ázerbájdžánská republika; Ázerbájdžán};{ Republik Aserbaidschan; Aserbaidschan};{ Aserbaidžaani Vabariik; Aserbaidžaan};{ Azerbaidzanin tasavalta; Azerbaidzan};{ République d'Azerbaïdjan; Azerbaïdjan};{ Republika Azerbajdžan; Azerbajdžan};{ Azerbajdzsán; Azerbajdzsán};{ Repubblica dell'Azerbaigian; Azerbaijan};{ アゼルバイジャン共和国; アゼルバイジャン};{ 아제르바이잔 공화국; 아제르바이잔};{ Republiek Azerbeidzjan; Azerbeidzjan};{ جمهوری آذربایجان; جمهوری آذربایجان};{ Republika Azerbejdżanu; Azerbejdżan};{ República do Azerbaijão; Azerbeijão};{ Азербайджанская Республика; Азербайджан};{ Azerbajǆanská republika; AzerbajǇan};{ República de Azerbaiyán; Azerbaiyán};{ Republika Azerbejdžan; Azerbejdžan};{ Republiken Azerbajdzjan; Azerbajdzjan};{ Azerbaycan Cumhuriyeti; Azerbaycan};{ جمہوریہ آذربائیجان; آذربائیجان};{ 阿塞拜疆共和国; 阿塞拜疆}};[ 40.5; 47.5];true;[ ARM; GEO; IRN; RUS; TUR]; 86600; 🇦🇿;{{ Azerbaijani; Azerbaijani};{ Azerbaïdjanaise; Azerbaïdjanais}}
-{ Burundi; Republic of Burundi;{ ; fra:{ official: République du Burundi; common: Burundi}; run:{ official: Republika y'Uburundi ; common: Uburundi}}};[ .bi]; BI; 108; BDI; BDI;true; officially-assigned;true; African Group;{ BIF:{ name: Burundian franc; symbol: Fr}};{ +2;[ 57]};[ Gitega];[ BI; Republic of Burundi; Republika y'Uburundi; République du Burundi]; Africa; Eastern Africa;{ ; fra: French; run: Kirundi};{{ جمهورية بوروندي; بوروندي};{ Republik Burundi; Burundi};{ Burundská republika; Burundi};{ Republik Burundi; Burundi};{ Burundi Vabariik; Burundi};{ Burundin tasavalta; Burundi};{ République du Burundi; Burundi};{ Burundi; Burundi};{ Burundi; Burundi};{ Repubblica del Burundi; Burundi};{ ブルンジ共和国; ブルンジ};{ 부룬디; 부룬디};{ Republiek Burundi; Burundi};{ جمهوری بوروندی; بوروندی};{ Republika Burundi; Burundi};{ República do Burundi; Burundi};{ Республика Бурунди; Бурунди};{ Burundská republika; Burundi};{ República de Burundi; Burundi};{ Republika Burundi; Burundi};{ Republiken Burundi; Burundi};{ Burundi Cumhuriyeti; Burundi};{ جمہوریہ برونڈی; برونڈی};{ 布隆迪共和国; 布隆迪}};[ -3.5; 30];true;[ COD; RWA; TZA]; 27834; 🇧🇮;{{ Burundian; Burundian};{ Burundaise; Burundais}}
-{ Belgium; Kingdom of Belgium;{ ; deu:{ official: Königreich Belgien; common: Belgien}; fra:{ official: Royaume de Belgique; common: Belgique}; nld:{ official: Koninkrijk België; common: België}}};[ .be]; BE; 056; BEL; BEL;true; officially-assigned;true; Western European and Others Group;{ EUR:{ name: Euro; symbol: €}};{ +3;[ 2]};[ Brussels];[ BE; België; Belgie; Belgien; Belgique; Kingdom of Belgium; Koninkrijk België; Royaume de Belgique; Königreich Belgien]; Europe; Western Europe;{ ; deu: German; fra: French; nld: Dutch};{{ مملكة بلجيكا; بلجيكا};{ Rouantelezh Belgia; Belgia};{ Belgické království; Belgie};{ Königreich Belgien; Belgien};{ Belgia Kuningriik; Belgia};{ Belgian kuningaskunta; Belgia};{ Royaume de Belgique; Belgique};{ Kraljevina Belgija; Belgija};{ Belga Királyság; Belgium};{ Regno del Belgio; Belgio};{ ベルギー王国; ベルギー};{ 벨기에 왕국; 벨기에};{ Koninkrijk België; België};{ پادشاهی بلژیک; بلژیک};{ Królestwo Belgii; Belgia};{ Reino da Bélgica; Bélgica};{ Королевство Бельгия; Бельгия};{ Belgické kráľovstvo; Belgicko};{ Reino de Bélgica; Bélgica};{ Kraljevina Belgija; Belgija};{ Konungariket Belgien; Belgien};{ Belçika Krallığı; Belçika};{ مملکتِ بلجئیم; بلجئیم};{ 比利时王国; 比利时}};[ 50.83333333; 4];false;[ FRA; DEU; LUX; NLD]; 30528; 🇧🇪;{{ Belgian; Belgian};{ Belge; Belge}}
-{ Benin; Republic of Benin;{ ; fra:{ official: République du Bénin; common: Bénin}}};[ .bj]; BJ; 204; BEN; BEN;true; officially-assigned;true; African Group;{ XOF:{ name: West African CFA franc; symbol: Fr}};{ +2;[ 29]};[ Porto-Novo];[ BJ; Republic of Benin; République du Bénin]; Africa; Western Africa;{ ; fra: French};{{ جمهورية بنين; بنين};{ Republik Benin; Benin};{ Beninská republika; Benin};{ Republik Benin; Benin};{ Benini Vabariik; Benin};{ Beninin tasavalta; Benin};{ République du Bénin; Bénin};{ Republika Benin; Benin};{ Benini Köztársaság; Benin};{ Repubblica del Benin; Benin};{ ベナン共和国; ベナン};{ 베냉 공화국; 베냉};{ Republiek Benin; Benin};{ جمهوری بنین; بنین};{ Benin; Benin};{ República do Benin; Benin};{ Республика Бенин; Бенин};{ Beninská republika; Benin};{ República de Benin; Benín};{ Republika Benin; Benin};{ Republiken Benin; Benin};{ Benin Cumhuriyeti; Benin};{ جمہوریہ بینن; بینن};{ 贝宁共和国; 贝宁}};[ 9.5; 2.25];false;[ BFA; NER; NGA; TGO]; 112622; 🇧🇯;{{ Beninese; Beninese};{ Béninoise; Béninois}}
-{ Burkina Faso; Burkina Faso;{ ; fra:{ official: République du Burkina; common: Burkina Faso}}};[ .bf]; BF; 854; BFA; BUR;true; officially-assigned;true; African Group;{ XOF:{ name: West African CFA franc; symbol: Fr}};{ +2;[ 26]};[ Ouagadougou];[ BF]; Africa; Western Africa;{ ; fra: French};{{ بوركينا فاسو; بوركينا فاسو};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ République du Burkina; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina};{ Burkina Faso; Burkina Faso};{ ブルキナファソ; ブルキナファソ};{ 부르키나파소; 부르키나파소};{ Burkina Faso; Burkina Faso};{ بورکینافاسو; بورکینافاسو};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Буркина -Фасо; Буркина-Фасо};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ Burkina Faso; Burkina Faso};{ برکینا فاسو; برکینا فاسو};{ 布基纳法索; 布基纳法索}};[ 13; -2];true;[ BEN; CIV; GHA; MLI; NER; TGO]; 272967; 🇧🇫;{{ Burkinabe; Burkinabe};{ Burkinabée; Burkinabé}}
-{ Bangladesh; People's Republic of Bangladesh;{ ; ben:{ official: বাংলাদেশ গণপ্রজাতন্ত্রী; common: বাংলাদেশ}}};[ .bd]; BD; 050; BGD; BAN;true; officially-assigned;true; Asia and the Pacific Group;{ BDT:{ name: Bangladeshi taka; symbol: ৳}};{ +8;[ 80]};[ Dhaka];[ BD; People's Republic of Bangladesh; Gônôprôjatôntri Bangladesh]; Asia; Southern Asia;{ ; ben: Bengali};{{ جمهورية بنغلاديش الشعبية; بنغلاديش};{ Republik pobl Bangladesh; Bangladesh};{ Bangladéšská lidová republika; Bangladéš};{ Volksrepublik Bangladesch; Bangladesch};{ Bangladeshi Rahvavabariik; Bangladesh};{ Bangladeshin kansantasavalta; Bangladesh};{ La République populaire du Bangladesh; Bangladesh};{ Narodna Republika Bangladeš; Bangladeš};{ Banglades; Banglades};{ Repubblica popolare del Bangladesh; Bangladesh};{ バングラデシュ人民共和国; バングラデシュ};{ 방글라데시 인민 공화국; 방글라데시};{ Volksrepubliek Bangladesh; Bangladesh};{ جمهوری خلق بنگلادش; بنگلادش};{ Ludowa Republika Bangladeszu; Bangladesz};{ República Popular do Bangladesh; Bangladesh};{ Народная Республика Бангладеш; Бангладеш};{ Bangladéšska ľudová republika; Bangladéš};{ República Popular de Bangladesh; Bangladesh};{ Narodna Republika Bangladeš; Bangladeš};{ Folkrepubliken Bangladesh; Bangladesh};{ Bangladeş Halk Cumhuriyeti; Bangladeş};{ عوامی جمہوریہ بنگلہ دیش; بنگلہ دیش};{ 孟加拉人民共和国; 孟加拉国}};[ 24; 90];false;[ MMR; IND]; 147570; 🇧🇩;{{ Bangladeshi; Bangladeshi};{ Bangladaise; Bangladais}}
-{ Bulgaria; Republic of Bulgaria;{ ; bul:{ official: Република България; common: България}}};[ .bg]; BG; 100; BGR; BUL;true; officially-assigned;true; Eastern European Group;{ BGN:{ name: Bulgarian lev; symbol: лв}};{ +3;[ 59]};[ Sofia];[ BG; Republic of Bulgaria; Република България]; Europe; Southeast Europe;{ ; bul: Bulgarian};{{ جمهورية بلغاريا; بلغاريا};{ Republik Bulgaria; Bulgaria};{ Bulharská republika; Bulharsko};{ Republik Bulgarien; Bulgarien};{ Bulgaaria Vabariik; Bulgaaria};{ Bulgarian tasavalta; Bulgaria};{ République de Bulgarie; Bulgarie};{ Republika Bugarska; Bugarska};{ Bolgár Köztársaság; Bulgária};{ Repubblica di Bulgaria; Bulgaria};{ ブルガリア共和国; ブルガリア};{ 불가리아 공화국; 불가리아};{ Republiek Bulgarije; Bulgarije};{ جمهوری بلغارستان; بلغارستان};{ Republika Bułgarii; Bułgaria};{ República da Bulgária; Bulgária};{ Республика Болгария; Болгария};{ Bulharská republika; Bulharsko};{ República de Bulgaria; Bulgaria};{ Republika Bugarska; Bugarska};{ Republiken Bulgarien; Bulgarien};{ Bulgaristan Cumhuriyeti; Bulgaristan};{ جمہوریہ بلغاریہ; بلغاریہ};{ 保加利亚共和国; 保加利亚}};[ 43; 25];false;[ GRC; MKD; ROU; SRB; TUR]; 110879; 🇧🇬;{{ Bulgarian; Bulgarian};{ Bulgare; Bulgare}}
-{ Bahrain; Kingdom of Bahrain;{ ; ara:{ official: مملكة البحرين; common: البحرين}}};[ .bh]; BH; 048; BHR; BRN;true; officially-assigned;true; Asia and the Pacific Group;{ BHD:{ name: Bahraini dinar; symbol: .د.ب}};{ +9;[ 73]};[ Manama];[ BH; Kingdom of Bahrain; Mamlakat al-Baḥrayn]; Asia; Western Asia;{ ; ara: Arabic};{{ مملكة البحرين; البحرين};{ Rouantelezh Bahrein; Bahrein};{ Království Bahrajn; Bahrajn};{ Königreich Bahrain; Bahrain};{ Bahreini Kuningriik; Bahrein};{ Bahrainin kuningaskunta; Bahrain};{ Royaume de Bahreïn; Bahreïn};{ Kraljevina Bahrein; Bahrein};{ Bahreini Királyság; Bahrein};{ Regno del Bahrain; Bahrein};{ バーレーン王国; バーレーン};{ 바레인 왕국; 바레인};{ Koninkrijk Bahrein; Bahrein};{ پادشاهی بحرین; بحرین};{ Królestwo Bahrajnu; Bahrajn};{ Reino do Bahrein; Bahrein};{ Королевство Бахрейн; Бахрейн};{ Bahrajnské kráľovstvo; Bahrajn};{ Reino de Bahrein; Bahrein};{ Kraljevina Bahrein; Bahrein};{ Konungariket Bahrain; Bahrain};{ Bahreyn Krallığı; Bahreyn};{ مملکتِ بحرین; بحرین};{ 巴林王国; 巴林}};[ 26; 50.55];false; []; 765; 🇧🇭;{{ Bahraini; Bahraini};{ Bahreïnienne; Bahreïnien}}
-... (truncated)
-```
-
-**compact (33%)** (297663 chars, 145843 tokens):
-```txt
-name{common;official;native{eng{official;common};...}};tld[];cca2;ccn3;cca3;cioc;independent;status;unMember;unRegionalGroup;currencies{...};idd{root;suffixes[]};capital[];altSpellings[];region;subregion;languages{eng;...};translations{ara{official;common};bre{official;common};ces{official;common};deu{official;common};est{official;common};fin{official;common};fra{official;common};hrv{official;common};hun{official;common};ita{official;common};jpn{official;common};kor{official;common};nld{official;common};per{official;common};pol{official;common};por{official;common};rus{official;common};slk{official;common};spa{official;common};srp{official;common};swe{official;common};tur{official;common};urd{official;common};zho{official;common}};latlng[];landlocked;borders[];area;flag;demonyms{eng{f;m};fra{f;m}}
-{Aruba;Aruba;{;nld:{official:Aruba;common:Aruba};pap:{official:Aruba;common:Aruba}}};[.aw];AW;533;ABW;ARU;false;officially-assigned;false;;{AWG:{name:Aruban florin;symbol:ƒ}};{+2;[97]};[Oranjestad];[AW];Americas;Caribbean;{;nld:Dutch;pap:Papiamento};{{أروبا;أروبا};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{アルバ;アルバ};{아루바;아루바};{Aruba;Aruba};{آروبا;آروبا};{Aruba;Aruba};{Aruba;Aruba};{Аруба;Аруба};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{Aruba;Aruba};{اروبا;اروبا};{阿鲁巴;阿鲁巴}};[12.5;-69.96666666];false;[];180;🇦🇼;{{Aruban;Aruban};{Arubaise;Arubais}}
-{Afghanistan;Islamic Republic of Afghanistan;{;prs:{official:جمهوری اسلامی افغانستان;common:افغانستان};pus:{official:د افغانستان اسلامي جمهوریت;common:افغانستان};tuk:{official:Owganystan Yslam Respublikasy;common:Owganystan}}};[.af];AF;004;AFG;AFG;true;officially-assigned;true;Asia and the Pacific Group;{AFN:{name:Afghan afghani;symbol:؋}};{+9;[3]};[Kabul];[AF;Afġānistān];Asia;Southern Asia;{;prs:Dari;pus:Pashto;tuk:Turkmen};{{جمهورية أففانستان الإسلامية;أفغانستان};{Republik Islamek Afghanistan;Afghanistan};{Afghánská islámská republika;Afghánistán};{Islamische Republik Afghanistan;Afghanistan};{Afganistani Islamivabariik;Afganistan};{Afganistanin islamilainen tasavalta;Afganistan};{République islamique d'Afghanistan;Afghanistan};{Islamska Republika Afganistan;Afganistan};{Afganisztáni Iszlám Köztársaság;Afganisztán};{Repubblica islamica dell'Afghanistan;Afghanistan};{アフガニスタン・イスラム共和国;アフガニスタン};{아프가니스탄 이슬람 공화국;아프가니스탄};{Islamitische Republiek Afghanistan;Afghanistan};{جمهوری اسلامی افغانستان;افغانستان};{Islamska Republika Afganistanu;Afganistan};{República Islâmica do Afeganistão;Afeganistão};{Исламская Республика Афганистан;Афганистан};{Afgánsky islamský štát;Afganistan};{República Islámica de Afganistán;Afganistán};{Islamska Republika Avganistan;Avganistan};{Islamiska republiken Afghanistan;Afghanistan};{Afganistan İslam Cumhuriyeti;Afganistan};{اسلامی جمہوریہ افغانستان;افغانستان};{阿富汗伊斯兰共和国;阿富汗}};[33;65];true;[IRN;PAK;TKM;UZB;TJK;CHN];652230;🇦🇫;{{Afghan;Afghan};{Afghane;Afghan}}
-{Angola;Republic of Angola;{;por:{official:República de Angola;common:Angola}}};[.ao];AO;024;AGO;ANG;true;officially-assigned;true;African Group;{AOA:{name:Angolan kwanza;symbol:Kz}};{+2;[44]};[Luanda];[AO;República de Angola;ʁɛpublika de an'ɡɔla];Africa;Middle Africa;{;por:Portuguese};{{أنغولا;جمهورية أنغولا};{Republik Angola;Angola};{Angolská republika;Angola};{Republik Angola;Angola};{Angola Vabariik;Angola};{Angolan tasavalta;Angola};{République d'Angola;Angola};{Republika Angola;Angola};{Angola;Angola};{Repubblica dell'Angola;Angola};{アンゴラ共和国;アンゴラ};{앙골라 공화국;앙골라};{Republiek Angola;Angola};{جمهوری آنگولا;آنگولا};{Republika Angoli;Angola};{República de Angola;Angola};{Республика Ангола;Ангола};{Angolská republika;Angola};{República de Angola;Angola};{Republika Angola;Angola};{Republiken Angola;Angola};{Angola Cumhuriyeti;Angola};{جمہوریہ انگولہ;انگولہ};{安哥拉共和国;安哥拉}};[-12.5;18.5];false;[COG;COD;ZMB;NAM];1246700;🇦🇴;{{Angolan;Angolan};{Angolaise;Angolais}}
-{Anguilla;Anguilla;{{Anguilla;Anguilla}}};[.ai];AI;660;AIA;;false;officially-assigned;false;;{XCD:{name:Eastern Caribbean dollar;symbol:$}};{+1;[264]};[The Valley];[AI];Americas;Caribbean;{English};{{أنغويلا;أنغويلا};{Anguilla;Anguilla};{Anguilla;Anguilla};{Anguilla;Anguilla};{Anguilla;Anguilla};{Anguilla;Anguilla};{Anguilla;Anguilla};{Anguilla;Angvila};{Anguilla;Anguilla};{Anguilla;Anguilla};{アンギラ;アンギラ};{앵귈라;앵귈라};{Anguilla;Anguilla};{آنگویلا;آنگویلا};{Anguilla;Anguilla};{Anguilla;Anguilla};{Ангилья;Ангилья};{Anguilla;Anguilla};{Anguila;Anguilla};{Angvila;Angvila};{Anguilla;Anguilla};{Anguilla;Anguilla};{اینگویلا;اینگویلا};{安圭拉;安圭拉}};[18.25;-63.16666666];false;[];91;🇦🇮;{{Anguillian;Anguillian};{Anguillane;Anguillan}}
-{Åland Islands;Åland Islands;{;swe:{official:Landskapet Åland;common:Åland}}};[.ax];AX;248;ALA;;false;officially-assigned;false;;{EUR:{name:Euro;symbol:€}};{+3;[5818]};[Mariehamn];[AX;Aaland;Aland;Ahvenanmaa];Europe;Northern Europe;{;swe:Swedish};{{جزر أولاند;جزر أولاند};{Inizi Åland;Åland};{Ålandské ostrovy;Ålandy};{Åland-Inseln;Åland};{Ahvenamaa maakond;Ahvenamaa};{Ahvenanmaan maakunta;Ahvenanmaa};{Ahvenanmaa;Ahvenanmaa};{Aland Islands;Ålandski otoci};{Åland-szigetek;Åland-szigetek};{Isole Åland;Isole Aland};{オーランド諸島;オーランド};{올란드 제도;올란드 제도};{Åland eilanden;Ålandeilanden};{جزایر الند;جزایر الند};{Wyspy Alandzkie;Wyspy Alandzkie};{Ilhas Åland;Alândia};{Аландские острова;Аландские острова};{Alandské ostrovy;Alandy};{Islas Åland;Alandia};{Olandska Ostrva;Olandska Ostrva};{Åland;Åland};{Åland Adaları;Åland};{جزائر اولند;جزائر اولند};{奥兰群岛;奥兰群岛}};[60.116667;19.9];false;[];1580;🇦🇽;{{Ålandish;Ålandish};{Ålandaise;Ålandais}}
-{Albania;Republic of Albania;{;sqi:{official:Republika e Shqipërisë;common:Shqipëria}}};[.al];AL;008;ALB;ALB;true;officially-assigned;true;Eastern European Group;{ALL:{name:Albanian lek;symbol:L}};{+3;[55]};[Tirana];[AL;Shqipëri;Shqipëria;Shqipnia];Europe;Southeast Europe;{;sqi:Albanian};{{جمهورية ألبانيا;ألبانيا};{Republik Albania;Albania};{Albánská republika;Albánie};{Republik Albanien;Albanien};{Albaania Vabariik;Albaania};{Albanian tasavalta;Albania};{République d'Albanie;Albanie};{Republika Albanija;Albanija};{Albán Köztársaság;Albánia};{Repubblica d'Albania;Albania};{アルバニア共和国;アルバニア};{알바니아 공화국;알바니아};{Republiek Albanië;Albanië};{جمهوری آلبانی;آلبانی};{Republika Albanii;Albania};{República da Albânia;Albânia};{Республика Албания;Албания};{Albánska republika;Albánsko};{República de Albania;Albania};{Republika Albanija;Albanija};{Republiken Albanien;Albanien};{Arnavutluk Cumhuriyeti;Arnavutluk};{جمہوریہ البانیا;البانیا};{阿尔巴尼亚共和国;阿尔巴尼亚}};[41;20];false;[MNE;GRC;MKD;UNK];28748;🇦🇱;{{Albanian;Albanian};{Albanaise;Albanais}}
-{Andorra;Principality of Andorra;{;cat:{official:Principat d'Andorra;common:Andorra}}};[.ad];AD;020;AND;AND;true;officially-assigned;true;Western European and Others Group;{EUR:{name:Euro;symbol:€}};{+3;[76]};[Andorra la Vella];[AD;Principality of Andorra;Principat d'Andorra];Europe;Southern Europe;{;cat:Catalan};{{إمارة أندورا;أندورا};{Priñselezh Andorra;Andorra};{Andorrské knížectví;Andorra};{Fürstentum Andorra;Andorra};{Andorra Vürstiriik;Andorra};{Andorran ruhtinaskunta;Andorra};{Principauté d'Andorre;Andorre};{Kneževina Andora;Andora};{Andorra;Andorra};{Principato di Andorra;Andorra};{アンドラ公国;アンドラ};{안도라 공국;안도라};{Prinsdom Andorra;Andorra};{شاهزاده‌نشین آندورا;آندورا};{Księstwo Andory;Andora};{Principado de Andorra;Andorra};{Княжество Андорра;Андорра};{Andorrské kniežatstvo;Andorra};{Principado de Andorra;Andorra};{Kneževina Andora;Andora};{Furstendömet Andorra;Andorra};{Andorra Prensliği;Andorra};{اماراتِ انڈورا;انڈورا};{安道尔公国;安道尔}};[42.5;1.5];true;[FRA;ESP];468;🇦🇩;{{Andorran;Andorran};{Andorrane;Andorran}}
-{United Arab Emirates;United Arab Emirates;{;ara:{official:الإمارات العربية المتحدة;common:الإمارات}}};[.ae;امارات.];AE;784;ARE;UAE;true;officially-assigned;true;Asia and the Pacific Group;{AED:{name:United Arab Emirates dirham;symbol:د.إ}};{+9;[71]};[Abu Dhabi];[AE;UAE;Emirates];Asia;Western Asia;{;ara:Arabic};{{الإمارات العربية المتحدة;الإمارات};{Emirelezhioù Arab Unanet;Emirelezhioù Arab Unanet};{Spojené arabské emiráty;Spojené arabské emiráty};{Vereinigte Arabische Emirate;Vereinigte Arabische Emirate};{Araabia Ühendemiraadid;Araabia Ühendemiraadid};{Yhdistyneet arabiemiirikunnat;Arabiemiraatit};{Émirats arabes unis;Émirats arabes unis};{Ujedinjeni Arapski Emirati;Ujedinjeni Arapski Emirati};{Egyesült Arab Emírségek;Egyesült Arab Emírségek};{Emirati Arabi Uniti;Emirati Arabi Uniti};{アラブ首長国連邦;UAE};{아랍 토후국 연방;아랍에미리트};{Verenigde Arabische Emiraten;Verenigde Arabische Emiraten};{امارات متحده عربی;امارات};{Zjednoczone Emiraty Arabskie;Zjednoczone Emiraty Arabskie};{Emirados Árabes Unidos;Emirados Árabes Unidos};{Объединенные Арабские Эмираты;Объединённые Арабские Эмираты};{Spojené arabské emiráty;Spojené arabské emiráty};{Emiratos Árabes Unidos;Emiratos Árabes Unidos};{Ujedinjeni Arapski Emirati;Ujedinjeni Arapski Emirati};{Förenade Arabemiraten;Förenade Arabemiraten};{Birleşik Arap Emirlikleri;Birleşik Arap Emirlikleri};{متحدہ عرب امارات;متحدہ عرب امارات};{阿拉伯联合酋长国;阿拉伯联合酋长国}};[24;54];false;[OMN;SAU];83600;🇦🇪;{{Emirati;Emirati};{Emirienne;Emirien}}
-{Argentina;Argentine Republic;{;grn:{official:Argentine Republic;common:Argentina};spa:{official:República Argentina;common:Argentina}}};[.ar];AR;032;ARG;ARG;true;officially-assigned;true;Latin American and Caribbean Group;{ARS:{name:Argentine peso;symbol:$}};{+5;[4]};[Buenos Aires];[AR;Argentine Republic;República Argentina];Americas;South America;{;grn:Guaraní;spa:Spanish};{{جمهورية الأرجنتين;الأرجنتين};{Republik Arc'hantina;Arc'hantina};{Argentinská republika;Argentina};{Argentinische Republik;Argentinien};{Argentina Vabariik;Argentina};{Argentiinan tasavalta;Argentiina};{République argentine;Argentine};{Argentinski Republika;Argentina};{Argentin Köztársaság;Argentína};{Repubblica Argentina;Argentina};{アルゼンチン共和国;アルゼンチン};{아르헨티나 공화국;아르헨티나};{Argentijnse Republiek;Argentinië};{جمهوری آرژانتین;آرژانتین};{Republika Argentyńska;Argentyna};{República Argentina;Argentina};{Аргентинская Республика;Аргентина};{Argentínska republika;Argentína};{República Argentina;Argentina};{Republika Argentina;Argentina};{Republiken Argentina;Argentina};{Arjantin Cumhuriyeti;Arjantin};{جمہوریہ ارجنٹائن;ارجنٹائن};{阿根廷共和国;阿根廷}};[-34;-64];false;[BOL;BRA;CHL;PRY;URY];2780400;🇦🇷;{{Argentine;Argentine};{Argentine;Argentin}}
-{Armenia;Republic of Armenia;{;hye:{official:Հայաստանի Հանրապետություն;common:Հայաստան}}};[.am];AM;051;ARM;ARM;true;officially-assigned;true;Eastern European Group;{AMD:{name:Armenian dram;symbol:֏}};{+3;[74]};[Yerevan];[AM;Hayastan;Republic of Armenia;Հայաստանի Հանրապետություն];Asia;Western Asia;{;hye:Armenian};{{جمهورية أرمينيا;أرمينيا};{Republik Armenia;Armenia};{Arménská republika;Arménie};{Republik Armenien;Armenien};{Armeenia Vabariik;Armeenia};{Armenian tasavalta;Armenia};{République d'Arménie;Arménie};{Republika Armenija;Armenija};{Örményország;Örményország};{Repubblica di Armenia;Armenia};{アルメニア共和国;アルメニア};{아르메니아 공화국;아르메니아};{Republiek Armenië;Armenië};{جمهوری ارمنستان;ارمنستان};{Republika Armenii;Armenia};{República da Arménia;Arménia};{Республика Армения;Армения};{Arménska republika;Arménsko};{República de Armenia;Armenia};{Republika Jermenija;Jermenija};{Republiken Armenien;Armenien};{Ermenistan Cumhuriyeti;Ermenistan};{جمہوریہ آرمینیا;آرمینیا};{亚美尼亚共和国;亚美尼亚}};[40;45];true;[AZE;GEO;IRN;TUR];29743;🇦🇲;{{Armenian;Armenian};{Arménienne;Arménien}}
-{American Samoa;American Samoa;{{American Samoa;American Samoa};smo:{official:Sāmoa Amelika;common:Sāmoa Amelika}}};[.as];AS;016;ASM;ASA;false;officially-assigned;false;;{USD:{name:United States dollar;symbol:$}};{+1;[684]};[Pago Pago];[AS;Amerika Sāmoa;Amelika Sāmoa;Sāmoa Amelika];Oceania;Polynesia;{English;smo:Samoan};{{ساموا الأمريكية;ساموا الأمريكية};{Samoa Amerikan;Samoa Amerikan};{Americká Samoa;Americká Samoa};{Amerikanisch-Samoa;Amerikanisch-Samoa};{Ameerika Samoa;Ameerika Samoa};{Amerikan Samoa;Amerikan Samoa};{Samoa américaines;Samoa américaines};{američka Samoa;Američka Samoa};{Szamoa;Szamoa};{Samoa americane;Samoa Americane};{米領サモア;アメリカ領サモア};{아메리칸사모아;아메리칸사모아};{Amerikaans Samoa;Amerikaans Samoa};{ساموآی آمریکا;ساموآی آمریکا};{Samoa Amerykańskie;Samoa Amerykańskie};{Samoa americana;Samoa Americana};{американское Самоа;Американское Самоа};{Americká Samoa;Americká Samoa};{Samoa Americana;Samoa Americana};{Američka Samoa;Američka Samoa};{Amerikanska Samoa;Amerikanska Samoa};{Amerikan Samoası;Amerikan Samoası};{امریکی سمووا;امریکی سمووا};{美属萨摩亚;美属萨摩亚}};[-14.33333333;-170];false;[];199;🇦🇸;{{American Samoan;American Samoan};{Samoane;Samoan}}
-{Antarctica;Antarctica;{}};[.aq];AQ;010;ATA;;false;officially-assigned;false;;{};{;[]};[];[AQ];Antarctic;;{};{{أنتارتيكا;أنتارتيكا};{Antarktika;Antarktika};{Antarktida;Antarktida};{Antarktika;Antarktis};{Antarktika;Antarktika};{Etelämanner;Etelämanner};{Antarctique;Antarctique};{Antarktika;Antarktika};{Antarktisz;Antarktisz};{Antartide;Antartide};{南極;南極大陸};{남극;남극};{Antarctica;Antarctica};{جنوبگان;جنوبگان};{Antarktyka;Antarktyka};{Antártica;Antártida};{Антарктида;Антарктида};{Antarktída;Antarktída};{Antártida;Antártida};{Antarktik;Antarktik};{Antarktis;Antarktis};{Antarktika;Antarktika};{انٹارکٹکا;انٹارکٹکا};{南极洲;南极洲}};[-90;0];false;[];14000000;🇦🇶;{{Antarctican;Antarctican};{Antarcticaine;Antarcticain}}
-{French Southern and Antarctic Lands;Territory of the French Southern and Antarctic Lands;{;fra:{official:Territoire des Terres australes et antarctiques françaises;common:Terres australes et antarctiques françaises}}};[.tf];TF;260;ATF;;false;officially-assigned;false;;{EUR:{name:Euro;symbol:€}};{+2;[62]};[Port-aux-Français];[TF;French Southern Territories];Antarctic;;{;fra:French};{{مقاطعات وأقاليم ما وراء البحار الفرنسية;أراض فرنسية جنوبية وأنتارتيكية};{Tiriad Douaroù Aostral hag Antarktikel Frañs;Douaroù Aostral hag Antarktikel Frañs};{Teritorium Francouzská jižní a antarktická území;Francouzská jižní a antarktická území};{Gebiet der Französisch Süd- und Antarktisgebiete;Französische Süd- und Antarktisgebiete};{Prantsuse Lõunaalad;Prantsuse Lõunaalad};{Ranskan eteläiset ja antarktiset alueet;Ranskan eteläiset ja antarktiset alueet};{Territoire des Terres australes et antarctiques françaises;Terres australes et antarctiques françaises};{Teritoriju Francuski južni i antarktički teritoriji;Francuski južni i antarktički teritoriji};{Francia déli és antarktiszi területek;Francia déli és antarktiszi területek};{Territorio della australi e antartiche francesi Terre;Territori Francesi del Sud};{フランス領極南諸島;フランス領南方・南極地域};{프랑스령 남부와 남극 지역;프랑스령 남부와 남극 지역};{Grondgebied van de Franse Zuidelijke en Antarctische gebieden;Franse Gebieden in de zuidelijke Indische Oceaan};{سرزمین‌های جنوبی و جنوبگانی فرانسه;سرزمین‌های جنوبی و جنوبگانی فرانسه};{Francuskie Terytoria Południowe i Antarktyczne;Francuskie Terytoria Południowe i Antarktyczne};{Território do Sul e Antártica Francesa;Terras Austrais e Antárticas Francesas};{Территория Французские Южные и Антарктические земли;Французские Южные и Антарктические территории};{Francúzske južné a antarktické územia;Francúzske juŽné a antarktické územia};{Territorio del Francés Tierras australes y antárticas;Tierras Australes y Antárticas Francesas};{Francuske južne i antarktičke zemlje;Francuske južne i antarktičke zemlje};{Franska syd- och Antarktisterritorierna;Franska södra territorierna};{Fransız Güney ve Antarktika Toprakları;Fransız Güney ve Antarktika Toprakları};{سرزمینِ جنوبی فرانسیسیہ و انٹارکٹیکہ;سرزمین جنوبی فرانسیسیہ و انٹارکٹیکا};{法国南部和南极土地;法国南部和南极土地}};[-49.25;69.167];false;[];7747;🇹🇫;{{French;French};{Française;Français}}
-{Antigua and Barbuda;Antigua and Barbuda;{{Antigua and Barbuda;Antigua and Barbuda}}};[.ag];AG;028;ATG;ANT;true;officially-assigned;true;Latin American and Caribbean Group;{XCD:{name:Eastern Caribbean dollar;symbol:$}};{+1;[268]};[Saint John's];[AG];Americas;Caribbean;{English};{{أنتيغوا وباربودا;أنتيغوا وباربودا};{Antigua ha Barbuda;Antigua ha Barbuda};{Antigua a Barbuda;Antigua a Barbuda};{Antigua und Barbuda;Antigua und Barbuda};{Antigua ja Barbuda;Antigua ja Barbuda};{Antigua ja Barbuda;Antigua ja Barbuda};{Antigua -et-Barbuda;Antigua-et-Barbuda};{Antigva i Barbuda;Antigva i Barbuda};{Antigua és Barbuda;Antigua és Barbuda};{Antigua e Barbuda;Antigua e Barbuda};{アンティグア・バーブーダ;アンティグア・バーブーダ};{앤티가 바부다;앤티가 바부다};{Antigua en Barbuda;Antigua en Barbuda};{آنتیگوا و باربودا;آنتیگوا و باربودا};{Antigua i Barbuda;Antigua i Barbuda};{Antigua e Barbuda;Antígua e Barbuda};{Антигуа и Барбуда;Антигуа и Барбуда};{Antigua a Barbuda;Antigua a Barbuda};{Antigua y Barbuda;Antigua y Barbuda};{Antigva i Barbuda;Antigva i Barbuda};{Antigua och Barbuda;Antigua och Barbuda};{Antigua ve Barbuda;Antigua ve Barbuda};{اینٹیگوا و باربوڈا;اینٹیگوا و باربوڈا};{安提瓜和巴布达;安提瓜和巴布达}};[17.05;-61.8];false;[];442;🇦🇬;{{Antiguan, Barbudan;Antiguan, Barbudan};{Antiguaise et barbudienne;Antiguaise et barbudien}}
-{Australia;Commonwealth of Australia;{{Commonwealth of Australia;Australia}}};[.au];AU;036;AUS;AUS;true;officially-assigned;true;Western European and Others Group;{AUD:{name:Australian dollar;symbol:$}};{+6;[1]};[Canberra];[AU];Oceania;Australia and New Zealand;{English};{{كومونولث أستراليا;أستراليا};{Kenglad Aostralia;Aostralia};{Australské společenství;Austrálie};{Commonwealth Australien;Australien};{Austraalia Ühendus;Austraalia};{Australian liittovaltio;Australia};{Australie;Australie};{Commonwealth of Australia;Australija};{Ausztrál Államszövetség;Ausztrália};{Commonwealth dell'Australia;Australia};{オーストラリア連邦;オーストラリア};{오스트레일리아 연방;호주};{Gemenebest van Australië;Australië};{قلمرو همسود استرالیا;استرالیا};{Związek Australijski;Australia};{Comunidade da Austrália;Austrália};{Содружество Австралии;Австралия};{Austrálsky zväz;Austrália};{Mancomunidad de Australia;Australia};{Komonvelt Australija;Australija};{Australiska statsförbundet;Australien};{Avustralya Federal Devleti;Avustralya};{دولتِ مشترکہ آسٹریلیا;آسٹریلیا};{澳大利亚联邦;澳大利亚}};[-27;133];false;[];7692024;🇦🇺;{{Australian;Australian};{Australienne;Australien}}
-{Austria;Republic of Austria;{;bar:{official:Republik Österreich;common:Österreich}}};[.at];AT;040;AUT;AUT;true;officially-assigned;true;Western European and Others Group;{EUR:{name:Euro;symbol:€}};{+4;[3]};[Vienna];[AT;Osterreich;Oesterreich];Europe;Central Europe;{;bar:Austro-Bavarian German};{{جمهورية النمسا;النمسا};{Republik Aostria;Aostria};{Rakouská republika;Rakousko};{Republik Österreich;Österreich};{Austria Vabariik;Austria};{Itävallan tasavalta;Itävalta};{République d'Autriche;Autriche};{Republika Austrija;Austrija};{Ausztria;Ausztria};{Repubblica d'Austria;Austria};{オーストリア共和国;オーストリア};{오스트리아 공화국;오스트리아};{Republiek Oostenrijk;Oostenrijk};{جمهوری اتریش;اتریش};{Republika Austrii;Austria};{República da Áustria;Áustria};{Австрийская Республика;Австрия};{Rakúska republika;Rakúsko};{República de Austria;Austria};{Republika Austrija;Austrija};{Republiken Österrike;Österrike};{Avusturya Cumhuriyeti;Avusturya};{جمہوریہ آسٹریا;آسٹریا};{奥地利共和国;奥地利}};[47.33333333;13.33333333];true;[CZE;DEU;HUN;ITA;LIE;SVK;SVN;CHE];83871;🇦🇹;{{Austrian;Austrian};{Autrichienne;Autrichien}}
-{Azerbaijan;Republic of Azerbaijan;{;aze:{official:Azərbaycan Respublikası;common:Azərbaycan};rus:{official:Азербайджанская Республика;common:Азербайджан}}};[.az];AZ;031;AZE;AZE;true;officially-assigned;true;Eastern European Group;{AZN:{name:Azerbaijani manat;symbol:₼}};{+9;[94]};[Baku];[AZ;Republic of Azerbaijan;Azərbaycan Respublikası];Asia;Western Asia;{;aze:Azerbaijani;rus:Russian};{{جمهورية أذربيجان;أذربيجان};{Republik Azerbaidjan;Azerbaidjan};{Ázerbájdžánská republika;Ázerbájdžán};{Republik Aserbaidschan;Aserbaidschan};{Aserbaidžaani Vabariik;Aserbaidžaan};{Azerbaidzanin tasavalta;Azerbaidzan};{République d'Azerbaïdjan;Azerbaïdjan};{Republika Azerbajdžan;Azerbajdžan};{Azerbajdzsán;Azerbajdzsán};{Repubblica dell'Azerbaigian;Azerbaijan};{アゼルバイジャン共和国;アゼルバイジャン};{아제르바이잔 공화국;아제르바이잔};{Republiek Azerbeidzjan;Azerbeidzjan};{جمهوری آذربایجان;جمهوری آذربایجان};{Republika Azerbejdżanu;Azerbejdżan};{República do Azerbaijão;Azerbeijão};{Азербайджанская Республика;Азербайджан};{Azerbajǆanská republika;AzerbajǇan};{República de Azerbaiyán;Azerbaiyán};{Republika Azerbejdžan;Azerbejdžan};{Republiken Azerbajdzjan;Azerbajdzjan};{Azerbaycan Cumhuriyeti;Azerbaycan};{جمہوریہ آذربائیجان;آذربائیجان};{阿塞拜疆共和国;阿塞拜疆}};[40.5;47.5];true;[ARM;GEO;IRN;RUS;TUR];86600;🇦🇿;{{Azerbaijani;Azerbaijani};{Azerbaïdjanaise;Azerbaïdjanais}}
-{Burundi;Republic of Burundi;{;fra:{official:République du Burundi;common:Burundi};run:{official:Republika y'Uburundi ;common:Uburundi}}};[.bi];BI;108;BDI;BDI;true;officially-assigned;true;African Group;{BIF:{name:Burundian franc;symbol:Fr}};{+2;[57]};[Gitega];[BI;Republic of Burundi;Republika y'Uburundi;République du Burundi];Africa;Eastern Africa;{;fra:French;run:Kirundi};{{جمهورية بوروندي;بوروندي};{Republik Burundi;Burundi};{Burundská republika;Burundi};{Republik Burundi;Burundi};{Burundi Vabariik;Burundi};{Burundin tasavalta;Burundi};{République du Burundi;Burundi};{Burundi;Burundi};{Burundi;Burundi};{Repubblica del Burundi;Burundi};{ブルンジ共和国;ブルンジ};{부룬디;부룬디};{Republiek Burundi;Burundi};{جمهوری بوروندی;بوروندی};{Republika Burundi;Burundi};{República do Burundi;Burundi};{Республика Бурунди;Бурунди};{Burundská republika;Burundi};{República de Burundi;Burundi};{Republika Burundi;Burundi};{Republiken Burundi;Burundi};{Burundi Cumhuriyeti;Burundi};{جمہوریہ برونڈی;برونڈی};{布隆迪共和国;布隆迪}};[-3.5;30];true;[COD;RWA;TZA];27834;🇧🇮;{{Burundian;Burundian};{Burundaise;Burundais}}
-{Belgium;Kingdom of Belgium;{;deu:{official:Königreich Belgien;common:Belgien};fra:{official:Royaume de Belgique;common:Belgique};nld:{official:Koninkrijk België;common:België}}};[.be];BE;056;BEL;BEL;true;officially-assigned;true;Western European and Others Group;{EUR:{name:Euro;symbol:€}};{+3;[2]};[Brussels];[BE;België;Belgie;Belgien;Belgique;Kingdom of Belgium;Koninkrijk België;Royaume de Belgique;Königreich Belgien];Europe;Western Europe;{;deu:German;fra:French;nld:Dutch};{{مملكة بلجيكا;بلجيكا};{Rouantelezh Belgia;Belgia};{Belgické království;Belgie};{Königreich Belgien;Belgien};{Belgia Kuningriik;Belgia};{Belgian kuningaskunta;Belgia};{Royaume de Belgique;Belgique};{Kraljevina Belgija;Belgija};{Belga Királyság;Belgium};{Regno del Belgio;Belgio};{ベルギー王国;ベルギー};{벨기에 왕국;벨기에};{Koninkrijk België;België};{پادشاهی بلژیک;بلژیک};{Królestwo Belgii;Belgia};{Reino da Bélgica;Bélgica};{Королевство Бельгия;Бельгия};{Belgické kráľovstvo;Belgicko};{Reino de Bélgica;Bélgica};{Kraljevina Belgija;Belgija};{Konungariket Belgien;Belgien};{Belçika Krallığı;Belçika};{مملکتِ بلجئیم;بلجئیم};{比利时王国;比利时}};[50.83333333;4];false;[FRA;DEU;LUX;NLD];30528;🇧🇪;{{Belgian;Belgian};{Belge;Belge}}
-{Benin;Republic of Benin;{;fra:{official:République du Bénin;common:Bénin}}};[.bj];BJ;204;BEN;BEN;true;officially-assigned;true;African Group;{XOF:{name:West African CFA franc;symbol:Fr}};{+2;[29]};[Porto-Novo];[BJ;Republic of Benin;République du Bénin];Africa;Western Africa;{;fra:French};{{جمهورية بنين;بنين};{Republik Benin;Benin};{Beninská republika;Benin};{Republik Benin;Benin};{Benini Vabariik;Benin};{Beninin tasavalta;Benin};{République du Bénin;Bénin};{Republika Benin;Benin};{Benini Köztársaság;Benin};{Repubblica del Benin;Benin};{ベナン共和国;ベナン};{베냉 공화국;베냉};{Republiek Benin;Benin};{جمهوری بنین;بنین};{Benin;Benin};{República do Benin;Benin};{Республика Бенин;Бенин};{Beninská republika;Benin};{República de Benin;Benín};{Republika Benin;Benin};{Republiken Benin;Benin};{Benin Cumhuriyeti;Benin};{جمہوریہ بینن;بینن};{贝宁共和国;贝宁}};[9.5;2.25];false;[BFA;NER;NGA;TGO];112622;🇧🇯;{{Beninese;Beninese};{Béninoise;Béninois}}
-{Burkina Faso;Burkina Faso;{;fra:{official:République du Burkina;common:Burkina Faso}}};[.bf];BF;854;BFA;BUR;true;officially-assigned;true;African Group;{XOF:{name:West African CFA franc;symbol:Fr}};{+2;[26]};[Ouagadougou];[BF];Africa;Western Africa;{;fra:French};{{بوركينا فاسو;بوركينا فاسو};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{République du Burkina;Burkina Faso};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina};{Burkina Faso;Burkina Faso};{ブルキナファソ;ブルキナファソ};{부르키나파소;부르키나파소};{Burkina Faso;Burkina Faso};{بورکینافاسو;بورکینافاسو};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{Буркина -Фасо;Буркина-Фасо};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{Burkina Faso;Burkina Faso};{برکینا فاسو;برکینا فاسو};{布基纳法索;布基纳法索}};[13;-2];true;[BEN;CIV;GHA;MLI;NER;TGO];272967;🇧🇫;{{Burkinabe;Burkinabe};{Burkinabée;Burkinabé}}
-{Bangladesh;People's Republic of Bangladesh;{;ben:{official:বাংলাদেশ গণপ্রজাতন্ত্রী;common:বাংলাদেশ}}};[.bd];BD;050;BGD;BAN;true;officially-assigned;true;Asia and the Pacific Group;{BDT:{name:Bangladeshi taka;symbol:৳}};{+8;[80]};[Dhaka];[BD;People's Republic of Bangladesh;Gônôprôjatôntri Bangladesh];Asia;Southern Asia;{;ben:Bengali};{{جمهورية بنغلاديش الشعبية;بنغلاديش};{Republik pobl Bangladesh;Bangladesh};{Bangladéšská lidová republika;Bangladéš};{Volksrepublik Bangladesch;Bangladesch};{Bangladeshi Rahvavabariik;Bangladesh};{Bangladeshin kansantasavalta;Bangladesh};{La République populaire du Bangladesh;Bangladesh};{Narodna Republika Bangladeš;Bangladeš};{Banglades;Banglades};{Repubblica popolare del Bangladesh;Bangladesh};{バングラデシュ人民共和国;バングラデシュ};{방글라데시 인민 공화국;방글라데시};{Volksrepubliek Bangladesh;Bangladesh};{جمهوری خلق بنگلادش;بنگلادش};{Ludowa Republika Bangladeszu;Bangladesz};{República Popular do Bangladesh;Bangladesh};{Народная Республика Бангладеш;Бангладеш};{Bangladéšska ľudová republika;Bangladéš};{República Popular de Bangladesh;Bangladesh};{Narodna Republika Bangladeš;Bangladeš};{Folkrepubliken Bangladesh;Bangladesh};{Bangladeş Halk Cumhuriyeti;Bangladeş};{عوامی جمہوریہ بنگلہ دیش;بنگلہ دیش};{孟加拉人民共和国;孟加拉国}};[24;90];false;[MMR;IND];147570;🇧🇩;{{Bangladeshi;Bangladeshi};{Bangladaise;Bangladais}}
-{Bulgaria;Republic of Bulgaria;{;bul:{official:Република България;common:България}}};[.bg];BG;100;BGR;BUL;true;officially-assigned;true;Eastern European Group;{BGN:{name:Bulgarian lev;symbol:лв}};{+3;[59]};[Sofia];[BG;Republic of Bulgaria;Република България];Europe;Southeast Europe;{;bul:Bulgarian};{{جمهورية بلغاريا;بلغاريا};{Republik Bulgaria;Bulgaria};{Bulharská republika;Bulharsko};{Republik Bulgarien;Bulgarien};{Bulgaaria Vabariik;Bulgaaria};{Bulgarian tasavalta;Bulgaria};{République de Bulgarie;Bulgarie};{Republika Bugarska;Bugarska};{Bolgár Köztársaság;Bulgária};{Repubblica di Bulgaria;Bulgaria};{ブルガリア共和国;ブルガリア};{불가리아 공화국;불가리아};{Republiek Bulgarije;Bulgarije};{جمهوری بلغارستان;بلغارستان};{Republika Bułgarii;Bułgaria};{República da Bulgária;Bulgária};{Республика Болгария;Болгария};{Bulharská republika;Bulharsko};{República de Bulgaria;Bulgaria};{Republika Bugarska;Bugarska};{Republiken Bulgarien;Bulgarien};{Bulgaristan Cumhuriyeti;Bulgaristan};{جمہوریہ بلغاریہ;بلغاریہ};{保加利亚共和国;保加利亚}};[43;25];false;[GRC;MKD;ROU;SRB;TUR];110879;🇧🇬;{{Bulgarian;Bulgarian};{Bulgare;Bulgare}}
-{Bahrain;Kingdom of Bahrain;{;ara:{official:مملكة البحرين;common:البحرين}}};[.bh];BH;048;BHR;BRN;true;officially-assigned;true;Asia and the Pacific Group;{BHD:{name:Bahraini dinar;symbol:.د.ب}};{+9;[73]};[Manama];[BH;Kingdom of Bahrain;Mamlakat al-Baḥrayn];Asia;Western Asia;{;ara:Arabic};{{مملكة البحرين;البحرين};{Rouantelezh Bahrein;Bahrein};{Království Bahrajn;Bahrajn};{Königreich Bahrain;Bahrain};{Bahreini Kuningriik;Bahrein};{Bahrainin kuningaskunta;Bahrain};{Royaume de Bahreïn;Bahreïn};{Kraljevina Bahrein;Bahrein};{Bahreini Királyság;Bahrein};{Regno del Bahrain;Bahrein};{バーレーン王国;バーレーン};{바레인 왕국;바레인};{Koninkrijk Bahrein;Bahrein};{پادشاهی بحرین;بحرین};{Królestwo Bahrajnu;Bahrajn};{Reino do Bahrein;Bahrein};{Королевство Бахрейн;Бахрейн};{Bahrajnské kráľovstvo;Bahrajn};{Reino de Bahrein;Bahrein};{Kraljevina Bahrein;Bahrein};{Konungariket Bahrain;Bahrain};{Bahreyn Krallığı;Bahreyn};{مملکتِ بحرین;بحرین};{巴林王国;巴林}};[26;50.55];false;[];765;🇧🇭;{{Bahraini;Bahraini};{Bahreïnienne;Bahreïnien}}
-... (truncated)
-```
-
 ---
 
 ## large_non_uniform_nested_mixed.json
@@ -1459,10 +1209,8 @@ Original size (JSON pretty): **2402 chars**
 | YAML | 1573 | 661 | 617 | 559 | 532 | 592.2 | 4.1 |
 | TOON | 1766 | 841 | 625 | 572 | 544 | 645.5 | 3.7 |
 | TSON | 1275 | 525 | 560 | 462 | 488 | 508.8 | 4.7 |
-| minemizer | 1207 | 383 | 452 | 404 | 388 | 406.8 | 5.9 |
+| minemizer | 1203 | 383 | 452 | 400 | 388 | 405.8 | 5.9 |
 | minemizer (compact) | 1072 | 409 | 462 | 382 | 384 | 409.2 | 5.9 |
-| minemizer (33%) | 1196 | 382 | 450 | 403 | 387 | 405.5 | 5.9 |
-| compact (33%) | 1058 | 406 | 461 | 380 | 383 | 407.5 | 5.9 |
 
 ### Serialized outputs
 
@@ -1576,18 +1324,18 @@ N/A - format cannot represent this data
 [{@id,name,work,contact|1,Alice,{@title,years,remote,team|"Senior Engineer",5,true,Platform},{@email|"alice@co.com"}},{@id,profile,status,permissions|2,{@age,city,verified|28,NYC,true},active,{@admin,editor|false,true}},{@id,name,contact,metadata|3,Charlie,{@email,preferred,phone|"c@example.com",email,555-0103},{@created|2019-06-10}},{@id,user,metadata,settings|4,{@username,role,level|diana,admin,5},{@created,updated|2020-09-01,2024-01-20},{@theme|dark}},{@id,employee,performance,contact|5,{@name,department|"Eve Adams",Sales},{@score,reviews|85,3},{@email,slack|"eve@co.com","@eve"}},{@id,name,work,contact|6,Frank,{@title,years,remote,team|"Product Manager",8,false,Growth},{@email,phone|"frank@co.com",555-0106}},{@id,profile,status,permissions,metadata|7,{@age,city,verified|35,LA,false},inactive,{@admin,editor|true,false},{@created|2018-03-15}},{@id,name,contact,settings|8,Grace,{@email,preferred,slack|"grace@example.org",slack,"@grace"},{@theme,notifications|light,true}},{@id,user,employee,performance|9,{@username,role,level|henry,viewer,2},{@name,department|"Henry Wilson",Marketing},{@score,reviews|72,5}},{@id,name,work,profile,contact|10,Iris,{@title,years,remote,team|Designer,3,true,Creative},{@age,city,verified|26,Austin,true},{@email|"iris@co.com"}}]
 ```
 
-**minemizer** (1207 chars, 407 tokens):
+**minemizer** (1203 chars, 406 tokens):
 ```txt
 id; name; contact{ email; ...}
 1; Alice;{ alice@co.com}; work{ title: Senior Engineer; years: 5; remote:true; team: Platform}
-2;; ; profile{ age: 28; city: NYC; verified:true}; status: active; permissions{ admin:false; editor:true}
+2;;; profile{ age: 28; city: NYC; verified:true}; status: active; permissions{ admin:false; editor:true}
 3; Charlie;{ c@example.com; preferred: email; phone: 555-0103}; metadata{ created: 2019-06-10}
-4;; ; user{ username: diana; role: admin; level: 5}; metadata{ created: 2020-09-01; updated: 2024-01-20}; settings{ theme: dark}
+4;;; user{ username: diana; role: admin; level: 5}; metadata{ created: 2020-09-01; updated: 2024-01-20}; settings{ theme: dark}
 5;;{ eve@co.com; slack: @eve}; employee{ name: Eve Adams; department: Sales}; performance{ score: 85; reviews: 3}
 6; Frank;{ frank@co.com; phone: 555-0106}; work{ title: Product Manager; years: 8; remote:false; team: Growth}
-7;; ; profile{ age: 35; city: LA; verified:false}; status: inactive; permissions{ admin:true; editor:false}; metadata{ created: 2018-03-15}
+7;;; profile{ age: 35; city: LA; verified:false}; status: inactive; permissions{ admin:true; editor:false}; metadata{ created: 2018-03-15}
 8; Grace;{ grace@example.org; preferred: slack; slack: @grace}; settings{ theme: light; notifications:true}
-9;; ; user{ username: henry; role: viewer; level: 2}; employee{ name: Henry Wilson; department: Marketing}; performance{ score: 72; reviews: 5}
+9;;; user{ username: henry; role: viewer; level: 2}; employee{ name: Henry Wilson; department: Marketing}; performance{ score: 72; reviews: 5}
 10; Iris;{ iris@co.com}; work{ title: Designer; years: 3; remote:true; team: Creative}; profile{ age: 26; city: Austin; verified:true}
 ```
 
@@ -1606,36 +1354,6 @@ id;name;contact{email;...}
 10;Iris;{iris@co.com};work{title:Designer;years:3;remote:true;team:Creative};profile{age:26;city:Austin;verified:true}
 ```
 
-**minemizer (33%)** (1196 chars, 406 tokens):
-```txt
-id; name; contact{ email; preferred; phone; slack}
-1; Alice;{ alice@co.com;; ; }; work{ title: Senior Engineer; years: 5; remote:true; team: Platform}
-2;; ; profile{ age: 28; city: NYC; verified:true}; status: active; permissions{ admin:false; editor:true}
-3; Charlie;{ c@example.com; email; 555-0103; }; metadata{ created: 2019-06-10}
-4;; ; user{ username: diana; role: admin; level: 5}; metadata{ created: 2020-09-01; updated: 2024-01-20}; settings{ theme: dark}
-5;;{ eve@co.com;; ; @eve}; employee{ name: Eve Adams; department: Sales}; performance{ score: 85; reviews: 3}
-6; Frank;{ frank@co.com;; 555-0106; }; work{ title: Product Manager; years: 8; remote:false; team: Growth}
-7;; ; profile{ age: 35; city: LA; verified:false}; status: inactive; permissions{ admin:true; editor:false}; metadata{ created: 2018-03-15}
-8; Grace;{ grace@example.org; slack;; @grace}; settings{ theme: light; notifications:true}
-9;; ; user{ username: henry; role: viewer; level: 2}; employee{ name: Henry Wilson; department: Marketing}; performance{ score: 72; reviews: 5}
-10; Iris;{ iris@co.com;; ; }; work{ title: Designer; years: 3; remote:true; team: Creative}; profile{ age: 26; city: Austin; verified:true}
-```
-
-**compact (33%)** (1058 chars, 408 tokens):
-```txt
-id;name;contact{email;preferred;phone;slack}
-1;Alice;{alice@co.com;;;};work{title:Senior Engineer;years:5;remote:true;team:Platform}
-2;;;profile{age:28;city:NYC;verified:true};status:active;permissions{admin:false;editor:true}
-3;Charlie;{c@example.com;email;555-0103;};metadata{created:2019-06-10}
-4;;;user{username:diana;role:admin;level:5};metadata{created:2020-09-01;updated:2024-01-20};settings{theme:dark}
-5;;{eve@co.com;;;@eve};employee{name:Eve Adams;department:Sales};performance{score:85;reviews:3}
-6;Frank;{frank@co.com;;555-0106;};work{title:Product Manager;years:8;remote:false;team:Growth}
-7;;;profile{age:35;city:LA;verified:false};status:inactive;permissions{admin:true;editor:false};metadata{created:2018-03-15}
-8;Grace;{grace@example.org;slack;;@grace};settings{theme:light;notifications:true}
-9;;;user{username:henry;role:viewer;level:2};employee{name:Henry Wilson;department:Marketing};performance{score:72;reviews:5}
-10;Iris;{iris@co.com;;;};work{title:Designer;years:3;remote:true;team:Creative};profile{age:26;city:Austin;verified:true}
-```
-
 ---
 
 ## large_non_uniform_nested_numerical.json
@@ -1651,10 +1369,8 @@ Original size (JSON pretty): **2947 chars**
 | YAML | 2085 | 1033 | 1171 | 1077 | 893 | 1043.5 | 2.8 |
 | TOON | 2318 | 1249 | 1178 | 1090 | 905 | 1105.5 | 2.7 |
 | TSON | 1642 | 823 | 993 | 907 | 746 | 867.2 | 3.4 |
-| minemizer | 1537 | 632 | 940 | 886 | 698 | 789.0 | 3.7 |
+| minemizer | 1534 | 632 | 940 | 883 | 698 | 788.2 | 3.7 |
 | minemizer (compact) | 1361 | 676 | 875 | 809 | 641 | 750.2 | 3.9 |
-| minemizer (33%) | 1537 | 632 | 940 | 886 | 698 | 789.0 | 3.7 |
-| compact (33%) | 1361 | 676 | 875 | 809 | 641 | 750.2 | 3.9 |
 
 ### Serialized outputs
 
@@ -1768,52 +1484,22 @@ N/A - format cannot represent this data
 [{@id,metrics,revenue,timestamp|1,{@views,clicks,ctr,bounce_rate|15420,842,0.0546,0.32},{@amount,currency_rate|12499.99,1.0},2024-01-15T09:30:00Z},{@id,metrics,stats,timestamp|2,{@views,clicks,ctr,bounce_rate|8923,156,0.0175,0.67},{@avg_time,pages_per_session,return_rate|45.7,2.3,0.15},2024-01-16T14:22:33Z},{@id,revenue,inventory|3,{@amount,tax,net,currency_rate|8750.5,700.04,8050.46,0.92},{@count,reserved,available|342,28,314}},{@id,metrics,performance,timestamp|4,{@views,clicks,ctr,bounce_rate|52100,3891,0.0747,0.21},{@latency_ms,uptime,errors|127.5,0.9987,3},2024-01-17T08:00:00Z},{@id,stats,scores,dates|5,{@avg_time,pages_per_session,return_rate|128.9,5.7,0.42},{@quality,relevance,engagement|94,87,0.78},{@start,end|2023-06-01,2024-01-31}},{@id,inventory,pricing,timestamp|6,{@count,reserved,available,reorder_point|1205,89,1116,200},{@cost,markup,price|24.99,0.35,33.74},2024-01-18T11:45:12Z},{@id,metrics,revenue,performance|7,{@views,clicks,ctr,bounce_rate|3156,98,0.031,0.55},{@amount,tax,net|2150.0,172.0,1978.0},{@latency_ms,uptime,errors|89.2,0.9995,0}},{@id,scores,dates,budget|8,{@quality,relevance,engagement,nps|78,92,0.65,45},{@start,end,renewal|2022-11-15,2024-02-28,2024-03-01},{@allocated,spent,remaining|50000,42350.75,7649.25}},{@id,pricing,inventory,timestamp|9,{@cost,markup,price,discount|149.99,0.28,191.99,0.1},{@count,reserved,available|56,12,44},2024-01-19T16:30:45Z},{@id,metrics,stats,budget,dates|10,{@views,clicks,ctr,bounce_rate|128750,9823,0.0763,0.18},{@avg_time,pages_per_session,return_rate|312.4,8.2,0.58},{@allocated,spent,remaining|125000,98420.33,26579.67},{@start,end|2023-01-01,2024-12-31}}]
 ```
 
-**minemizer** (1537 chars, 789 tokens):
+**minemizer** (1534 chars, 788 tokens):
 ```txt
 id; metrics{ views; clicks; ctr; bounce_rate}; timestamp
 1;{ 15420; 842; 0.0546; 0.32}; 2024-01-15T09:30:00Z; revenue{ amount: 12499.99; currency_rate: 1.0}
 2;{ 8923; 156; 0.0175; 0.67}; 2024-01-16T14:22:33Z; stats{ avg_time: 45.7; pages_per_session: 2.3; return_rate: 0.15}
-3;; ; revenue{ amount: 8750.5; tax: 700.04; net: 8050.46; currency_rate: 0.92}; inventory{ count: 342; reserved: 28; available: 314}
+3;;; revenue{ amount: 8750.5; tax: 700.04; net: 8050.46; currency_rate: 0.92}; inventory{ count: 342; reserved: 28; available: 314}
 4;{ 52100; 3891; 0.0747; 0.21}; 2024-01-17T08:00:00Z; performance{ latency_ms: 127.5; uptime: 0.9987; errors: 3}
-5;; ; stats{ avg_time: 128.9; pages_per_session: 5.7; return_rate: 0.42}; scores{ quality: 94; relevance: 87; engagement: 0.78}; dates{ start: 2023-06-01; end: 2024-01-31}
+5;;; stats{ avg_time: 128.9; pages_per_session: 5.7; return_rate: 0.42}; scores{ quality: 94; relevance: 87; engagement: 0.78}; dates{ start: 2023-06-01; end: 2024-01-31}
 6;; 2024-01-18T11:45:12Z; inventory{ count: 1205; reserved: 89; available: 1116; reorder_point: 200}; pricing{ cost: 24.99; markup: 0.35; price: 33.74}
 7;{ 3156; 98; 0.031; 0.55};; revenue{ amount: 2150.0; tax: 172.0; net: 1978.0}; performance{ latency_ms: 89.2; uptime: 0.9995; errors: 0}
-8;; ; scores{ quality: 78; relevance: 92; engagement: 0.65; nps: 45}; dates{ start: 2022-11-15; end: 2024-02-28; renewal: 2024-03-01}; budget{ allocated: 50000; spent: 42350.75; remaining: 7649.25}
+8;;; scores{ quality: 78; relevance: 92; engagement: 0.65; nps: 45}; dates{ start: 2022-11-15; end: 2024-02-28; renewal: 2024-03-01}; budget{ allocated: 50000; spent: 42350.75; remaining: 7649.25}
 9;; 2024-01-19T16:30:45Z; pricing{ cost: 149.99; markup: 0.28; price: 191.99; discount: 0.1}; inventory{ count: 56; reserved: 12; available: 44}
 10;{ 128750; 9823; 0.0763; 0.18};; stats{ avg_time: 312.4; pages_per_session: 8.2; return_rate: 0.58}; budget{ allocated: 125000; spent: 98420.33; remaining: 26579.67}; dates{ start: 2023-01-01; end: 2024-12-31}
 ```
 
 **minemizer (compact)** (1361 chars, 750 tokens):
-```txt
-id;metrics{views;clicks;ctr;bounce_rate};timestamp
-1;{15420;842;0.0546;0.32};2024-01-15T09:30:00Z;revenue{amount:12499.99;currency_rate:1.0}
-2;{8923;156;0.0175;0.67};2024-01-16T14:22:33Z;stats{avg_time:45.7;pages_per_session:2.3;return_rate:0.15}
-3;;;revenue{amount:8750.5;tax:700.04;net:8050.46;currency_rate:0.92};inventory{count:342;reserved:28;available:314}
-4;{52100;3891;0.0747;0.21};2024-01-17T08:00:00Z;performance{latency_ms:127.5;uptime:0.9987;errors:3}
-5;;;stats{avg_time:128.9;pages_per_session:5.7;return_rate:0.42};scores{quality:94;relevance:87;engagement:0.78};dates{start:2023-06-01;end:2024-01-31}
-6;;2024-01-18T11:45:12Z;inventory{count:1205;reserved:89;available:1116;reorder_point:200};pricing{cost:24.99;markup:0.35;price:33.74}
-7;{3156;98;0.031;0.55};;revenue{amount:2150.0;tax:172.0;net:1978.0};performance{latency_ms:89.2;uptime:0.9995;errors:0}
-8;;;scores{quality:78;relevance:92;engagement:0.65;nps:45};dates{start:2022-11-15;end:2024-02-28;renewal:2024-03-01};budget{allocated:50000;spent:42350.75;remaining:7649.25}
-9;;2024-01-19T16:30:45Z;pricing{cost:149.99;markup:0.28;price:191.99;discount:0.1};inventory{count:56;reserved:12;available:44}
-10;{128750;9823;0.0763;0.18};;stats{avg_time:312.4;pages_per_session:8.2;return_rate:0.58};budget{allocated:125000;spent:98420.33;remaining:26579.67};dates{start:2023-01-01;end:2024-12-31}
-```
-
-**minemizer (33%)** (1537 chars, 789 tokens):
-```txt
-id; metrics{ views; clicks; ctr; bounce_rate}; timestamp
-1;{ 15420; 842; 0.0546; 0.32}; 2024-01-15T09:30:00Z; revenue{ amount: 12499.99; currency_rate: 1.0}
-2;{ 8923; 156; 0.0175; 0.67}; 2024-01-16T14:22:33Z; stats{ avg_time: 45.7; pages_per_session: 2.3; return_rate: 0.15}
-3;; ; revenue{ amount: 8750.5; tax: 700.04; net: 8050.46; currency_rate: 0.92}; inventory{ count: 342; reserved: 28; available: 314}
-4;{ 52100; 3891; 0.0747; 0.21}; 2024-01-17T08:00:00Z; performance{ latency_ms: 127.5; uptime: 0.9987; errors: 3}
-5;; ; stats{ avg_time: 128.9; pages_per_session: 5.7; return_rate: 0.42}; scores{ quality: 94; relevance: 87; engagement: 0.78}; dates{ start: 2023-06-01; end: 2024-01-31}
-6;; 2024-01-18T11:45:12Z; inventory{ count: 1205; reserved: 89; available: 1116; reorder_point: 200}; pricing{ cost: 24.99; markup: 0.35; price: 33.74}
-7;{ 3156; 98; 0.031; 0.55};; revenue{ amount: 2150.0; tax: 172.0; net: 1978.0}; performance{ latency_ms: 89.2; uptime: 0.9995; errors: 0}
-8;; ; scores{ quality: 78; relevance: 92; engagement: 0.65; nps: 45}; dates{ start: 2022-11-15; end: 2024-02-28; renewal: 2024-03-01}; budget{ allocated: 50000; spent: 42350.75; remaining: 7649.25}
-9;; 2024-01-19T16:30:45Z; pricing{ cost: 149.99; markup: 0.28; price: 191.99; discount: 0.1}; inventory{ count: 56; reserved: 12; available: 44}
-10;{ 128750; 9823; 0.0763; 0.18};; stats{ avg_time: 312.4; pages_per_session: 8.2; return_rate: 0.58}; budget{ allocated: 125000; spent: 98420.33; remaining: 26579.67}; dates{ start: 2023-01-01; end: 2024-12-31}
-```
-
-**compact (33%)** (1361 chars, 750 tokens):
 ```txt
 id;metrics{views;clicks;ctr;bounce_rate};timestamp
 1;{15420;842;0.0546;0.32};2024-01-15T09:30:00Z;revenue{amount:12499.99;currency_rate:1.0}
@@ -1843,10 +1529,8 @@ Original size (JSON pretty): **4214 chars**
 | YAML | 3387 | 818 | 843 | 716 | 702 | 769.8 | 5.5 |
 | TOON | 3534 | 974 | 846 | 718 | 704 | 810.5 | 5.2 |
 | TSON | 3173 | 721 | 831 | 644 | 688 | 721.0 | 5.8 |
-| minemizer | 2816 | 524 | 622 | 515 | 501 | 540.5 | 7.8 |
+| minemizer | 2809 | 522 | 619 | 510 | 499 | 537.5 | 7.8 |
 | minemizer (compact) | 2694 | 565 | 672 | 534 | 526 | 574.2 | 7.3 |
-| minemizer (33%) | 2704 | 518 | 615 | 507 | 490 | 532.5 | 7.9 |
-| compact (33%) | 2585 | 546 | 648 | 520 | 504 | 554.5 | 7.6 |
 
 ### Serialized outputs
 
@@ -1960,18 +1644,18 @@ N/A - format cannot represent this data
 [{@id,title,author,abstract,tags|1,"Introduction to Machine Learning",{@name,affiliation,department|"Dr. Sarah Chen","Stanford University","Computer Science"},"A comprehensive overview of modern machine learning techniques and applications",[AI,ML,"deep learning"]},{@id,title,content,category|2,"Climate Change Impact Assessment",{@summary,methodology,conclusion|"Analysis of rising sea levels and temperature patterns","longitudinal study with satellite imagery","significant acceleration observed since 2010"},"Environmental Science"},{@id,author,publication,keywords|3,{@name,affiliation,role|"Marcus Williams","MIT Media Lab","Principal Researcher"},{@journal,volume,status|"Nature Communications",fifteen,peer-reviewed},"quantum computing, error correction, fault tolerance"},{@id,title,abstract,content,tags|4,"Urban Planning Strategies for Sustainable Cities","Examining green infrastructure and mixed-use development patterns",{@summary,methodology,findings|"Case studies from Copenhagen, Singapore, and Portland","comparative analysis with community surveys","walkability correlates strongly with resident satisfaction"},["urban design",sustainability,planning]},{@id,publication,content,category|5,{@journal,volume,issue,status|"The Lancet","four hundred two","special edition",published},{@summary,conclusion|"Global health outcomes following pandemic response measures","early intervention strategies proved most effective"},"Public Health"},{@id,title,author,abstract,keywords|6,"Advances in Natural Language Processing",{@name,affiliation,department|"Dr. James Rodriguez","Google Research","Language Understanding"},"Survey of transformer architectures and attention mechanisms in modern NLP systems","transformers, attention, language models, BERT, GPT"},{@id,content,category,tags|7,{@summary,methodology,findings,limitations|"Historical analysis of economic policy shifts in emerging markets","archival research combined with econometric modeling","trade liberalization showed mixed results across regions","data availability constraints for pre-1990 period"},Economics,[policy,trade,development]},{@id,title,author,publication,abstract|8,"Biodiversity Conservation in Tropical Rainforests",{@name,affiliation,role|"Dr. Ana Costa","Brazilian Institute for Amazonian Research","Lead Ecologist"},{@journal,status|"Conservation Biology","under review"},"Mapping species distribution patterns and identifying critical habitat corridors"},{@id,title,content,keywords,category|9,"Behavioral Economics and Consumer Decision Making",{@summary,methodology,conclusion|"Experimental studies on cognitive biases in purchasing behavior","randomized controlled trials with eye-tracking technology","anchoring effects persist even with expert consumers"},"behavioral economics, decision theory, consumer psychology",Psychology},{@id,author,publication,abstract,tags|10,{@name,affiliation,department,role|"Prof. Michael Thompson","Oxford University","Engineering Science","Department Chair"},{@journal,volume,status|"Advanced Materials",thirty-six,accepted},"Novel synthesis methods for high-performance ceramic composites",["materials science",ceramics,nanotechnology]}]
 ```
 
-**minemizer** (2816 chars, 540 tokens):
+**minemizer** (2809 chars, 538 tokens):
 ```txt
 id; title; author{ name; affiliation; department; role}; abstract; content{ summary; methodology; conclusion; ...}
-1; Introduction to Machine Learning;{ Dr. Sarah Chen; Stanford University; Computer Science; }; A comprehensive overview of modern machine learning techniques and applications;; tags[ AI; ML; deep learning]
-2; Climate Change Impact Assessment;; ;{ Analysis of rising sea levels and temperature patterns; longitudinal study with satellite imagery; significant acceleration observed since 2010}; category: Environmental Science
-3;;{ Marcus Williams; MIT Media Lab;; Principal Researcher};; ; publication{ journal: Nature Communications; volume: fifteen; status: peer-reviewed}; keywords: quantum computing, error correction, fault tolerance
+1; Introduction to Machine Learning;{ Dr. Sarah Chen; Stanford University; Computer Science;}; A comprehensive overview of modern machine learning techniques and applications;; tags[ AI; ML; deep learning]
+2; Climate Change Impact Assessment;;;{ Analysis of rising sea levels and temperature patterns; longitudinal study with satellite imagery; significant acceleration observed since 2010}; category: Environmental Science
+3;;{ Marcus Williams; MIT Media Lab;; Principal Researcher};;; publication{ journal: Nature Communications; volume: fifteen; status: peer-reviewed}; keywords: quantum computing, error correction, fault tolerance
 4; Urban Planning Strategies for Sustainable Cities;; Examining green infrastructure and mixed-use development patterns;{ Case studies from Copenhagen, Singapore, and Portland; comparative analysis with community surveys;; findings: walkability correlates strongly with resident satisfaction}; tags[ urban design; sustainability; planning]
-5;; ;;{ Global health outcomes following pandemic response measures;; early intervention strategies proved most effective}; publication{ journal: The Lancet; volume: four hundred two; issue: special edition; status: published}; category: Public Health
-6; Advances in Natural Language Processing;{ Dr. James Rodriguez; Google Research; Language Understanding; }; Survey of transformer architectures and attention mechanisms in modern NLP systems;; keywords: transformers, attention, language models, BERT, GPT
-7;; ;;{ Historical analysis of economic policy shifts in emerging markets; archival research combined with econometric modeling;; findings: trade liberalization showed mixed results across regions; limitations: data availability constraints for pre-1990 period}; category: Economics; tags[ policy; trade; development]
+5;;;;{ Global health outcomes following pandemic response measures;; early intervention strategies proved most effective}; publication{ journal: The Lancet; volume: four hundred two; issue: special edition; status: published}; category: Public Health
+6; Advances in Natural Language Processing;{ Dr. James Rodriguez; Google Research; Language Understanding;}; Survey of transformer architectures and attention mechanisms in modern NLP systems;; keywords: transformers, attention, language models, BERT, GPT
+7;;;;{ Historical analysis of economic policy shifts in emerging markets; archival research combined with econometric modeling;; findings: trade liberalization showed mixed results across regions; limitations: data availability constraints for pre-1990 period}; category: Economics; tags[ policy; trade; development]
 8; Biodiversity Conservation in Tropical Rainforests;{ Dr. Ana Costa; Brazilian Institute for Amazonian Research;; Lead Ecologist}; Mapping species distribution patterns and identifying critical habitat corridors;; publication{ journal: Conservation Biology; status: under review}
-9; Behavioral Economics and Consumer Decision Making;; ;{ Experimental studies on cognitive biases in purchasing behavior; randomized controlled trials with eye-tracking technology; anchoring effects persist even with expert consumers}; keywords: behavioral economics, decision theory, consumer psychology; category: Psychology
+9; Behavioral Economics and Consumer Decision Making;;;{ Experimental studies on cognitive biases in purchasing behavior; randomized controlled trials with eye-tracking technology; anchoring effects persist even with expert consumers}; keywords: behavioral economics, decision theory, consumer psychology; category: Psychology
 10;;{ Prof. Michael Thompson; Oxford University; Engineering Science; Department Chair}; Novel synthesis methods for high-performance ceramic composites;; publication{ journal: Advanced Materials; volume: thirty-six; status: accepted}; tags[ materials science; ceramics; nanotechnology]
 ```
 
@@ -1990,36 +1674,6 @@ id;title;author{name;affiliation;department;role};abstract;content{summary;metho
 10;;{Prof. Michael Thompson;Oxford University;Engineering Science;Department Chair};Novel synthesis methods for high-performance ceramic composites;;publication{journal:Advanced Materials;volume:thirty-six;status:accepted};tags[materials science;ceramics;nanotechnology]
 ```
 
-**minemizer (33%)** (2704 chars, 532 tokens):
-```txt
-id; title; author{ name; affiliation; department; role}; abstract; tags[]; content{ summary; methodology; conclusion; findings; ...}; category; publication{ journal; volume; status; ...}
-1; Introduction to Machine Learning;{ Dr. Sarah Chen; Stanford University; Computer Science; }; A comprehensive overview of modern machine learning techniques and applications;[ AI; ML; deep learning];; ; 
-2; Climate Change Impact Assessment;; ;;{ Analysis of rising sea levels and temperature patterns; longitudinal study with satellite imagery; significant acceleration observed since 2010; }; Environmental Science; 
-3;;{ Marcus Williams; MIT Media Lab;; Principal Researcher};; ;; ;{ Nature Communications; fifteen; peer-reviewed}; keywords: quantum computing, error correction, fault tolerance
-4; Urban Planning Strategies for Sustainable Cities;; Examining green infrastructure and mixed-use development patterns;[ urban design; sustainability; planning];{ Case studies from Copenhagen, Singapore, and Portland; comparative analysis with community surveys;; walkability correlates strongly with resident satisfaction};; 
-5;; ;; ;{ Global health outcomes following pandemic response measures;; early intervention strategies proved most effective; }; Public Health;{ The Lancet; four hundred two; published; issue: special edition}
-6; Advances in Natural Language Processing;{ Dr. James Rodriguez; Google Research; Language Understanding; }; Survey of transformer architectures and attention mechanisms in modern NLP systems;; ;; ; keywords: transformers, attention, language models, BERT, GPT
-7;; ;;[ policy; trade; development];{ Historical analysis of economic policy shifts in emerging markets; archival research combined with econometric modeling;; trade liberalization showed mixed results across regions; limitations: data availability constraints for pre-1990 period}; Economics; 
-8; Biodiversity Conservation in Tropical Rainforests;{ Dr. Ana Costa; Brazilian Institute for Amazonian Research;; Lead Ecologist}; Mapping species distribution patterns and identifying critical habitat corridors;; ;;{ Conservation Biology;; under review}
-9; Behavioral Economics and Consumer Decision Making;; ;;{ Experimental studies on cognitive biases in purchasing behavior; randomized controlled trials with eye-tracking technology; anchoring effects persist even with expert consumers; }; Psychology;; keywords: behavioral economics, decision theory, consumer psychology
-10;;{ Prof. Michael Thompson; Oxford University; Engineering Science; Department Chair}; Novel synthesis methods for high-performance ceramic composites;[ materials science; ceramics; nanotechnology];; ;{ Advanced Materials; thirty-six; accepted}
-```
-
-**compact (33%)** (2585 chars, 554 tokens):
-```txt
-id;title;author{name;affiliation;department;role};abstract;tags[];content{summary;methodology;conclusion;findings;...};category;publication{journal;volume;status;...}
-1;Introduction to Machine Learning;{Dr. Sarah Chen;Stanford University;Computer Science;};A comprehensive overview of modern machine learning techniques and applications;[AI;ML;deep learning];;;
-2;Climate Change Impact Assessment;;;;{Analysis of rising sea levels and temperature patterns;longitudinal study with satellite imagery;significant acceleration observed since 2010;};Environmental Science;
-3;;{Marcus Williams;MIT Media Lab;;Principal Researcher};;;;;{Nature Communications;fifteen;peer-reviewed};keywords:quantum computing, error correction, fault tolerance
-4;Urban Planning Strategies for Sustainable Cities;;Examining green infrastructure and mixed-use development patterns;[urban design;sustainability;planning];{Case studies from Copenhagen, Singapore, and Portland;comparative analysis with community surveys;;walkability correlates strongly with resident satisfaction};;
-5;;;;;{Global health outcomes following pandemic response measures;;early intervention strategies proved most effective;};Public Health;{The Lancet;four hundred two;published;issue:special edition}
-6;Advances in Natural Language Processing;{Dr. James Rodriguez;Google Research;Language Understanding;};Survey of transformer architectures and attention mechanisms in modern NLP systems;;;;;keywords:transformers, attention, language models, BERT, GPT
-7;;;;[policy;trade;development];{Historical analysis of economic policy shifts in emerging markets;archival research combined with econometric modeling;;trade liberalization showed mixed results across regions;limitations:data availability constraints for pre-1990 period};Economics;
-8;Biodiversity Conservation in Tropical Rainforests;{Dr. Ana Costa;Brazilian Institute for Amazonian Research;;Lead Ecologist};Mapping species distribution patterns and identifying critical habitat corridors;;;;{Conservation Biology;;under review}
-9;Behavioral Economics and Consumer Decision Making;;;;{Experimental studies on cognitive biases in purchasing behavior;randomized controlled trials with eye-tracking technology;anchoring effects persist even with expert consumers;};Psychology;;keywords:behavioral economics, decision theory, consumer psychology
-10;;{Prof. Michael Thompson;Oxford University;Engineering Science;Department Chair};Novel synthesis methods for high-performance ceramic composites;[materials science;ceramics;nanotechnology];;;{Advanced Materials;thirty-six;accepted}
-```
-
 ---
 
 ## mcp_tools_list.json
@@ -2035,10 +1689,8 @@ Original size (JSON pretty): **51663 chars**
 | YAML | 38139 | 16770 | 8915 | 7927 | 7996 | 10402.0 | 5.0 |
 | TOON | 38376 | 17296 | 8649 | 7670 | 7766 | 10345.2 | 5.0 |
 | TSON | 25878 | 7318 | 7045 | 5889 | 6730 | 6745.5 | 7.7 |
-| minemizer | 23392 | 5559 | 5767 | 5319 | 5341 | 5496.5 | 9.4 |
+| minemizer | 23383 | 5559 | 5767 | 5319 | 5341 | 5496.5 | 9.4 |
 | minemizer (compact) | 21912 | 5672 | 5726 | 5112 | 5215 | 5431.2 | 9.5 |
-| minemizer (33%) | 23392 | 5559 | 5767 | 5319 | 5341 | 5496.5 | 9.4 |
-| compact (33%) | 21912 | 5672 | 5726 | 5112 | 5215 | 5431.2 | 9.5 |
 
 ### Serialized outputs
 
@@ -2154,7 +1806,7 @@ N/A - format cannot represent this data
 ... (truncated)
 ```
 
-**minemizer** (23392 chars, 5496 tokens):
+**minemizer** (23383 chars, 5496 tokens):
 ```txt
 inputSchema{ json{ properties{ owner{ description; type}; repo{ description; type}; ...}; required[]; type}}; name; description
 {{ {{ Repository owner; string};{ Repository name; string}; body:{ description: Comment content; type: string}; issue_number:{ description: Issue number to comment on; type: number}};[ owner; repo; issue_number; body]; object}}; add_issue_comment; Add a comment to a specific issue in a GitHub repository.
@@ -2174,10 +1826,10 @@ More information can be found at:
 {{ {{ Repository owner (username or organization); string};{ Repository name; string}; branch:{ description: Branch to create/update the file in; type: string}; content:{ description: Content of the file; type: string}; message:{ description: Commit message; type: string}; path:{ description: Path where to create/update the file; type: string}; sha:{ description: SHA of file being replaced (for updates); type: string}};[ owner; repo; path; content; message; branch]; object}}; create_or_update_file; Create or update a single file in a GitHub repository. If updating, you must provide the SHA of the file you want to update.
 {{ {{ Repository owner; string};{ Repository name; string}; commitID:{ description: SHA of commit to review; type: string}; pullNumber:{ description: Pull request number; type: number}};[ owner; repo; pullNumber]; object}}; create_pending_pull_request_review; Create a pending review for a pull request. Call this first before attempting to add comments to a pending review, and ultimately submitting it. A pending pull request review means a pull request review, it is pending because you create it first and submit it later, and the PR author will not see it until it is submitted.
 {{ {{ Repository owner; string};{ Repository name; string}; base:{ description: Branch to merge into; type: string}; body:{ description: PR description; type: string}; draft:{ description: Create as draft PR; type: boolean}; head:{ description: Branch containing changes; type: string}; maintainer_can_modify:{ description: Allow maintainer edits; type: boolean}; title:{ description: PR title; type: string}};[ owner; repo; title; head; base]; object}}; create_pull_request; Create a new pull request in a GitHub repository.
-{{ { ;; autoInit:{ description: Initialize with README; type: boolean}; description:{ description: Repository description; type: string}; name:{ description: Repository name; type: string}; private:{ description: Whether repo should be private; type: boolean}};[ name]; object}}; create_repository; Create a new GitHub repository in your account
+{{ {;; autoInit:{ description: Initialize with README; type: boolean}; description:{ description: Repository description; type: string}; name:{ description: Repository name; type: string}; private:{ description: Whether repo should be private; type: boolean}};[ name]; object}}; create_repository; Create a new GitHub repository in your account
 {{ {{ Repository owner (username or organization); string};{ Repository name; string}; branch:{ description: Branch to delete the file from; type: string}; message:{ description: Commit message; type: string}; path:{ description: Path to the file to delete; type: string}};[ owner; repo; path; message; branch]; object}}; delete_file; Delete a file from a GitHub repository
 {{ {{ Repository owner; string};{ Repository name; string}; pullNumber:{ description: Pull request number; type: number}};[ owner; repo; pullNumber]; object}}; delete_pending_pull_request_review; Delete the requester's latest pending pull request review. Use this after the user decides not to submit a pending review, if you don't know if they already created one then check first.
-{{ { ;; state:{ description: The new state of the notification (read/done); enum:[ read; done]; type: string}; threadID:{ description: The ID of the notification thread; type: string}};[ threadID]; object}}; dismiss_notification; Dismiss a notification by marking it as read or done
+{{ {;; state:{ description: The new state of the notification (read/done); enum:[ read; done]; type: string}; threadID:{ description: The ID of the notification thread; type: string}};[ threadID]; object}}; dismiss_notification; Dismiss a notification by marking it as read or done
 {{ {{ Repository owner; string};{ Repository name; string}; organization:{ description: Organization to fork to; type: string}};[ owner; repo]; object}}; fork_repository; Fork a GitHub repository to your account or specified organization
 {{ {{ The owner of the repository.; string};{ The name of the repository.; string}; alertNumber:{ description: The number of the alert.; type: number}};[ owner; repo; alertNumber]; object}}; get_code_scanning_alert; Get details of a specific code scanning alert in a GitHub repository.
 {{ {{ Repository owner; string};{ Repository name; string}; page:{ description: Page number for pagination (min 1); minimum: 1; type: number}; perPage:{ description: Results per page for pagination (min 1, max 100); maximum: 100; minimum: 1; type: number}; sha:{ description: Commit SHA, branch name, or tag name; type: string}};[ owner; repo; sha]; object}}; get_commit; Get details for a commit from a GitHub repository
@@ -2185,66 +1837,6 @@ More information can be found at:
 ```
 
 **minemizer (compact)** (21912 chars, 5431 tokens):
-```txt
-inputSchema{json{properties{owner{description;type};repo{description;type};...};required[];type}};name;description
-{{{{Repository owner;string};{Repository name;string};body:{description:Comment content;type:string};issue_number:{description:Issue number to comment on;type:number}};[owner;repo;issue_number;body];object}};add_issue_comment;Add a comment to a specific issue in a GitHub repository.
-{{{{Repository owner;string};{Repository name;string};body:{description:The text of the review comment;type:string};line:{description:The line of the blob in the pull request diff that the comment applies to. For multi-line comments, the last line of the range;type:number};path:{description:The relative path to the file that necessitates a comment;type:string};pullNumber:{description:Pull request number;type:number};side:{description:The side of the diff to comment on. LEFT indicates the previous state, RIGHT indicates the new state;enum:[LEFT;RIGHT];type:string};startLine:{description:For multi-line comments, the first line of the range that the comment applies to;type:number};startSide:{description:For multi-line comments, the starting side of the diff that the comment applies to. LEFT indicates the previous state, RIGHT indicates the new state;enum:[LEFT;RIGHT];type:string};subjectType:{description:The level at which the comment is targeted;enum:[FILE;LINE];type:string}};[owner;repo;pullNumber;path;body;subjectType];object}};add_pull_request_review_comment_to_pending_review;Add a comment to the requester's latest pending pull request review, a pending review needs to already exist to call this (check with the user if not sure).
-{{{{Repository owner;string};{Repository name;string};issueNumber:{description:Issue number;type:number}};[owner;repo;issueNumber];object}};assign_copilot_to_issue;Assign Copilot to a specific issue in a GitHub repository.
-
-This tool can help with the following outcomes:
-- a Pull Request created with source code changes to resolve the issue
-
-
-More information can be found at:
-- https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent-to-work-on-tasks/about-assigning-tasks-to-copilot
-
-{{{{Repository owner;string};{Repository name;string};body:{description:Review comment text;type:string};commitID:{description:SHA of commit to review;type:string};event:{description:Review action to perform;enum:[APPROVE;REQUEST_CHANGES;COMMENT];type:string};pullNumber:{description:Pull request number;type:number}};[owner;repo;pullNumber;body;event];object}};create_and_submit_pull_request_review;Create and submit a review for a pull request without review comments.
-{{{{Repository owner;string};{Repository name;string};branch:{description:Name for new branch;type:string};from_branch:{description:Source branch (defaults to repo default);type:string}};[owner;repo;branch];object}};create_branch;Create a new branch in a GitHub repository
-{{{{Repository owner;string};{Repository name;string};assignees:{description:Usernames to assign to this issue;items:{type:string};type:array};body:{description:Issue body content;type:string};labels:{description:Labels to apply to this issue;items:{type:string};type:array};milestone:{description:Milestone number;type:number};title:{description:Issue title;type:string}};[owner;repo;title];object}};create_issue;Create a new issue in a GitHub repository.
-{{{{Repository owner (username or organization);string};{Repository name;string};branch:{description:Branch to create/update the file in;type:string};content:{description:Content of the file;type:string};message:{description:Commit message;type:string};path:{description:Path where to create/update the file;type:string};sha:{description:SHA of file being replaced (for updates);type:string}};[owner;repo;path;content;message;branch];object}};create_or_update_file;Create or update a single file in a GitHub repository. If updating, you must provide the SHA of the file you want to update.
-{{{{Repository owner;string};{Repository name;string};commitID:{description:SHA of commit to review;type:string};pullNumber:{description:Pull request number;type:number}};[owner;repo;pullNumber];object}};create_pending_pull_request_review;Create a pending review for a pull request. Call this first before attempting to add comments to a pending review, and ultimately submitting it. A pending pull request review means a pull request review, it is pending because you create it first and submit it later, and the PR author will not see it until it is submitted.
-{{{{Repository owner;string};{Repository name;string};base:{description:Branch to merge into;type:string};body:{description:PR description;type:string};draft:{description:Create as draft PR;type:boolean};head:{description:Branch containing changes;type:string};maintainer_can_modify:{description:Allow maintainer edits;type:boolean};title:{description:PR title;type:string}};[owner;repo;title;head;base];object}};create_pull_request;Create a new pull request in a GitHub repository.
-{{{;;autoInit:{description:Initialize with README;type:boolean};description:{description:Repository description;type:string};name:{description:Repository name;type:string};private:{description:Whether repo should be private;type:boolean}};[name];object}};create_repository;Create a new GitHub repository in your account
-{{{{Repository owner (username or organization);string};{Repository name;string};branch:{description:Branch to delete the file from;type:string};message:{description:Commit message;type:string};path:{description:Path to the file to delete;type:string}};[owner;repo;path;message;branch];object}};delete_file;Delete a file from a GitHub repository
-{{{{Repository owner;string};{Repository name;string};pullNumber:{description:Pull request number;type:number}};[owner;repo;pullNumber];object}};delete_pending_pull_request_review;Delete the requester's latest pending pull request review. Use this after the user decides not to submit a pending review, if you don't know if they already created one then check first.
-{{{;;state:{description:The new state of the notification (read/done);enum:[read;done];type:string};threadID:{description:The ID of the notification thread;type:string}};[threadID];object}};dismiss_notification;Dismiss a notification by marking it as read or done
-{{{{Repository owner;string};{Repository name;string};organization:{description:Organization to fork to;type:string}};[owner;repo];object}};fork_repository;Fork a GitHub repository to your account or specified organization
-{{{{The owner of the repository.;string};{The name of the repository.;string};alertNumber:{description:The number of the alert.;type:number}};[owner;repo;alertNumber];object}};get_code_scanning_alert;Get details of a specific code scanning alert in a GitHub repository.
-{{{{Repository owner;string};{Repository name;string};page:{description:Page number for pagination (min 1);minimum:1;type:number};perPage:{description:Results per page for pagination (min 1, max 100);maximum:100;minimum:1;type:number};sha:{description:Commit SHA, branch name, or tag name;type:string}};[owner;repo;sha];object}};get_commit;Get details for a commit from a GitHub repository
-... (truncated)
-```
-
-**minemizer (33%)** (23392 chars, 5496 tokens):
-```txt
-inputSchema{ json{ properties{ owner{ description; type}; repo{ description; type}; ...}; required[]; type}}; name; description
-{{ {{ Repository owner; string};{ Repository name; string}; body:{ description: Comment content; type: string}; issue_number:{ description: Issue number to comment on; type: number}};[ owner; repo; issue_number; body]; object}}; add_issue_comment; Add a comment to a specific issue in a GitHub repository.
-{{ {{ Repository owner; string};{ Repository name; string}; body:{ description: The text of the review comment; type: string}; line:{ description: The line of the blob in the pull request diff that the comment applies to. For multi-line comments, the last line of the range; type: number}; path:{ description: The relative path to the file that necessitates a comment; type: string}; pullNumber:{ description: Pull request number; type: number}; side:{ description: The side of the diff to comment on. LEFT indicates the previous state, RIGHT indicates the new state; enum:[ LEFT; RIGHT]; type: string}; startLine:{ description: For multi-line comments, the first line of the range that the comment applies to; type: number}; startSide:{ description: For multi-line comments, the starting side of the diff that the comment applies to. LEFT indicates the previous state, RIGHT indicates the new state; enum:[ LEFT; RIGHT]; type: string}; subjectType:{ description: The level at which the comment is targeted; enum:[ FILE; LINE]; type: string}};[ owner; repo; pullNumber; path; body; subjectType]; object}}; add_pull_request_review_comment_to_pending_review; Add a comment to the requester's latest pending pull request review, a pending review needs to already exist to call this (check with the user if not sure).
-{{ {{ Repository owner; string};{ Repository name; string}; issueNumber:{ description: Issue number; type: number}};[ owner; repo; issueNumber]; object}}; assign_copilot_to_issue; Assign Copilot to a specific issue in a GitHub repository.
-
-This tool can help with the following outcomes:
-- a Pull Request created with source code changes to resolve the issue
-
-
-More information can be found at:
-- https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent-to-work-on-tasks/about-assigning-tasks-to-copilot
-
-{{ {{ Repository owner; string};{ Repository name; string}; body:{ description: Review comment text; type: string}; commitID:{ description: SHA of commit to review; type: string}; event:{ description: Review action to perform; enum:[ APPROVE; REQUEST_CHANGES; COMMENT]; type: string}; pullNumber:{ description: Pull request number; type: number}};[ owner; repo; pullNumber; body; event]; object}}; create_and_submit_pull_request_review; Create and submit a review for a pull request without review comments.
-{{ {{ Repository owner; string};{ Repository name; string}; branch:{ description: Name for new branch; type: string}; from_branch:{ description: Source branch (defaults to repo default); type: string}};[ owner; repo; branch]; object}}; create_branch; Create a new branch in a GitHub repository
-{{ {{ Repository owner; string};{ Repository name; string}; assignees:{ description: Usernames to assign to this issue; items:{ type: string}; type: array}; body:{ description: Issue body content; type: string}; labels:{ description: Labels to apply to this issue; items:{ type: string}; type: array}; milestone:{ description: Milestone number; type: number}; title:{ description: Issue title; type: string}};[ owner; repo; title]; object}}; create_issue; Create a new issue in a GitHub repository.
-{{ {{ Repository owner (username or organization); string};{ Repository name; string}; branch:{ description: Branch to create/update the file in; type: string}; content:{ description: Content of the file; type: string}; message:{ description: Commit message; type: string}; path:{ description: Path where to create/update the file; type: string}; sha:{ description: SHA of file being replaced (for updates); type: string}};[ owner; repo; path; content; message; branch]; object}}; create_or_update_file; Create or update a single file in a GitHub repository. If updating, you must provide the SHA of the file you want to update.
-{{ {{ Repository owner; string};{ Repository name; string}; commitID:{ description: SHA of commit to review; type: string}; pullNumber:{ description: Pull request number; type: number}};[ owner; repo; pullNumber]; object}}; create_pending_pull_request_review; Create a pending review for a pull request. Call this first before attempting to add comments to a pending review, and ultimately submitting it. A pending pull request review means a pull request review, it is pending because you create it first and submit it later, and the PR author will not see it until it is submitted.
-{{ {{ Repository owner; string};{ Repository name; string}; base:{ description: Branch to merge into; type: string}; body:{ description: PR description; type: string}; draft:{ description: Create as draft PR; type: boolean}; head:{ description: Branch containing changes; type: string}; maintainer_can_modify:{ description: Allow maintainer edits; type: boolean}; title:{ description: PR title; type: string}};[ owner; repo; title; head; base]; object}}; create_pull_request; Create a new pull request in a GitHub repository.
-{{ { ;; autoInit:{ description: Initialize with README; type: boolean}; description:{ description: Repository description; type: string}; name:{ description: Repository name; type: string}; private:{ description: Whether repo should be private; type: boolean}};[ name]; object}}; create_repository; Create a new GitHub repository in your account
-{{ {{ Repository owner (username or organization); string};{ Repository name; string}; branch:{ description: Branch to delete the file from; type: string}; message:{ description: Commit message; type: string}; path:{ description: Path to the file to delete; type: string}};[ owner; repo; path; message; branch]; object}}; delete_file; Delete a file from a GitHub repository
-{{ {{ Repository owner; string};{ Repository name; string}; pullNumber:{ description: Pull request number; type: number}};[ owner; repo; pullNumber]; object}}; delete_pending_pull_request_review; Delete the requester's latest pending pull request review. Use this after the user decides not to submit a pending review, if you don't know if they already created one then check first.
-{{ { ;; state:{ description: The new state of the notification (read/done); enum:[ read; done]; type: string}; threadID:{ description: The ID of the notification thread; type: string}};[ threadID]; object}}; dismiss_notification; Dismiss a notification by marking it as read or done
-{{ {{ Repository owner; string};{ Repository name; string}; organization:{ description: Organization to fork to; type: string}};[ owner; repo]; object}}; fork_repository; Fork a GitHub repository to your account or specified organization
-{{ {{ The owner of the repository.; string};{ The name of the repository.; string}; alertNumber:{ description: The number of the alert.; type: number}};[ owner; repo; alertNumber]; object}}; get_code_scanning_alert; Get details of a specific code scanning alert in a GitHub repository.
-{{ {{ Repository owner; string};{ Repository name; string}; page:{ description: Page number for pagination (min 1); minimum: 1; type: number}; perPage:{ description: Results per page for pagination (min 1, max 100); maximum: 100; minimum: 1; type: number}; sha:{ description: Commit SHA, branch name, or tag name; type: string}};[ owner; repo; sha]; object}}; get_commit; Get details for a commit from a GitHub repository
-... (truncated)
-```
-
-**compact (33%)** (21912 chars, 5431 tokens):
 ```txt
 inputSchema{json{properties{owner{description;type};repo{description;type};...};required[];type}};name;description
 {{{{Repository owner;string};{Repository name;string};body:{description:Comment content;type:string};issue_number:{description:Issue number to comment on;type:number}};[owner;repo;issue_number;body];object}};add_issue_comment;Add a comment to a specific issue in a GitHub repository.

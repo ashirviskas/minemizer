@@ -82,43 +82,25 @@
           "qwen2.5": 77,
           "Deepseek-V3.2": 82
         }
-      },
-      "minemizer_33": {
-        "chars": 251,
-        "tokens": {
-          "gpt2": 74,
-          "llama": 83,
-          "qwen2.5": 72,
-          "Deepseek-V3.2": 74
-        }
-      },
-      "minemizer_compact_33": {
-        "chars": 224,
-        "tokens": {
-          "gpt2": 85,
-          "llama": 91,
-          "qwen2.5": 77,
-          "Deepseek-V3.2": 82
-        }
       }
     },
     "nested_objects": {
       "json_pretty": {
-        "chars": 741,
+        "chars": 1039,
         "tokens": {
-          "gpt2": 407,
-          "llama": 322,
-          "qwen2.5": 252,
-          "Deepseek-V3.2": 261
+          "gpt2": 590,
+          "llama": 435,
+          "qwen2.5": 348,
+          "Deepseek-V3.2": 348
         }
       },
       "json_min": {
-        "chars": 470,
+        "chars": 618,
         "tokens": {
-          "gpt2": 143,
-          "llama": 159,
-          "qwen2.5": 127,
-          "Deepseek-V3.2": 147
+          "gpt2": 188,
+          "llama": 211,
+          "qwen2.5": 174,
+          "Deepseek-V3.2": 186
         }
       },
       "csv": {
@@ -140,66 +122,48 @@
         }
       },
       "yaml": {
-        "chars": 463,
+        "chars": 629,
         "tokens": {
-          "gpt2": 195,
-          "llama": 182,
-          "qwen2.5": 158,
-          "Deepseek-V3.2": 166
+          "gpt2": 264,
+          "llama": 246,
+          "qwen2.5": 229,
+          "Deepseek-V3.2": 227
         }
       },
       "toon": {
-        "chars": 527,
+        "chars": 675,
         "tokens": {
-          "gpt2": 252,
-          "llama": 191,
-          "qwen2.5": 166,
-          "Deepseek-V3.2": 174
+          "gpt2": 315,
+          "llama": 238,
+          "qwen2.5": 223,
+          "Deepseek-V3.2": 223
         }
       },
       "tson": {
-        "chars": 249,
+        "chars": 306,
         "tokens": {
-          "gpt2": 101,
-          "llama": 104,
-          "qwen2.5": 75,
-          "Deepseek-V3.2": 93
+          "gpt2": 136,
+          "llama": 141,
+          "qwen2.5": 110,
+          "Deepseek-V3.2": 123
         }
       },
       "minemizer": {
-        "chars": 253,
+        "chars": 325,
         "tokens": {
-          "gpt2": 90,
-          "llama": 95,
-          "qwen2.5": 77,
-          "Deepseek-V3.2": 85
+          "gpt2": 126,
+          "llama": 132,
+          "qwen2.5": 121,
+          "Deepseek-V3.2": 119
         }
       },
       "minemizer_compact": {
-        "chars": 231,
+        "chars": 290,
         "tokens": {
-          "gpt2": 95,
-          "llama": 100,
-          "qwen2.5": 77,
-          "Deepseek-V3.2": 88
-        }
-      },
-      "minemizer_33": {
-        "chars": 253,
-        "tokens": {
-          "gpt2": 90,
-          "llama": 95,
-          "qwen2.5": 77,
-          "Deepseek-V3.2": 85
-        }
-      },
-      "minemizer_compact_33": {
-        "chars": 231,
-        "tokens": {
-          "gpt2": 95,
-          "llama": 100,
-          "qwen2.5": 77,
-          "Deepseek-V3.2": 88
+          "gpt2": 132,
+          "llama": 139,
+          "qwen2.5": 117,
+          "Deepseek-V3.2": 118
         }
       }
     },
@@ -284,43 +248,25 @@
           "qwen2.5": 70,
           "Deepseek-V3.2": 70
         }
-      },
-      "minemizer_33": {
-        "chars": 188,
-        "tokens": {
-          "gpt2": 81,
-          "llama": 79,
-          "qwen2.5": 71,
-          "Deepseek-V3.2": 67
-        }
-      },
-      "minemizer_compact_33": {
-        "chars": 165,
-        "tokens": {
-          "gpt2": 83,
-          "llama": 83,
-          "qwen2.5": 70,
-          "Deepseek-V3.2": 70
-        }
       }
     },
     "sparse_data": {
       "json_pretty": {
-        "chars": 589,
+        "chars": 611,
         "tokens": {
-          "gpt2": 318,
-          "llama": 278,
-          "qwen2.5": 224,
-          "Deepseek-V3.2": 225
+          "gpt2": 323,
+          "llama": 285,
+          "qwen2.5": 227,
+          "Deepseek-V3.2": 228
         }
       },
       "json_min": {
-        "chars": 378,
+        "chars": 400,
         "tokens": {
-          "gpt2": 121,
-          "llama": 133,
-          "qwen2.5": 114,
-          "Deepseek-V3.2": 121
+          "gpt2": 131,
+          "llama": 146,
+          "qwen2.5": 121,
+          "Deepseek-V3.2": 125
         }
       },
       "csv": {
@@ -342,52 +288,34 @@
         }
       },
       "yaml": {
-        "chars": 356,
+        "chars": 384,
         "tokens": {
-          "gpt2": 135,
-          "llama": 150,
-          "qwen2.5": 143,
-          "Deepseek-V3.2": 143
+          "gpt2": 145,
+          "llama": 158,
+          "qwen2.5": 149,
+          "Deepseek-V3.2": 149
         }
       },
       "toon": {
-        "chars": 414,
+        "chars": 438,
         "tokens": {
-          "gpt2": 184,
-          "llama": 161,
-          "qwen2.5": 153,
-          "Deepseek-V3.2": 153
+          "gpt2": 190,
+          "llama": 167,
+          "qwen2.5": 159,
+          "Deepseek-V3.2": 159
         }
       },
       "tson": {
-        "chars": 300,
+        "chars": 328,
         "tokens": {
-          "gpt2": 136,
-          "llama": 133,
-          "qwen2.5": 109,
-          "Deepseek-V3.2": 112
+          "gpt2": 146,
+          "llama": 145,
+          "qwen2.5": 113,
+          "Deepseek-V3.2": 116
         }
       },
       "minemizer": {
-        "chars": 233,
-        "tokens": {
-          "gpt2": 75,
-          "llama": 82,
-          "qwen2.5": 71,
-          "Deepseek-V3.2": 74
-        }
-      },
-      "minemizer_compact": {
         "chars": 207,
-        "tokens": {
-          "gpt2": 84,
-          "llama": 90,
-          "qwen2.5": 74,
-          "Deepseek-V3.2": 78
-        }
-      },
-      "minemizer_33": {
-        "chars": 227,
         "tokens": {
           "gpt2": 78,
           "llama": 85,
@@ -395,12 +323,12 @@
           "Deepseek-V3.2": 75
         }
       },
-      "minemizer_compact_33": {
-        "chars": 198,
+      "minemizer_compact": {
+        "chars": 184,
         "tokens": {
-          "gpt2": 83,
-          "llama": 89,
-          "qwen2.5": 73,
+          "gpt2": 85,
+          "llama": 91,
+          "qwen2.5": 74,
           "Deepseek-V3.2": 76
         }
       }
@@ -486,24 +414,6 @@
           "qwen2.5": 190,
           "Deepseek-V3.2": 158
         }
-      },
-      "minemizer_33": {
-        "chars": 395,
-        "tokens": {
-          "gpt2": 156,
-          "llama": 202,
-          "qwen2.5": 192,
-          "Deepseek-V3.2": 159
-        }
-      },
-      "minemizer_compact_33": {
-        "chars": 352,
-        "tokens": {
-          "gpt2": 169,
-          "llama": 210,
-          "qwen2.5": 186,
-          "Deepseek-V3.2": 154
-        }
       }
     },
     "books": {
@@ -571,33 +481,15 @@
         }
       },
       "minemizer": {
-        "chars": 14462,
+        "chars": 14460,
         "tokens": {
-          "gpt2": 5156,
-          "llama": 6046,
-          "qwen2.5": 4978,
-          "Deepseek-V3.2": 4521
+          "gpt2": 5154,
+          "llama": 6044,
+          "qwen2.5": 4976,
+          "Deepseek-V3.2": 4519
         }
       },
       "minemizer_compact": {
-        "chars": 13755,
-        "tokens": {
-          "gpt2": 5262,
-          "llama": 6058,
-          "qwen2.5": 4847,
-          "Deepseek-V3.2": 4386
-        }
-      },
-      "minemizer_33": {
-        "chars": 14462,
-        "tokens": {
-          "gpt2": 5156,
-          "llama": 6046,
-          "qwen2.5": 4978,
-          "Deepseek-V3.2": 4521
-        }
-      },
-      "minemizer_compact_33": {
         "chars": 13755,
         "tokens": {
           "gpt2": 5262,
@@ -672,12 +564,12 @@
         }
       },
       "minemizer": {
-        "chars": 323309,
+        "chars": 323130,
         "tokens": {
-          "gpt2": 166528,
-          "llama": 152319,
-          "qwen2.5": 133622,
-          "Deepseek-V3.2": 120164
+          "gpt2": 166573,
+          "llama": 152369,
+          "qwen2.5": 133672,
+          "Deepseek-V3.2": 120114
         }
       },
       "minemizer_compact": {
@@ -687,24 +579,6 @@
           "llama": 156354,
           "qwen2.5": 133597,
           "Deepseek-V3.2": 124199
-        }
-      },
-      "minemizer_33": {
-        "chars": 321447,
-        "tokens": {
-          "gpt2": 166131,
-          "llama": 151922,
-          "qwen2.5": 133225,
-          "Deepseek-V3.2": 119767
-        }
-      },
-      "minemizer_compact_33": {
-        "chars": 297663,
-        "tokens": {
-          "gpt2": 170444,
-          "llama": 155868,
-          "qwen2.5": 133230,
-          "Deepseek-V3.2": 123829
         }
       }
     },
@@ -773,11 +647,11 @@
         }
       },
       "minemizer": {
-        "chars": 1207,
+        "chars": 1203,
         "tokens": {
           "gpt2": 383,
           "llama": 452,
-          "qwen2.5": 404,
+          "qwen2.5": 400,
           "Deepseek-V3.2": 388
         }
       },
@@ -788,24 +662,6 @@
           "llama": 462,
           "qwen2.5": 382,
           "Deepseek-V3.2": 384
-        }
-      },
-      "minemizer_33": {
-        "chars": 1196,
-        "tokens": {
-          "gpt2": 382,
-          "llama": 450,
-          "qwen2.5": 403,
-          "Deepseek-V3.2": 387
-        }
-      },
-      "minemizer_compact_33": {
-        "chars": 1058,
-        "tokens": {
-          "gpt2": 406,
-          "llama": 461,
-          "qwen2.5": 380,
-          "Deepseek-V3.2": 383
         }
       }
     },
@@ -874,33 +730,15 @@
         }
       },
       "minemizer": {
-        "chars": 1537,
+        "chars": 1534,
         "tokens": {
           "gpt2": 632,
           "llama": 940,
-          "qwen2.5": 886,
+          "qwen2.5": 883,
           "Deepseek-V3.2": 698
         }
       },
       "minemizer_compact": {
-        "chars": 1361,
-        "tokens": {
-          "gpt2": 676,
-          "llama": 875,
-          "qwen2.5": 809,
-          "Deepseek-V3.2": 641
-        }
-      },
-      "minemizer_33": {
-        "chars": 1537,
-        "tokens": {
-          "gpt2": 632,
-          "llama": 940,
-          "qwen2.5": 886,
-          "Deepseek-V3.2": 698
-        }
-      },
-      "minemizer_compact_33": {
         "chars": 1361,
         "tokens": {
           "gpt2": 676,
@@ -975,12 +813,12 @@
         }
       },
       "minemizer": {
-        "chars": 2816,
+        "chars": 2809,
         "tokens": {
-          "gpt2": 524,
-          "llama": 622,
-          "qwen2.5": 515,
-          "Deepseek-V3.2": 501
+          "gpt2": 522,
+          "llama": 619,
+          "qwen2.5": 510,
+          "Deepseek-V3.2": 499
         }
       },
       "minemizer_compact": {
@@ -990,24 +828,6 @@
           "llama": 672,
           "qwen2.5": 534,
           "Deepseek-V3.2": 526
-        }
-      },
-      "minemizer_33": {
-        "chars": 2704,
-        "tokens": {
-          "gpt2": 518,
-          "llama": 615,
-          "qwen2.5": 507,
-          "Deepseek-V3.2": 490
-        }
-      },
-      "minemizer_compact_33": {
-        "chars": 2585,
-        "tokens": {
-          "gpt2": 546,
-          "llama": 648,
-          "qwen2.5": 520,
-          "Deepseek-V3.2": 504
         }
       }
     },
@@ -1076,7 +896,7 @@
         }
       },
       "minemizer": {
-        "chars": 23392,
+        "chars": 23383,
         "tokens": {
           "gpt2": 5559,
           "llama": 5767,
@@ -1085,24 +905,6 @@
         }
       },
       "minemizer_compact": {
-        "chars": 21912,
-        "tokens": {
-          "gpt2": 5672,
-          "llama": 5726,
-          "qwen2.5": 5112,
-          "Deepseek-V3.2": 5215
-        }
-      },
-      "minemizer_33": {
-        "chars": 23392,
-        "tokens": {
-          "gpt2": 5559,
-          "llama": 5767,
-          "qwen2.5": 5319,
-          "Deepseek-V3.2": 5341
-        }
-      },
-      "minemizer_compact_33": {
         "chars": 21912,
         "tokens": {
           "gpt2": 5672,

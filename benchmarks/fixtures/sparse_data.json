@@ -1,10 +1,10 @@
 [
-  {"id": 1, "name": "Carol", "role": "Manager"},
-  {"id": 2, "name": "Dave", "remote": true},
-  {"id": 3, "name": "Eve", "role": "Designer", "team": "UX"},
-  {"id": 4, "name": "Frank", "department": "Engineering"},
-  {"id": 5, "name": "Grace", "role": "Engineer", "remote": true, "team": "Platform"},
-  {"id": 6, "name": "Henry", "role": "Analyst"},
-  {"id": 7, "name": "Ivy"},
-  {"id": 8, "name": "Jack", "department": "Sales", "remote": false}
+  {"id": 1, "name": "Erik", "department": "Engineering"},
+  {"id": 2, "name": "Rachel", "department": "Design", "remote": true},
+  {"id": 3, "name": "Hans"},
+  {"id": 4, "name": "Kenji", "department": "Sales", "slack": "@kenji", "remote": false},
+  {"id": 5, "name": "Mai", "remote": true},
+  {"id": 6, "name": "Tom", "department": "Engineering"},
+  {"id": 7, "name": "Priya", "slack": "@priya", "remote": true},
+  {"id": 8, "name": "Nina", "department": "Marketing"}
 ]

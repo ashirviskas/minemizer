@@ -255,8 +255,10 @@ def _serialize(data: list[dict], cfg: Config) -> str:
     if cfg.wrap_lines:
         w = cfg.wrap_lines
         lines = [f"{w}{line}{w}" for line in lines]
-
-    return "\n".join(lines)
+    text_str = "\n".join(lines)
+    if text_str.endswith(" "):
+        return text_str[:-1]
+    return text_str
 
 
 # --- Public API ---
