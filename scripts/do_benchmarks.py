@@ -59,6 +59,20 @@ FORMAT_LABELS = {
     "minemizer_compact": "minemizer (compact)",
 }
 
+# Max lines/characters to show in example outputs (markdown and HTML)
+MAX_EXAMPLE_LINES = 25
+MAX_EXAMPLE_CHARS = 5000
+
+# Fixture display order (others sorted alphabetically after these)
+FIXTURE_ORDER = [
+    "simple_flat",
+    "nested_objects",
+    "lists_of_primitives",
+    "sparse_data",
+    "coingecko_coins",
+    "complex_mixed",
+]
+
 
 @dataclass
 class BenchmarkResult:
@@ -89,12 +103,28 @@ def load_tokenizers() -> dict[str, PreTrainedTokenizerBase]:
 
 
 def load_fixtures() -> dict[str, list[dict]]:
-    """Load all fixture JSON files."""
+    """Load all fixture JSON files in specified order."""
     fixtures = {}
     for path in sorted(FIXTURES_DIR.glob("*.json")):
         with path.open() as f:
             fixtures[path.stem] = json.load(f)
-    return fixtures
+
+    # Reorder according to FIXTURE_ORDER
+    ordered = {}
+    for name in FIXTURE_ORDER:
+        if name in fixtures:
+            ordered[name] = fixtures.pop(name)
+    # Add any remaining fixtures not in FIXTURE_ORDER
+    for name in sorted(fixtures.keys()):
+        ordered[name] = fixtures[name]
+    return ordered
+
+
+def fmt_num(n: int | float) -> str:
+    """Format number with thousand separators."""
+    if isinstance(n, float):
+        return f"{n:,.1f}"
+    return f"{n:,}"
 
 
 def has_nested_structures(data: list[dict]) -> bool:
@@ -229,21 +259,33 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
                 ratio = base_chars / avg_tokens if avg_tokens > 0 else 0
                 format_stats[result.format_name]["ratios"].append(ratio)
 
-    # Build per-fixture ratios for detailed table
+    # Build per-fixture ratios for detailed table (normalized to JSON pretty = 1.0x)
     fixture_ratios: dict[str, dict[str, float | None]] = {fmt: {} for fmt in FORMATS}
+    json_pretty_baseline: dict[str, float] = {}  # baseline ratio per fixture
+
     for fixture in results:
         json_pretty_result = next(r for r in fixture.results if r.format_name == "json_pretty")
         base_chars = json_pretty_result.chars
         assert base_chars is not None  # JSON always succeeds
+
+        # Calculate JSON pretty baseline (chars/tokens)
+        json_pretty_tokens = sum(v for v in json_pretty_result.tokens.values() if v is not None) / len(
+            json_pretty_result.tokens
+        )
+        json_pretty_baseline[fixture.fixture_name] = base_chars / json_pretty_tokens
+
         for result in fixture.results:
             if result.chars is not None:
                 avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
-                fixture_ratios[result.format_name][fixture.fixture_name] = base_chars / avg_tokens
+                raw_ratio = base_chars / avg_tokens
+                # Normalize: how many times better than JSON pretty
+                normalized = raw_ratio / json_pretty_baseline[fixture.fixture_name]
+                fixture_ratios[result.format_name][fixture.fixture_name] = normalized
             else:
                 fixture_ratios[result.format_name][fixture.fixture_name] = None
 
-    # Detailed table with per-fixture ratios
-    lines.append("### Token efficiency (original chars encoded per token)")
+    # Detailed table with per-fixture ratios (normalized)
+    lines.append("### Token efficiency (normalized, JSON pretty = 1.0x)")
     lines.append("")
 
     # Header with fixture names (shortened)
@@ -252,6 +294,7 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
         "nested_objects": "nested",
         "lists_of_primitives": "lists",
         "sparse_data": "sparse",
+        "coingecko_coins": "coingecko",
         "complex_mixed": "complex",
     }
 
@@ -267,7 +310,11 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
     for fmt in FORMATS:
         stats = format_stats[fmt]
         if len(stats["ratios"]) == total_fixtures:
-            all_avgs.append(sum(stats["ratios"]) / len(stats["ratios"]))
+            # Recalculate normalized average
+            fmt_ratios = [fixture_ratios[fmt].get(f) for f in fixture_names]
+            valid = [r for r in fmt_ratios if r is not None]
+            if valid:
+                all_avgs.append(sum(valid) / len(valid))
     best_avg = max(all_avgs) if all_avgs else 0
 
     header = ["Format", *[short_names.get(f, f) for f in fixture_names], "avg"]
@@ -276,13 +323,14 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
 
     for fmt in FORMATS:
         label = FORMAT_LABELS[fmt]
-        stats = format_stats[fmt]
         row = [label]
 
+        fmt_ratios_list = []
         for fixture_name in fixture_names:
             ratio = fixture_ratios[fmt].get(fixture_name)
             if ratio:
-                val = f"{ratio:.1f}"
+                fmt_ratios_list.append(ratio)
+                val = f"{ratio:.1f}x"
                 if ratio == best_per_fixture[fixture_name]:
                     val = f"**{val}**"
                 row.append(val)
@@ -290,12 +338,12 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
                 row.append("✗")
 
         # Average
-        if stats["ratios"]:
-            avg_ratio = sum(stats["ratios"]) / len(stats["ratios"])
-            val = f"{avg_ratio:.1f}"
-            if len(stats["ratios"]) == total_fixtures and avg_ratio == best_avg:
+        if fmt_ratios_list:
+            avg_ratio = sum(fmt_ratios_list) / len(fmt_ratios_list)
+            val = f"{avg_ratio:.1f}x"
+            if len(fmt_ratios_list) == total_fixtures and avg_ratio == best_avg:
                 val = f"**{val}**"
-            elif len(stats["ratios"]) < total_fixtures:
+            elif len(fmt_ratios_list) < total_fixtures:
                 val = f"{val}\\*\\*"  # partial data marker
             row.append(val)
         else:
@@ -384,7 +432,7 @@ def generate_token_visualization_html(
         "<meta charset='utf-8'>",
         "<title>Minemizer Token Visualization</title>",
         "<style>",
-        "body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }",
+        "body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; }",
         "h1, h2, h3 { color: #333; }",
         ".format { margin: 20px 0; }",
         ".format-header { font-weight: bold; margin-bottom: 8px; color: #555; }",
@@ -393,7 +441,6 @@ def generate_token_visualization_html(
         ".token { display: inline; border: 1px solid #ccc; border-radius: 3px; padding: 1px 2px; margin: 1px; }",
         ".token-space { background: #ffe8e8 !important; border-color: #daa !important; }",
         ".token-newline { background: #f0e8ff !important; color: #999; border-color: #c8b8e8 !important; }",
-        ".stats { color: #666; font-size: 14px; }",
         ".na { color: #999; font-style: italic; }",
         # Summary table styles
         "table { border-collapse: collapse; margin: 20px 0; }",
@@ -403,7 +450,19 @@ def generate_token_visualization_html(
         ".best { font-weight: bold; color: #228855; }",
         ".partial-best { font-weight: bold; }",
         ".summary-section { margin-bottom: 30px; }",
-        # Tab styles
+        # Layout: sidebar + main content
+        ".page-layout { display: flex; gap: 20px; }",
+        ".sidebar { position: sticky; top: 20px; align-self: flex-start; width: 120px; flex-shrink: 0; }",
+        ".main-content { flex: 1; max-width: 1100px; }",
+        # Sidebar tokenizer tabs (vertical)
+        ".sidebar-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 13px; }",
+        ".sidebar-tabs { display: flex; flex-direction: column; gap: 4px; }",
+        ".sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid #ddd; "
+        "border-radius: 6px; background: #f5f5f5; transition: all 0.2s; user-select: none; "
+        "text-align: center; font-size: 13px; }",
+        ".sidebar-tab:hover { background: #e8e8e8; border-color: #ccc; }",
+        ".sidebar-tab.active { background: #4a9eff; border-color: #4a9eff; color: white; font-weight: bold; }",
+        # Fixture tabs (horizontal)
         ".tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid #ddd; }",
         ".tab { padding: 10px 20px; cursor: pointer; border: 1px solid transparent; border-bottom: none; "
         "border-radius: 8px 8px 0 0; background: #f5f5f5; margin-bottom: -2px; transition: all 0.2s; "
@@ -412,41 +471,81 @@ def generate_token_visualization_html(
         ".tab.active { background: white; border-color: #ddd; border-bottom-color: white; font-weight: bold; }",
         ".tab-content { display: none; }",
         ".tab-content.active { display: block; }",
-        ".tab-group { margin-bottom: 30px; }",
+        ".tab-group { margin-bottom: 20px; }",
         ".tab-group-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 14px; }",
         ".fixture-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; "
         "background: #f9f9f9; border-radius: 4px; }",
+        # Stats display styles
+        ".stats { color: #666; font-size: 13px; display: block; margin-top: 4px; }",
+        ".stat-item { display: inline-block; margin-right: 12px; padding: 3px 10px; "
+        "border-radius: 4px; border: 1px solid; }",
+        ".stat-label { font-size: 12px; }",
+        ".stat-value { font-weight: 600; }",
+        ".stat-chars { background: #e3f2fd; border-color: #90caf9; color: #1565c0; }",
+        ".stat-tokens { background: #f3e5f5; border-color: #ce93d8; color: #7b1fa2; }",
+        ".stat-og { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }",
+        ".stat-enc { background: #fff3e0; border-color: #ffcc80; color: #e65100; }",
+        # Copy button styles
+        ".format-header-row { display: flex; align-items: center; gap: 10px; }",
+        ".copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid #ccc; "
+        "border-radius: 4px; background: #fff; color: #555; transition: all 0.2s; }",
+        ".copy-btn:hover { background: #f0f0f0; border-color: #999; }",
+        ".copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }",
         "</style>",
         "</head><body>",
         "<h1>Token Visualization</h1>",
         "<p>Compare <a href='https://github.com/ashirviskas/minemizer'>minemizer</a> "
-        "to other methods of encoding various data for LLMs. Each token is colored uniquely.</p>",
+        "to other encoding formats for LLM in token efficiency. Each token is colored uniquely.</p>",
+        "<div style='background: #f8f9fa; padding: 12px 16px; border-radius: 6px; margin: 16px 0; "
+        "border-left: 4px solid #4a9eff;'>",
+        "<strong>Metrics explained:</strong><br>",
+        "<b>chars_og/tok</b> &mdash; Original JSON characters encoded per token "
+        "(how much source original data fits per token after converting to <b>format</b>)<br>",
+        "<b>encoded_chars/tok</b> &mdash; Encoded format characters per token "
+        "(raw compression efficiency of the format itself)",
+        "</div>",
     ]
 
-    # Generate summary table (like markdown version)
+    # Generate summary table (normalized to JSON pretty = 1.0x)
     html.append("<div class='summary-section'>")
     html.append("<h2>Token Efficiency Summary</h2>")
-    html.append("<p><em>Original characters encoded per token on average (higher is better)</em></p>")
+    html.append("<p><em>Normalized efficiency (JSON pretty = 1.0x, higher is better)</em></p>")
     html.append("<table>")
 
     # Header row
     header = ["Format"] + [f.fixture_name.replace("_", " ") for f in results] + ["avg"]
     html.append("<tr>" + "".join(f"<th>{h}</th>" for h in header) + "</tr>")
 
-    # Compute best values per column
+    # Compute JSON pretty baseline per fixture
+    json_pretty_baseline: dict[str, float] = {}
+    for fixture in results:
+        json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
+        base_chars = json_pretty.chars
+        assert base_chars is not None
+        json_pretty_tokens = sum(v for v in json_pretty.tokens.values() if v is not None) / len(json_pretty.tokens)
+        json_pretty_baseline[fixture.fixture_name] = base_chars / json_pretty_tokens
+
+    # Compute normalized ratios per format per fixture
     best_per_fixture: dict[str, float] = {}
     format_avgs: dict[str, float] = {}
+    format_ratios: dict[str, dict[str, float | None]] = {fmt: {} for fmt in FORMATS}
 
     for fixture in results:
         json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
         base_chars = json_pretty.chars
-        assert base_chars is not None  # JSON always succeeds
+        assert base_chars is not None
+        baseline = json_pretty_baseline[fixture.fixture_name]
+
         best_ratio = 0.0
         for result in fixture.results:
             if result.chars is not None:
                 avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
-                ratio = base_chars / avg_tokens if avg_tokens > 0 else 0
-                best_ratio = max(best_ratio, ratio)
+                raw_ratio = base_chars / avg_tokens if avg_tokens > 0 else 0
+                normalized = raw_ratio / baseline
+                format_ratios[result.format_name][fixture.fixture_name] = normalized
+                best_ratio = max(best_ratio, normalized)
+            else:
+                format_ratios[result.format_name][fixture.fixture_name] = None
         best_per_fixture[fixture.fixture_name] = best_ratio
 
     # Compute format averages and track completeness
@@ -454,18 +553,11 @@ def generate_token_visualization_html(
     format_complete: dict[str, bool] = {}
 
     for fmt in FORMATS:
-        ratios = []
-        for fixture in results:
-            json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
-            base_chars = json_pretty.chars
-            assert base_chars is not None  # JSON always succeeds
-            result = next(r for r in fixture.results if r.format_name == fmt)
-            if result.chars is not None:
-                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
-                ratios.append(base_chars / avg_tokens if avg_tokens > 0 else 0)
-        if ratios:
-            format_avgs[fmt] = sum(ratios) / len(ratios)
-            format_complete[fmt] = len(ratios) == total_fixtures
+        ratios = [format_ratios[fmt].get(f.fixture_name) for f in results]
+        valid = [r for r in ratios if r is not None]
+        if valid:
+            format_avgs[fmt] = sum(valid) / len(valid)
+            format_complete[fmt] = len(valid) == total_fixtures
 
     # Best among complete formats (bold + green)
     complete_avgs = [format_avgs[f] for f in format_avgs if format_complete.get(f)]
@@ -480,18 +572,13 @@ def generate_token_visualization_html(
         row = [f"<td>{label}</td>"]
 
         for fixture in results:
-            json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
-            base_chars = json_pretty.chars
-            assert base_chars is not None  # JSON always succeeds
-            result = next(r for r in fixture.results if r.format_name == fmt)
+            ratio = format_ratios[fmt].get(fixture.fixture_name)
 
-            if result.chars is None:
+            if ratio is None:
                 row.append("<td class='na'>✗</td>")
             else:
-                avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
-                ratio = base_chars / avg_tokens if avg_tokens > 0 else 0
                 css_class = " class='best'" if ratio == best_per_fixture[fixture.fixture_name] else ""
-                row.append(f"<td{css_class}>{ratio:.1f}</td>")
+                row.append(f"<td{css_class}>{ratio:.1f}x</td>")
 
         # Average column
         if fmt in format_avgs:
@@ -503,7 +590,7 @@ def generate_token_visualization_html(
                 css_class = " class='partial-best'"  # bold only
             else:
                 css_class = ""
-            row.append(f"<td{css_class}>{avg:.1f}</td>")
+            row.append(f"<td{css_class}>{avg:.1f}x</td>")
         else:
             row.append("<td class='na'>N/A</td>")
 
@@ -512,17 +599,69 @@ def generate_token_visualization_html(
     html.append("</table>")
     html.append("</div>")
 
-    # Tokenizer tabs
-    html.append("<div class='tab-group'>")
-    html.append("<div class='tab-group-label'>Tokenizer:</div>")
-    html.append("<div class='tabs' id='tokenizer-tabs'>")
+    # Second table: Tokenizer vs Format (averaged across all fixtures)
+    html.append("<div class='summary-section'>")
+    html.append("<h2>Tokenizer × Format</h2>")
+    html.append("<p><em>Average efficiency per tokenizer (normalized, higher is better)</em></p>")
+    html.append("<table>")
+
+    # Header row: Format | tokenizer1 | tokenizer2 | ...
+    header = ["Format"] + list(tokenizer_names)
+    html.append("<tr>" + "".join(f"<th>{h}</th>" for h in header) + "</tr>")
+
+    # Compute per-tokenizer efficiency for each format
+    for fmt in FORMATS:
+        label = FORMAT_LABELS[fmt]
+        row = [f"<td>{label}</td>"]
+
+        for tok_name in tokenizer_names:
+            # Average across all fixtures for this format+tokenizer
+            ratios = []
+            for fixture in results:
+                json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
+                base_chars = json_pretty.chars
+                assert base_chars is not None
+                jp_tokens = json_pretty.tokens.get(tok_name)
+                if jp_tokens is None:
+                    continue
+                baseline = base_chars / jp_tokens
+
+                result = next(r for r in fixture.results if r.format_name == fmt)
+                if result.chars is not None:
+                    tok_count = result.tokens.get(tok_name)
+                    if tok_count:
+                        raw_ratio = base_chars / tok_count
+                        normalized = raw_ratio / baseline
+                        ratios.append(normalized)
+
+            if ratios:
+                avg = sum(ratios) / len(ratios)
+                row.append(f"<td>{avg:.1f}x</td>")
+            else:
+                row.append("<td class='na'>✗</td>")
+
+        html.append("<tr>" + "".join(row) + "</tr>")
+
+    html.append("</table>")
+    html.append("</div>")
+
+    # Start page layout with sidebar
+    html.append("<div class='page-layout'>")
+
+    # Sidebar with tokenizer tabs (sticky)
+    html.append("<div class='sidebar'>")
+    html.append("<div class='sidebar-label'>Tokenizer</div>")
+    html.append("<div class='sidebar-tabs' id='tokenizer-tabs'>")
     for i, tok_name in enumerate(tokenizer_names):
         active = " active" if i == 0 else ""
-        html.append(f"  <div class='tab{active}' data-tokenizer='{tok_name}'>{tok_name}</div>")
+        html.append(f"  <div class='sidebar-tab{active}' data-tokenizer='{tok_name}'>{tok_name}</div>")
     html.append("</div>")
     html.append("</div>")
 
-    # Fixture tabs
+    # Main content area
+    html.append("<div class='main-content'>")
+
+    # Fixture tabs (horizontal, in main content)
     html.append("<div class='tab-group'>")
     html.append("<div class='tab-group-label'>Example:</div>")
     html.append("<div class='tabs' id='fixture-tabs'>")
@@ -569,15 +708,44 @@ def generate_token_visualization_html(
                     html.append(f"<div class='format-header'>{label}: <span class='na'>N/A</span></div>")
                 else:
                     token_count = result.tokens[tok_name]
-                    ratio = base_chars / token_count if token_count else 0
+                    chars_og_per_tok = base_chars / token_count if token_count else 0
+                    encoded_per_tok = result.chars / token_count if token_count else 0
+                    # Unique ID for copy functionality
+                    copy_id = f"copy-{tok_name}-{fixture.fixture_name}-{fmt}"
                     html.append(
-                        f"<div class='format-header'>{label} "
-                        f"<span class='stats'>({result.chars} chars, {token_count} tokens, "
-                        f"{ratio:.1f} orig/tok)</span></div>"
+                        f"<div class='format-header-row'>"
+                        f"<span class='format-header'>{label}</span>"
+                        f"<button class='copy-btn' onclick='copyText(\"{copy_id}\")'>Copy</button>"
+                        f"</div>"
+                    )
+                    # Hidden textarea with full output for copying
+                    escaped_output = output.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                    html.append(f"<textarea id='{copy_id}' style='display:none'>{escaped_output}</textarea>")
+                    html.append(
+                        f"<div class='stats'>"
+                        f"<span class='stat-item stat-chars'><span class='stat-label'>chars:</span> "
+                        f"<span class='stat-value'>{fmt_num(result.chars)}</span></span>"
+                        f"<span class='stat-item stat-tokens'><span class='stat-label'>tokens:</span> "
+                        f"<span class='stat-value'>{fmt_num(token_count)}</span></span>"
+                        f"<span class='stat-item stat-og'><span class='stat-label'>chars_og/tok:</span> "
+                        f"<span class='stat-value'>{chars_og_per_tok:.1f}</span></span>"
+                        f"<span class='stat-item stat-enc'><span class='stat-label'>encoded_chars/tok:</span> "
+                        f"<span class='stat-value'>{encoded_per_tok:.1f}</span></span>"
+                        f"</div>"
                     )
 
-                    # Tokenize and visualize
-                    token_ids = tokenizer.encode(output)
+                    # Tokenize and visualize (truncate by lines first, then chars)
+                    display_output = output
+                    truncated = False
+                    lines_list = output.split("\n")
+                    if len(lines_list) > MAX_EXAMPLE_LINES:
+                        display_output = "\n".join(lines_list[:MAX_EXAMPLE_LINES])
+                        truncated = True
+                    elif len(output) > MAX_EXAMPLE_CHARS:
+                        display_output = output[:MAX_EXAMPLE_CHARS]
+                        truncated = True
+
+                    token_ids = tokenizer.encode(display_output)
                     tokens = [tokenizer.decode([tid]) for tid in token_ids]
 
                     html.append("<div class='tokens'>")
@@ -595,6 +763,8 @@ def generate_token_visualization_html(
                             token_spans.append(f"<span class='token token-space'>{visible}</span>")
                         else:
                             token_spans.append(f"<span class='token' style='background:{color}'>{escaped}</span>")
+                    if truncated:
+                        token_spans.append("<br><em>... (truncated)</em>")
                     html.append("".join(token_spans))
                     html.append("</div>")
 
@@ -602,7 +772,10 @@ def generate_token_visualization_html(
 
             html.append("</div>")  # end tab-content
 
-    # JavaScript for dual tab switching
+    html.append("</div>")  # end main-content
+    html.append("</div>")  # end page-layout
+
+    # JavaScript for dual tab switching and copy functionality
     html.append(
         """
 <script>
@@ -622,9 +795,29 @@ function updateContent() {
   if (el) el.classList.add('active');
 }
 
-document.querySelectorAll('#tokenizer-tabs .tab').forEach(tab => {
+function copyText(id) {
+  const textarea = document.getElementById(id);
+  if (!textarea) return;
+
+  navigator.clipboard.writeText(textarea.value).then(() => {
+    // Find the button that triggered this
+    const btn = document.querySelector(`button[onclick="copyText('${id}')"]`);
+    if (btn) {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+  });
+}
+
+document.querySelectorAll('#tokenizer-tabs .sidebar-tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('#tokenizer-tabs .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#tokenizer-tabs .sidebar-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     currentTokenizer = tab.dataset.tokenizer;
     updateContent();
@@ -736,7 +929,7 @@ def save_raw_results(
                     avg_tokens = sum(token_values) / len(token_values)
                     ratio = base_chars / avg_tokens
                     row.append(f"{avg_tokens:.1f}")
-                    row.append(f"{ratio:.2f}")
+                    row.append(f"{ratio:.1f}")
                 else:
                     row.extend(["N/A", "N/A"])
 
@@ -763,7 +956,14 @@ def save_raw_results(
                 avg_tokens = sum(v for v in result.tokens.values() if v is not None) / len(result.tokens)
                 md_lines.append(f"**{label}** ({result.chars} chars, {avg_tokens:.0f} tokens):")
                 md_lines.append(f"```{ext}")
-                md_lines.append(output.rstrip())
+                display_output = output.rstrip()
+                # Truncate by lines first, then by characters
+                lines_list = display_output.split("\n")
+                if len(lines_list) > MAX_EXAMPLE_LINES:
+                    display_output = "\n".join(lines_list[:MAX_EXAMPLE_LINES]) + "\n... (truncated)"
+                elif len(display_output) > MAX_EXAMPLE_CHARS:
+                    display_output = display_output[:MAX_EXAMPLE_CHARS] + "\n... (truncated)"
+                md_lines.append(display_output)
                 md_lines.append("```")
             md_lines.append("")
 

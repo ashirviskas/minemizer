@@ -1,169 +1,86 @@
 {
-  "date": "2025-11-30",
+  "date": "2025-12-01",
   "fixtures": {
-    "complex_mixed": {
+    "simple_flat": {
       "json_pretty": {
-        "chars": 1320,
+        "chars": 763,
         "tokens": {
-          "gpt2": 768,
-          "llama": 560,
-          "qwen2.5": 455,
-          "phi4": 427
+          "gpt2": 384,
+          "llama": 334,
+          "qwen2.5": 264,
+          "phi4": 264
         }
       },
       "json_min": {
-        "chars": 760,
+        "chars": 522,
         "tokens": {
-          "gpt2": 224,
-          "llama": 284,
-          "qwen2.5": 246,
-          "phi4": 218
-        }
-      },
-      "csv": {
-        "chars": null,
-        "tokens": {
-          "gpt2": null,
-          "llama": null,
-          "qwen2.5": null,
-          "phi4": null
-        }
-      },
-      "tsv": {
-        "chars": null,
-        "tokens": {
-          "gpt2": null,
-          "llama": null,
-          "qwen2.5": null,
-          "phi4": null
-        }
-      },
-      "yaml": {
-        "chars": 818,
-        "tokens": {
-          "gpt2": 374,
-          "llama": 338,
-          "qwen2.5": 306,
-          "phi4": 278
-        }
-      },
-      "toon": {
-        "chars": 881,
-        "tokens": {
-          "gpt2": 434,
-          "llama": 329,
-          "qwen2.5": 304,
-          "phi4": 276
-        }
-      },
-      "tson": {
-        "chars": 453,
-        "tokens": {
-          "gpt2": 207,
-          "llama": 237,
-          "qwen2.5": 203,
-          "phi4": 175
-        }
-      },
-      "minemizer": {
-        "chars": 421,
-        "tokens": {
-          "gpt2": 159,
-          "llama": 201,
-          "qwen2.5": 191,
-          "phi4": 163
-        }
-      },
-      "minemizer_compact": {
-        "chars": 364,
-        "tokens": {
-          "gpt2": 173,
-          "llama": 214,
-          "qwen2.5": 191,
-          "phi4": 163
-        }
-      }
-    },
-    "lists_of_primitives": {
-      "json_pretty": {
-        "chars": 610,
-        "tokens": {
-          "gpt2": 382,
-          "llama": 280,
-          "qwen2.5": 217,
-          "phi4": 217
-        }
-      },
-      "json_min": {
-        "chars": 330,
-        "tokens": {
-          "gpt2": 115,
-          "llama": 125,
-          "qwen2.5": 103,
-          "phi4": 103
-        }
-      },
-      "csv": {
-        "chars": null,
-        "tokens": {
-          "gpt2": null,
-          "llama": null,
-          "qwen2.5": null,
-          "phi4": null
-        }
-      },
-      "tsv": {
-        "chars": null,
-        "tokens": {
-          "gpt2": null,
-          "llama": null,
-          "qwen2.5": null,
-          "phi4": null
-        }
-      },
-      "yaml": {
-        "chars": 341,
-        "tokens": {
-          "gpt2": 153,
-          "llama": 157,
-          "qwen2.5": 149,
-          "phi4": 149
-        }
-      },
-      "toon": {
-        "chars": 339,
-        "tokens": {
-          "gpt2": 161,
-          "llama": 141,
+          "gpt2": 152,
+          "llama": 165,
           "qwen2.5": 137,
           "phi4": 137
         }
       },
-      "tson": {
-        "chars": 168,
+      "csv": {
+        "chars": 234,
         "tokens": {
-          "gpt2": 80,
-          "llama": 79,
-          "qwen2.5": 65,
-          "phi4": 65
+          "gpt2": 95,
+          "llama": 101,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      },
+      "tsv": {
+        "chars": 234,
+        "tokens": {
+          "gpt2": 95,
+          "llama": 101,
+          "qwen2.5": 77,
+          "phi4": 77
+        }
+      },
+      "yaml": {
+        "chars": 489,
+        "tokens": {
+          "gpt2": 163,
+          "llama": 180,
+          "qwen2.5": 169,
+          "phi4": 169
+        }
+      },
+      "toon": {
+        "chars": 246,
+        "tokens": {
+          "gpt2": 98,
+          "llama": 103,
+          "qwen2.5": 96,
+          "phi4": 96
+        }
+      },
+      "tson": {
+        "chars": 229,
+        "tokens": {
+          "gpt2": 90,
+          "llama": 95,
+          "qwen2.5": 80,
+          "phi4": 80
         }
       },
       "minemizer": {
-        "chars": 194,
+        "chars": 251,
         "tokens": {
-          "gpt2": 81,
-          "llama": 79,
-          "qwen2.5": 71,
-          "phi4": 71
+          "gpt2": 74,
+          "llama": 83,
+          "qwen2.5": 72,
+          "phi4": 72
         }
       },
       "minemizer_compact": {
-        "chars": 165,
+        "chars": 224,
         "tokens": {
-          "gpt2": 83,
-          "llama": 83,
-          "qwen2.5": 70,
-          "phi4": 70
+          "gpt2": 85,
+          "llama": 91,
+          "qwen2.5": 77,
+          "phi4": 77
         }
       }
     },
@@ -250,86 +167,86 @@
         }
       }
     },
-    "simple_flat": {
+    "lists_of_primitives": {
       "json_pretty": {
-        "chars": 763,
+        "chars": 610,
         "tokens": {
-          "gpt2": 384,
-          "llama": 334,
-          "qwen2.5": 264,
-          "phi4": 264
+          "gpt2": 382,
+          "llama": 280,
+          "qwen2.5": 217,
+          "phi4": 217
         }
       },
       "json_min": {
-        "chars": 522,
+        "chars": 330,
         "tokens": {
-          "gpt2": 152,
-          "llama": 165,
+          "gpt2": 115,
+          "llama": 125,
+          "qwen2.5": 103,
+          "phi4": 103
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "yaml": {
+        "chars": 341,
+        "tokens": {
+          "gpt2": 153,
+          "llama": 157,
+          "qwen2.5": 149,
+          "phi4": 149
+        }
+      },
+      "toon": {
+        "chars": 339,
+        "tokens": {
+          "gpt2": 161,
+          "llama": 141,
           "qwen2.5": 137,
           "phi4": 137
         }
       },
-      "csv": {
-        "chars": 234,
-        "tokens": {
-          "gpt2": 95,
-          "llama": 101,
-          "qwen2.5": 77,
-          "phi4": 77
-        }
-      },
-      "tsv": {
-        "chars": 234,
-        "tokens": {
-          "gpt2": 95,
-          "llama": 101,
-          "qwen2.5": 77,
-          "phi4": 77
-        }
-      },
-      "yaml": {
-        "chars": 489,
-        "tokens": {
-          "gpt2": 163,
-          "llama": 180,
-          "qwen2.5": 169,
-          "phi4": 169
-        }
-      },
-      "toon": {
-        "chars": 246,
-        "tokens": {
-          "gpt2": 98,
-          "llama": 103,
-          "qwen2.5": 96,
-          "phi4": 96
-        }
-      },
       "tson": {
-        "chars": 229,
+        "chars": 168,
         "tokens": {
-          "gpt2": 90,
-          "llama": 95,
-          "qwen2.5": 80,
-          "phi4": 80
+          "gpt2": 80,
+          "llama": 79,
+          "qwen2.5": 65,
+          "phi4": 65
         }
       },
       "minemizer": {
-        "chars": 251,
+        "chars": 194,
         "tokens": {
-          "gpt2": 74,
-          "llama": 83,
-          "qwen2.5": 72,
-          "phi4": 72
+          "gpt2": 81,
+          "llama": 79,
+          "qwen2.5": 71,
+          "phi4": 71
         }
       },
       "minemizer_compact": {
-        "chars": 224,
+        "chars": 165,
         "tokens": {
-          "gpt2": 85,
-          "llama": 91,
-          "qwen2.5": 77,
-          "phi4": 77
+          "gpt2": 83,
+          "llama": 83,
+          "qwen2.5": 70,
+          "phi4": 70
         }
       }
     },
@@ -413,6 +330,172 @@
           "llama": 90,
           "qwen2.5": 77,
           "phi4": 77
+        }
+      }
+    },
+    "coingecko_coins": {
+      "json_pretty": {
+        "chars": 1611780,
+        "tokens": {
+          "gpt2": 862469,
+          "llama": 749813,
+          "qwen2.5": 611575,
+          "phi4": 609227
+        }
+      },
+      "json_min": {
+        "chars": 1147811,
+        "tokens": {
+          "gpt2": 400135,
+          "llama": 422810,
+          "qwen2.5": 361897,
+          "phi4": 359549
+        }
+      },
+      "csv": {
+        "chars": 603635,
+        "tokens": {
+          "gpt2": 282641,
+          "llama": 303115,
+          "qwen2.5": 228404,
+          "phi4": 227103
+        }
+      },
+      "tsv": {
+        "chars": 603601,
+        "tokens": {
+          "gpt2": 282672,
+          "llama": 303547,
+          "qwen2.5": 224078,
+          "phi4": 222774
+        }
+      },
+      "yaml": {
+        "chars": 1048449,
+        "tokens": {
+          "gpt2": 429115,
+          "llama": 454247,
+          "qwen2.5": 409204,
+          "phi4": 407827
+        }
+      },
+      "toon": {
+        "chars": 623383,
+        "tokens": {
+          "gpt2": 279372,
+          "llama": 301477,
+          "qwen2.5": 245044,
+          "phi4": 243750
+        }
+      },
+      "tson": {
+        "chars": 603594,
+        "tokens": {
+          "gpt2": 271823,
+          "llama": 293257,
+          "qwen2.5": 232225,
+          "phi4": 230921
+        }
+      },
+      "minemizer": {
+        "chars": 622925,
+        "tokens": {
+          "gpt2": 258209,
+          "llama": 282585,
+          "qwen2.5": 237950,
+          "phi4": 236563
+        }
+      },
+      "minemizer_compact": {
+        "chars": 584259,
+        "tokens": {
+          "gpt2": 263320,
+          "llama": 285149,
+          "qwen2.5": 237554,
+          "phi4": 236253
+        }
+      }
+    },
+    "complex_mixed": {
+      "json_pretty": {
+        "chars": 1320,
+        "tokens": {
+          "gpt2": 768,
+          "llama": 560,
+          "qwen2.5": 455,
+          "phi4": 427
+        }
+      },
+      "json_min": {
+        "chars": 760,
+        "tokens": {
+          "gpt2": 224,
+          "llama": 284,
+          "qwen2.5": 246,
+          "phi4": 218
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "phi4": null
+        }
+      },
+      "yaml": {
+        "chars": 818,
+        "tokens": {
+          "gpt2": 374,
+          "llama": 338,
+          "qwen2.5": 306,
+          "phi4": 278
+        }
+      },
+      "toon": {
+        "chars": 881,
+        "tokens": {
+          "gpt2": 434,
+          "llama": 329,
+          "qwen2.5": 304,
+          "phi4": 276
+        }
+      },
+      "tson": {
+        "chars": 453,
+        "tokens": {
+          "gpt2": 207,
+          "llama": 237,
+          "qwen2.5": 203,
+          "phi4": 175
+        }
+      },
+      "minemizer": {
+        "chars": 421,
+        "tokens": {
+          "gpt2": 159,
+          "llama": 201,
+          "qwen2.5": 191,
+          "phi4": 163
+        }
+      },
+      "minemizer_compact": {
+        "chars": 364,
+        "tokens": {
+          "gpt2": 173,
+          "llama": 214,
+          "qwen2.5": 191,
+          "phi4": 163
         }
       }
     }

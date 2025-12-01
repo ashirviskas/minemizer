@@ -172,21 +172,21 @@ print(minemize(data, delimiter=","))  # a,b \n 1,2
 ## Benchmarks
 
 <!-- BENCHMARK_START -->
-_Last updated: 2025-11-30_
+_Last updated: 2025-12-01_
 
-### Token efficiency (original chars encoded per token)
+### Token efficiency (normalized, JSON pretty = 1.0x)
 
-| Format | complex | lists | nested | flat | sparse | avg |
-|---|---|---|---|---|---|---|
-| JSON (pretty) | 2.4 | 2.2 | 2.4 | 2.4 | 2.3 | 2.3 |
-| JSON (min) | 5.4 | 5.5 | 5.3 | 5.2 | 4.9 | 5.3 |
-| CSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
-| TSV | ✗ | ✗ | ✗ | 8.7 | ✗ | 8.7\*\* |
-| YAML | 4.1 | 4.0 | 4.3 | 4.5 | 4.1 | 4.2 |
-| TOON | 3.9 | 4.2 | 3.8 | 7.8 | 3.6 | 4.7 |
-| TSON | 6.4 | **8.4** | 8.3 | 8.8 | 4.8 | 7.4 |
-| minemizer | **7.4** | 8.1 | **8.7** | **10.1** | **7.4** | **8.3** |
-| minemizer (compact) | 7.1 | 8.0 | 8.4 | 9.2 | 7.2 | 8.0 |
+| Format | flat | nested | lists | sparse | coingecko | complex | avg |
+|---|---|---|---|---|---|---|---|
+| JSON (pretty) | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x | 1.0x |
+| JSON (min) | 2.1x | 2.2x | 2.5x | 2.2x | 1.8x | 2.3x | 2.2x |
+| CSV | 3.6x | ✗ | ✗ | ✗ | 2.7x | ✗ | 3.1x\*\* |
+| TSV | 3.6x | ✗ | ✗ | ✗ | 2.7x | ✗ | 3.2x\*\* |
+| YAML | 1.8x | 1.8x | 1.8x | 1.8x | 1.7x | 1.7x | 1.8x |
+| TOON | 3.2x | 1.6x | 1.9x | 1.6x | 2.6x | 1.6x | 2.1x |
+| TSON | 3.6x | 3.5x | **3.8x** | 2.1x | 2.8x | 2.7x | 3.1x |
+| minemizer | **4.1x** | **3.6x** | 3.6x | **3.3x** | **2.8x** | **3.1x** | **3.4x** |
+| minemizer (compact) | 3.8x | 3.5x | 3.6x | 3.2x | 2.8x | 3.0x | 3.3x |
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._
 

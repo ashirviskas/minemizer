@@ -29,3 +29,5 @@ htmlcov/
 .ruff_cache/
 
 tmp/
+
+**coingecko_coins.json
