@@ -116,4 +116,4 @@ def test_non_uniform_has_sparse_fields():
     # "extra" should be sparse (in row, not header)
     header = result.split("\n")[0]
     assert "extra" not in header
-    assert "extra:value" in result
+    assert "extra: value" in result

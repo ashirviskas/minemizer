@@ -25,12 +25,11 @@ class HeaderElement:
     """Schema definition for a single field in the header."""
 
     name: str
+    cfg: Config
     type: str = "value"  # "value", "dict", "list"
     schema: list["HeaderElement"] = field(default_factory=list)
     has_sparse: bool = False
     list_type: str | None = None
-    delimiter: str = "; "
-    sparse_indicator: str = "..."
 
     @property
     def schema_keys(self) -> set[str]:
@@ -41,16 +40,17 @@ class HeaderElement:
         if self.type == "value":
             return self.name
 
-        # Recursively render child elements
-        schema_str = self.delimiter.join(el.to_string() for el in self.schema)
+        c = self.cfg
+        schema_str = c.spaced_delimiter.join(el.to_string() for el in self.schema)
         if self.has_sparse:
-            schema_str = f"{schema_str}{self.delimiter}{self.sparse_indicator}" if schema_str else self.sparse_indicator
+            schema_str = f"{schema_str}{c.spaced_delimiter}{c.sparse_indicator}" if schema_str else c.sparse_indicator
 
         if self.type == "dict":
-            return f"{self.name}{{ {schema_str}}}"
+            return f"{self.name}{c.dict_open}{schema_str}{c.dict_close}"
         elif self.type == "list" and self.list_type == "dict":
-            return f"{self.name}[{{ {schema_str}}}]"
-        return f"{self.name}[]"
+            return f"{self.name}{c.list_open}{c.dict_open}{schema_str}{c.dict_close}{c.list_close}"
+        # Empty simple list
+        return f"{self.name}{c.list_open.rstrip()}{c.list_close}"
 
 
 # --- Pure functions ---
@@ -58,6 +58,39 @@ class HeaderElement:
 
 def _normalize(value: Any) -> str:
     return str(value).lower() if isinstance(value, bool) else str(value)
+
+
+def _majority_type(values: list, threshold: float = 0.5) -> str | None:
+    """Determine the majority type among values. Returns 'dict', 'list', or None."""
+    if not values:
+        return None
+
+    dict_count = sum(1 for v in values if isinstance(v, dict))
+    list_count = sum(1 for v in values if isinstance(v, list))
+    total = len(values)
+
+    if dict_count / total >= threshold:
+        return "dict"
+    if list_count / total >= threshold:
+        return "list"
+    return None
+
+
+def _format_any_value(value: Any, cfg: Config) -> str:
+    """Recursively format any value without schema."""
+    if value is None:
+        return ""
+    if isinstance(value, dict):
+        if not value:
+            return f"{cfg.dict_open.rstrip()}{cfg.dict_close.lstrip()}"
+        pairs = [cfg.format_kv(k, _format_any_value(v, cfg)) for k, v in value.items()]
+        return f"{cfg.dict_open}{cfg.spaced_delimiter.join(pairs)}{cfg.dict_close}"
+    if isinstance(value, list):
+        if not value:
+            return f"{cfg.list_open.rstrip()}{cfg.list_close.lstrip()}"
+        formatted = [_format_any_value(x, cfg) for x in value]
+        return f"{cfg.list_open}{cfg.spaced_delimiter.join(formatted)}{cfg.list_close}"
+    return _normalize(value)
 
 
 def _analyze_keys(items: list[dict], sparsity_threshold: float) -> KeyAnalysis:
@@ -76,43 +109,39 @@ def _analyze_keys(items: list[dict], sparsity_threshold: float) -> KeyAnalysis:
 
 def _create_header_element(key: str, items: list[dict], cfg: Config) -> HeaderElement:
     values = [v for item in items if (v := item.get(key)) is not None]
-    delim = cfg.spaced_delimiter
-    sparse = cfg.sparse_indicator
 
     if not values:
-        return HeaderElement(name=key, delimiter=delim, sparse_indicator=sparse)
+        return HeaderElement(name=key, cfg=cfg)
 
-    if all(isinstance(v, dict) for v in values):
-        analysis = _analyze_keys(values, cfg.sparsity_threshold)
-        # Recursively create HeaderElements for each schema key
-        nested_schema = [_create_header_element(k, values, cfg) for k in analysis.common]
-        return HeaderElement(
-            name=key,
-            type="dict",
-            schema=nested_schema,
-            has_sparse=analysis.has_sparse,
-            delimiter=delim,
-            sparse_indicator=sparse,
-        )
+    # Use majority-based type detection instead of all()
+    majority = _majority_type(values, cfg.sparsity_threshold)
 
-    if all(isinstance(v, list) for v in values):
-        all_items = [x for sublist in values for x in sublist]
-        if all_items and all(isinstance(x, dict) for x in all_items):
-            analysis = _analyze_keys(all_items, cfg.sparsity_threshold)
-            # Recursively create HeaderElements for list of dicts
-            nested_schema = [_create_header_element(k, all_items, cfg) for k in analysis.common]
+    if majority == "dict":
+        # Filter to only dict values for schema analysis
+        dict_values = [v for v in values if isinstance(v, dict)]
+        analysis = _analyze_keys(dict_values, cfg.sparsity_threshold)
+        nested_schema = [_create_header_element(k, dict_values, cfg) for k in analysis.common]
+        return HeaderElement(name=key, cfg=cfg, type="dict", schema=nested_schema, has_sparse=analysis.has_sparse)
+
+    if majority == "list":
+        # Flatten all list items, filtering out None
+        list_values = [v for v in values if isinstance(v, list)]
+        all_items = [x for sublist in list_values for x in sublist if x is not None]
+
+        # Use majority-based detection for list items too
+        item_majority = _majority_type(all_items, cfg.sparsity_threshold)
+
+        if item_majority == "dict":
+            dict_items = [x for x in all_items if isinstance(x, dict)]
+            analysis = _analyze_keys(dict_items, cfg.sparsity_threshold)
+            nested_schema = [_create_header_element(k, dict_items, cfg) for k in analysis.common]
             return HeaderElement(
-                name=key,
-                type="list",
-                list_type="dict",
-                schema=nested_schema,
-                has_sparse=analysis.has_sparse,
-                delimiter=delim,
-                sparse_indicator=sparse,
+                name=key, cfg=cfg, type="list", list_type="dict", schema=nested_schema, has_sparse=analysis.has_sparse
             )
-        return HeaderElement(name=key, type="list", list_type="simple", delimiter=delim, sparse_indicator=sparse)
 
-    return HeaderElement(name=key, delimiter=delim, sparse_indicator=sparse)
+        return HeaderElement(name=key, cfg=cfg, type="list", list_type="simple")
+
+    return HeaderElement(name=key, cfg=cfg)
 
 
 def _build_header(items: list[dict], cfg: Config) -> list[HeaderElement]:
@@ -127,62 +156,81 @@ def _build_header(items: list[dict], cfg: Config) -> list[HeaderElement]:
     ]
 
 
-def _format_dict_pairs(data: dict) -> list[str]:
-    return [f"{k}:{_normalize(v)}" for k, v in data.items()]
+def _format_dict_pairs(data: dict, cfg: Config) -> list[str]:
+    return [cfg.format_kv(k, _normalize(v)) for k, v in data.items()]
 
 
 def _format_dict(data: dict, element: HeaderElement, cfg: Config) -> str:
     if not data:
-        return "{}"
+        return f"{cfg.dict_open.rstrip()}{cfg.dict_close.lstrip()}"
 
     # Recursively format each child element
     common_values = [_format_value(data.get(child.name), child, cfg) for child in element.schema]
     sparse_pairs = []
     if element.has_sparse:
-        sparse_pairs = [f"{k}:{_normalize(v)}" for k, v in data.items() if k not in element.schema_keys]
+        # Use _format_any_value for recursive formatting of sparse values
+        sparse_pairs = [
+            cfg.format_kv(k, _format_any_value(v, cfg)) for k, v in data.items() if k not in element.schema_keys
+        ]
 
     content = cfg.spaced_delimiter.join(common_values + sparse_pairs)
-    return f"{cfg.dict_open}{content}}}"
+    return f"{cfg.dict_open}{content}{cfg.dict_close}"
 
 
 def _format_list(data: list, element: HeaderElement, cfg: Config) -> str:
     if not data:
-        return "[]"
+        return f"{cfg.list_open.rstrip()}{cfg.list_close.lstrip()}"
 
     if element.list_type == "dict":
-        formatted = [_format_dict(item, element, cfg) for item in data]
-        return f"{cfg.list_open}{cfg.spaced_delimiter.join(formatted)}]"
+        # Check each item type, fall back if not dict
+        formatted = []
+        for item in data:
+            if isinstance(item, dict):
+                formatted.append(_format_dict(item, element, cfg))
+            else:
+                formatted.append(_format_any_value(item, cfg))
+        return f"{cfg.list_open}{cfg.spaced_delimiter.join(formatted)}{cfg.list_close}"
 
-    return f"{cfg.list_open}{cfg.spaced_delimiter.join(str(x) for x in data)}]"
+    # Simple list - use recursive formatter for all items (handles nested lists, mixed content)
+    return f"{cfg.list_open}{cfg.spaced_delimiter.join(_format_any_value(x, cfg) for x in data)}{cfg.list_close}"
 
 
 def _format_value(value: Any, element: HeaderElement, cfg: Config) -> str:
     if value is None:
         return ""
+
+    # Check actual type matches expected schema type
     if element.type == "dict":
-        return _format_dict(value, element, cfg)
+        if isinstance(value, dict):
+            return _format_dict(value, element, cfg)
+        # Type mismatch - fall back to recursive formatter
+        return _format_any_value(value, cfg)
+
     if element.type == "list":
-        return _format_list(value, element, cfg)
-    return str(value)
+        if isinstance(value, list):
+            return _format_list(value, element, cfg)
+        # Type mismatch - fall back to recursive formatter
+        return _format_any_value(value, cfg)
+
+    return _normalize(value)
 
 
 def _format_sparse_field(key: str, value: Any, cfg: Config) -> str:
     if isinstance(value, dict):
         if not value:
-            return f"{key}{{}}"
-        pairs = _format_dict_pairs(value)
-        return f"{key}{cfg.dict_open}{cfg.spaced_delimiter.join(pairs)}}}"
+            return f"{key}{cfg.dict_open.rstrip()}{cfg.dict_close.lstrip()}"
+        # Use _format_any_value for recursive formatting
+        pairs = [cfg.format_kv(k, _format_any_value(v, cfg)) for k, v in value.items()]
+        return f"{key}{cfg.dict_open}{cfg.spaced_delimiter.join(pairs)}{cfg.dict_close}"
 
     if isinstance(value, list):
         if not value:
-            return f"{key}[]"
-        if all(isinstance(x, dict) for x in value):
-            delim = cfg.spaced_delimiter
-            formatted = [f"{cfg.dict_open}{delim.join(_format_dict_pairs(d))}}}" for d in value]
-            return f"{key}{cfg.list_open}{delim.join(formatted)}]"
-        return f"{key}{cfg.list_open}{cfg.spaced_delimiter.join(str(x) for x in value)}]"
+            return f"{key}{cfg.list_open.rstrip()}{cfg.list_close.lstrip()}"
+        # Use _format_any_value for all items (handles dicts, nested lists, etc.)
+        formatted = [_format_any_value(x, cfg) for x in value]
+        return f"{key}{cfg.list_open}{cfg.spaced_delimiter.join(formatted)}{cfg.list_close}"
 
-    return f"{key}:{value}"
+    return cfg.format_kv(key, _normalize(value))
 
 
 def _format_row(item: dict, header: list[HeaderElement], cfg: Config) -> str:
@@ -194,8 +242,8 @@ def _format_row(item: dict, header: list[HeaderElement], cfg: Config) -> str:
 
 def _serialize(data: list[dict], cfg: Config) -> str:
     header = _build_header(data, cfg)
-    rows = [_format_row(item, header, cfg) for item in data]
-    header_str = cfg.spaced_delimiter.join(h.to_string() for h in header)
+    rows = [cfg.cleanup(_format_row(item, header, cfg)) for item in data]
+    header_str = cfg.cleanup(cfg.spaced_delimiter.join(h.to_string() for h in header))
 
     lines = [header_str]
     if cfg.header_separator:
@@ -224,6 +272,7 @@ def minemize(
     sparse_indicator: str | None = None,
     header_separator: str | None = None,
     wrap_lines: str | None = None,
+    common_optimizations: bool | None = None,
 ) -> str:
     """Minimize your data into a compact string format.
 
@@ -236,6 +285,7 @@ def minemize(
         sparse_indicator: Indicator for sparse fields in header (default: "...")
         header_separator: Separator row after header, e.g., "---" for markdown tables
         wrap_lines: Wrap each line with this string (e.g., "|" for markdown tables)
+        common_optimizations: Use :true/:false/:null for single-token encoding (default: True)
 
     Returns:
         str: The minemized representation
@@ -265,5 +315,6 @@ def minemize(
         sparse_indicator=sparse_indicator,
         header_separator=header_separator,
         wrap_lines=wrap_lines,
+        common_optimizations=common_optimizations,
     )
     return _serialize(data, cfg)

@@ -7,6 +7,7 @@ import csv
 import io
 import json
 import re
+import time
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -27,11 +28,12 @@ FIXTURES_DIR = BENCHMARKS_DIR / "fixtures"
 README_PATH = Path(__file__).parent.parent / "README.md"
 
 # Tokenizer configs (all free, no auth required)
+# To benchmark others, just add HF model ID here
 TOKENIZERS: dict[str, str] = {
     "gpt2": "openai-community/gpt2",
     "llama": "NousResearch/Llama-2-7b-hf",
     "qwen2.5": "Qwen/Qwen2.5-0.5B",
-    "phi4": "microsoft/phi-4",
+    "Deepseek-V3.2": "deepseek-ai/DeepSeek-V3.2",
 }
 
 # Output formats to benchmark
@@ -45,6 +47,8 @@ FORMATS = [
     "tson",
     "minemizer",
     "minemizer_compact",
+    "minemizer_33",
+    "minemizer_compact_33",
 ]
 
 FORMAT_LABELS = {
@@ -56,7 +60,9 @@ FORMAT_LABELS = {
     "toon": "TOON",
     "tson": "TSON",
     "minemizer": "minemizer",
+    "minemizer_33": "minemizer (33%)",
     "minemizer_compact": "minemizer (compact)",
+    "minemizer_compact_33": "compact (33%)",
 }
 
 # Max lines/characters to show in example outputs (markdown and HTML)
@@ -72,6 +78,22 @@ FIXTURE_ORDER = [
     "coingecko_coins",
     "complex_mixed",
 ]
+
+# Short display names for fixtures (used in tables)
+SHORT_NAMES = {
+    "simple_flat": "flat",
+    "nested_objects": "nested",
+    "lists_of_primitives": "lists",
+    "sparse_data": "sparse",
+    "coingecko_coins": "coingecko",
+    "complex_mixed": "complex",
+    "large_non_uniform_nested_mixed": "large_mixed",
+    "large_non_uniform_nested_numerical": "large_numerical",
+    "large_non_uniform_nested_text": "large_text",
+    "books": "books",
+    "countries": "countries",
+    "mcp_tools_list": "mcp_tools",
+}
 
 
 @dataclass
@@ -91,23 +113,34 @@ class FixtureResult:
     results: list[BenchmarkResult]
 
 
-def load_tokenizers() -> dict[str, PreTrainedTokenizerBase]:
-    """Load all tokenizers from HuggingFace."""
+def load_tokenizers() -> tuple[dict[str, PreTrainedTokenizerBase], float]:
+    """Load all tokenizers from HuggingFace. Returns tokenizers and load time."""
     print("Loading tokenizers...")
+    start = time.perf_counter()
     tokenizers = {}
     for name, model_id in TOKENIZERS.items():
-        print(f"  Loading {name} ({model_id})...")
+        t0 = time.perf_counter()
         tokenizers[name] = AutoTokenizer.from_pretrained(model_id)
-    print()
-    return tokenizers
+        elapsed = time.perf_counter() - t0
+        print(f"  {name}: {elapsed:.2f}s")
+    total = time.perf_counter() - start
+    print(f"  Total: {total:.2f}s\n")
+    return tokenizers, total
 
 
 def load_fixtures() -> dict[str, list[dict]]:
-    """Load all fixture JSON files in specified order."""
+    """Load all fixture JSON and JSONL files in specified order."""
     fixtures = {}
+
+    # Load JSON files
     for path in sorted(FIXTURES_DIR.glob("*.json")):
         with path.open() as f:
             fixtures[path.stem] = json.load(f)
+
+    # Load JSONL files (one JSON object per line)
+    for path in sorted(FIXTURES_DIR.glob("*.jsonl")):
+        with path.open() as f:
+            fixtures[path.stem] = [json.loads(line) for line in f if line.strip()]
 
     # Reorder according to FIXTURE_ORDER
     ordered = {}
@@ -188,6 +221,18 @@ def _convert_to_format(data: list[dict], format_name: str) -> str | None:
         case "minemizer_compact":
             return minemize(data, preset=presets.compact)
 
+        case "minemizer_33":
+            return minemize(data, sparsity_threshold=0.33)
+
+        case "minemizer_75":
+            return minemize(data, sparsity_threshold=0.75)
+
+        case "minemizer_compact_33":
+            return minemize(data, preset=presets.compact, sparsity_threshold=0.33)
+
+        case "minemizer_compact_75":
+            return minemize(data, preset=presets.compact, sparsity_threshold=0.75)
+
         case _:
             raise ValueError(f"Unknown format: {format_name}")
 
@@ -200,16 +245,27 @@ def count_tokens(text: str, tokenizer: PreTrainedTokenizerBase) -> int:
 def run_benchmarks(
     fixtures: dict[str, list[dict]],
     tokenizers: dict[str, PreTrainedTokenizerBase],
-) -> list[FixtureResult]:
-    """Run all benchmarks."""
+) -> tuple[list[FixtureResult], dict[str, float]]:
+    """Run all benchmarks. Returns results and timing stats."""
     results = []
+    timing_stats: dict[str, float] = {
+        "total": 0.0,
+        "conversion": 0.0,
+        "tokenization": 0.0,
+    }
+
+    total_start = time.perf_counter()
 
     for fixture_name, data in fixtures.items():
-        print(f"Benchmarking {fixture_name}...")
+        fixture_start = time.perf_counter()
         fixture_results = []
+        fixture_tok_time = 0.0
+        fixture_conv_time = 0.0
 
         for format_name in FORMATS:
+            conv_start = time.perf_counter()
             converted = convert_to_format(data, format_name)
+            fixture_conv_time += time.perf_counter() - conv_start
 
             if converted is None:
                 # Format doesn't support this data structure
@@ -219,7 +275,9 @@ def run_benchmarks(
                     tokens=dict.fromkeys(tokenizers),
                 )
             else:
+                tok_start = time.perf_counter()
                 tokens: dict[str, int | None] = {name: count_tokens(converted, tok) for name, tok in tokenizers.items()}
+                fixture_tok_time += time.perf_counter() - tok_start
                 result = BenchmarkResult(
                     format_name=format_name,
                     chars=len(converted),
@@ -228,9 +286,15 @@ def run_benchmarks(
 
             fixture_results.append(result)
 
+        fixture_total = time.perf_counter() - fixture_start
+        timing_stats["conversion"] += fixture_conv_time
+        timing_stats["tokenization"] += fixture_tok_time
+        print(f"  {fixture_name}: {fixture_total:.2f}s (conv: {fixture_conv_time:.2f}s, tok: {fixture_tok_time:.2f}s)")
+
         results.append(FixtureResult(fixture_name=fixture_name, results=fixture_results))
 
-    return results
+    timing_stats["total"] = time.perf_counter() - total_start
+    return results, timing_stats
 
 
 def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[str]) -> str:
@@ -288,16 +352,6 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
     lines.append("### Token efficiency (normalized, JSON pretty = 1.0x)")
     lines.append("")
 
-    # Header with fixture names (shortened)
-    short_names = {
-        "simple_flat": "flat",
-        "nested_objects": "nested",
-        "lists_of_primitives": "lists",
-        "sparse_data": "sparse",
-        "coingecko_coins": "coingecko",
-        "complex_mixed": "complex",
-    }
-
     # Find best (highest) ratio for each fixture and for avg
     best_per_fixture: dict[str, float] = {}
     for fixture_name in fixture_names:
@@ -317,7 +371,7 @@ def generate_markdown_table(results: list[FixtureResult], tokenizer_names: list[
                 all_avgs.append(sum(valid) / len(valid))
     best_avg = max(all_avgs) if all_avgs else 0
 
-    header = ["Format", *[short_names.get(f, f) for f in fixture_names], "avg"]
+    header = ["Format", *[SHORT_NAMES.get(f, f) for f in fixture_names], "avg"]
     lines.append("| " + " | ".join(header) + " |")
     lines.append("|" + "|".join(["---"] * len(header)) + "|")
 
@@ -475,6 +529,9 @@ def generate_token_visualization_html(
         ".tab-group-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 14px; }",
         ".fixture-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; "
         "background: #f9f9f9; border-radius: 4px; }",
+        # Comparison table in tab content
+        ".comparison-table { font-size: 13px; margin: 15px 0 25px 0; }",
+        ".comparison-table th, .comparison-table td { padding: 6px 10px; }",
         # Stats display styles
         ".stats { color: #666; font-size: 13px; display: block; margin-top: 4px; }",
         ".stat-item { display: inline-block; margin-right: 12px; padding: 3px 10px; "
@@ -513,7 +570,7 @@ def generate_token_visualization_html(
     html.append("<table>")
 
     # Header row
-    header = ["Format"] + [f.fixture_name.replace("_", " ") for f in results] + ["avg"]
+    header = ["Format"] + [SHORT_NAMES.get(f.fixture_name, f.fixture_name) for f in results] + ["avg"]
     html.append("<tr>" + "".join(f"<th>{h}</th>" for h in header) + "</tr>")
 
     # Compute JSON pretty baseline per fixture
@@ -609,10 +666,12 @@ def generate_token_visualization_html(
     header = ["Format"] + list(tokenizer_names) + ["avg"]
     html.append("<tr>" + "".join(f"<th>{h}</th>" for h in header) + "</tr>")
 
-    # First pass: compute all values
+    # First pass: compute all values and track completeness
     table_data: dict[str, dict[str, float | None]] = {}
+    format_tok_complete: dict[str, dict[str, bool]] = {}  # Track if format+tokenizer ran on all fixtures
     for fmt in FORMATS:
         table_data[fmt] = {}
+        format_tok_complete[fmt] = {}
         for tok_name in tokenizer_names:
             ratios = []
             for fixture in results:
@@ -633,27 +692,33 @@ def generate_token_visualization_html(
                         ratios.append(normalized)
 
             table_data[fmt][tok_name] = sum(ratios) / len(ratios) if ratios else None
+            format_tok_complete[fmt][tok_name] = len(ratios) == total_fixtures
 
         # Compute row average
         valid_vals = [v for v in table_data[fmt].values() if v is not None]
         table_data[fmt]["avg"] = sum(valid_vals) / len(valid_vals) if valid_vals else None
+        # avg is complete only if all tokenizers are complete
+        format_tok_complete[fmt]["avg"] = all(format_tok_complete[fmt].get(tok, False) for tok in tokenizer_names)
 
-    # Find max per column and global min/max for coloring
+    # Find max/min per column for coloring (only from complete formats)
     all_cols = list(tokenizer_names) + ["avg"]
     col_max: dict[str, float] = {}
-    all_values: list[float] = []
+    col_min: dict[str, float] = {}
     for col in all_cols:
-        col_vals = [v for fmt in FORMATS if (v := table_data[fmt].get(col)) is not None]
+        col_vals = [
+            v
+            for fmt in FORMATS
+            if format_tok_complete[fmt].get(col, False) and (v := table_data[fmt].get(col)) is not None
+        ]
         if col_vals:
             col_max[col] = max(col_vals)
-            all_values.extend(col_vals)
+            col_min[col] = min(col_vals)
 
-    global_min = min(all_values) if all_values else 1.0
-    global_max = max(all_values) if all_values else 1.0
-
-    def value_to_color(val: float) -> str:
-        """Generate color from red (low) to green (high)."""
-        ratio = 0.5 if global_max == global_min else (val - global_min) / (global_max - global_min)
+    def value_to_color(val: float, col: str) -> str:
+        """Generate color from red (low) to green (high) within column range."""
+        col_min_val = col_min.get(col, val)
+        col_max_val = col_max.get(col, val)
+        ratio = 0.5 if col_max_val == col_min_val else (val - col_min_val) / (col_max_val - col_min_val)
         # Interpolate from light red to light green
         r = int(255 - ratio * 80)
         g = int(200 + ratio * 55)
@@ -667,10 +732,15 @@ def generate_token_visualization_html(
 
         for col in all_cols:
             val = table_data[fmt].get(col)
+            is_complete = format_tok_complete[fmt].get(col, False)
+
             if val is None:
                 row.append("<td class='na'>✗</td>")
+            elif not is_complete:
+                # Grey background for incomplete formats (didn't run on all fixtures)
+                row.append(f"<td style='background:#e0e0e0;'>{val:.1f}x</td>")
             else:
-                bg_color = value_to_color(val)
+                bg_color = value_to_color(val, col)
                 is_max = val == col_max.get(col)
                 style = f"background:{bg_color};"
                 if is_max:
@@ -680,6 +750,12 @@ def generate_token_visualization_html(
         html.append("<tr>" + "".join(row) + "</tr>")
 
     html.append("</table>")
+    html.append("</div>")
+
+    # Comparisons section header
+    html.append("<div class='summary-section'>")
+    html.append("<h2>Comparisons</h2>")
+    html.append("<p><em>Select a tokenizer and example to compare all formats</em></p>")
     html.append("</div>")
 
     # Start page layout with sidebar
@@ -704,7 +780,7 @@ def generate_token_visualization_html(
     html.append("<div class='tabs' id='fixture-tabs'>")
     for i, fixture in enumerate(results):
         active = " active" if i == 0 else ""
-        display_name = fixture.fixture_name.replace("_", " ")
+        display_name = SHORT_NAMES.get(fixture.fixture_name, fixture.fixture_name)
         html.append(f"  <div class='tab{active}' data-fixture='{fixture.fixture_name}'>{display_name}</div>")
     html.append("</div>")
     html.append("</div>")
@@ -733,6 +809,28 @@ def generate_token_visualization_html(
                 f"Tokenizer: {tok_name} ({TOKENIZERS[tok_name]})"
             )
             html.append("</div>")
+
+            # Comparison table for all formats
+            html.append("<table class='comparison-table'>")
+            html.append(
+                "<tr><th>Format</th><th>Chars</th><th>Tokens</th><th>chars_og/tok</th><th>encoded_chars/tok</th></tr>"
+            )
+            for fmt in FORMATS:
+                label = FORMAT_LABELS[fmt]
+                result = next(r for r in fixture.results if r.format_name == fmt)
+                if result.chars is None:
+                    html.append(f"<tr><td>{label}</td><td colspan='4' class='na'>N/A</td></tr>")
+                else:
+                    tok_count = result.tokens[tok_name] or 0
+                    chars_count = result.chars
+                    og_per_tok = base_chars / tok_count if tok_count else 0
+                    enc_per_tok = chars_count / tok_count if tok_count else 0
+                    html.append(
+                        f"<tr><td>{label}</td><td>{fmt_num(chars_count)}</td>"
+                        f"<td>{fmt_num(tok_count)}</td><td>{og_per_tok:.1f}</td>"
+                        f"<td>{enc_per_tok:.1f}</td></tr>"
+                    )
+            html.append("</table>")
 
             for fmt in FORMATS:
                 label = FORMAT_LABELS[fmt]
@@ -929,6 +1027,10 @@ def save_raw_results(
         "tson": "tson",
         "minemizer": "txt",
         "minemizer_compact": "txt",
+        "minemizer_33": "txt",
+        "minemizer_75": "txt",
+        "minemizer_compact_33": "txt",
+        "minemizer_compact_75": "txt",
     }
 
     for fixture in results:
@@ -1022,13 +1124,15 @@ def save_raw_results(
 
 def main() -> None:
     """Run benchmarks and update README."""
+    overall_start = time.perf_counter()
+
     print("=" * 60)
     print("Minemizer Benchmarks")
     print("=" * 60)
     print()
 
     # Load tokenizers
-    tokenizers = load_tokenizers()
+    tokenizers, load_time = load_tokenizers()
     tokenizer_names = list(tokenizers.keys())
 
     # Load fixtures
@@ -1036,7 +1140,8 @@ def main() -> None:
     print(f"Loaded {len(fixtures)} fixture files\n")
 
     # Run benchmarks
-    results = run_benchmarks(fixtures, tokenizers)
+    print("Running benchmarks...")
+    results, timing_stats = run_benchmarks(fixtures, tokenizers)
     print()
 
     # Generate markdown
@@ -1053,6 +1158,19 @@ def main() -> None:
 
     # Save raw results
     save_raw_results(results, tokenizer_names, fixtures, tokenizers)
+
+    # Print timing summary
+    overall_time = time.perf_counter() - overall_start
+    print()
+    print("=" * 60)
+    print("Timing Summary")
+    print("=" * 60)
+    print(f"  Tokenizer loading:  {load_time:>6.2f}s")
+    print(f"  Format conversion:  {timing_stats['conversion']:>6.2f}s")
+    print(f"  Tokenization:       {timing_stats['tokenization']:>6.2f}s")
+    print(f"  Benchmark total:    {timing_stats['total']:>6.2f}s")
+    print(f"  Overall total:      {overall_time:>6.2f}s")
+    print("=" * 60)
 
 
 if __name__ == "__main__":
