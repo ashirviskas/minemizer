@@ -605,17 +605,15 @@ def generate_token_visualization_html(
     html.append("<p><em>Average efficiency per tokenizer (normalized, higher is better)</em></p>")
     html.append("<table>")
 
-    # Header row: Format | tokenizer1 | tokenizer2 | ...
-    header = ["Format"] + list(tokenizer_names)
+    # Header row: Format | tokenizer1 | tokenizer2 | ... | avg
+    header = ["Format"] + list(tokenizer_names) + ["avg"]
     html.append("<tr>" + "".join(f"<th>{h}</th>" for h in header) + "</tr>")
 
-    # Compute per-tokenizer efficiency for each format
+    # First pass: compute all values
+    table_data: dict[str, dict[str, float | None]] = {}
     for fmt in FORMATS:
-        label = FORMAT_LABELS[fmt]
-        row = [f"<td>{label}</td>"]
-
+        table_data[fmt] = {}
         for tok_name in tokenizer_names:
-            # Average across all fixtures for this format+tokenizer
             ratios = []
             for fixture in results:
                 json_pretty = next(r for r in fixture.results if r.format_name == "json_pretty")
@@ -634,11 +632,50 @@ def generate_token_visualization_html(
                         normalized = raw_ratio / baseline
                         ratios.append(normalized)
 
-            if ratios:
-                avg = sum(ratios) / len(ratios)
-                row.append(f"<td>{avg:.1f}x</td>")
-            else:
+            table_data[fmt][tok_name] = sum(ratios) / len(ratios) if ratios else None
+
+        # Compute row average
+        valid_vals = [v for v in table_data[fmt].values() if v is not None]
+        table_data[fmt]["avg"] = sum(valid_vals) / len(valid_vals) if valid_vals else None
+
+    # Find max per column and global min/max for coloring
+    all_cols = list(tokenizer_names) + ["avg"]
+    col_max: dict[str, float] = {}
+    all_values: list[float] = []
+    for col in all_cols:
+        col_vals = [v for fmt in FORMATS if (v := table_data[fmt].get(col)) is not None]
+        if col_vals:
+            col_max[col] = max(col_vals)
+            all_values.extend(col_vals)
+
+    global_min = min(all_values) if all_values else 1.0
+    global_max = max(all_values) if all_values else 1.0
+
+    def value_to_color(val: float) -> str:
+        """Generate color from red (low) to green (high)."""
+        ratio = 0.5 if global_max == global_min else (val - global_min) / (global_max - global_min)
+        # Interpolate from light red to light green
+        r = int(255 - ratio * 80)
+        g = int(200 + ratio * 55)
+        b = int(200 - ratio * 50)
+        return f"#{r:02x}{g:02x}{b:02x}"
+
+    # Generate rows
+    for fmt in FORMATS:
+        label = FORMAT_LABELS[fmt]
+        row = [f"<td>{label}</td>"]
+
+        for col in all_cols:
+            val = table_data[fmt].get(col)
+            if val is None:
                 row.append("<td class='na'>✗</td>")
+            else:
+                bg_color = value_to_color(val)
+                is_max = val == col_max.get(col)
+                style = f"background:{bg_color};"
+                if is_max:
+                    style += " font-weight:bold;"
+                row.append(f"<td style='{style}'>{val:.1f}x</td>")
 
         html.append("<tr>" + "".join(row) + "</tr>")
 
@@ -707,9 +744,10 @@ def generate_token_visualization_html(
                 if output is None:
                     html.append(f"<div class='format-header'>{label}: <span class='na'>N/A</span></div>")
                 else:
-                    token_count = result.tokens[tok_name]
+                    token_count = result.tokens[tok_name] or 0
+                    chars_count = result.chars or 0
                     chars_og_per_tok = base_chars / token_count if token_count else 0
-                    encoded_per_tok = result.chars / token_count if token_count else 0
+                    encoded_per_tok = chars_count / token_count if token_count else 0
                     # Unique ID for copy functionality
                     copy_id = f"copy-{tok_name}-{fixture.fixture_name}-{fmt}"
                     html.append(
@@ -724,7 +762,7 @@ def generate_token_visualization_html(
                     html.append(
                         f"<div class='stats'>"
                         f"<span class='stat-item stat-chars'><span class='stat-label'>chars:</span> "
-                        f"<span class='stat-value'>{fmt_num(result.chars)}</span></span>"
+                        f"<span class='stat-value'>{fmt_num(chars_count)}</span></span>"
                         f"<span class='stat-item stat-tokens'><span class='stat-label'>tokens:</span> "
                         f"<span class='stat-value'>{fmt_num(token_count)}</span></span>"
                         f"<span class='stat-item stat-og'><span class='stat-label'>chars_og/tok:</span> "

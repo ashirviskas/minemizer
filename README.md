@@ -1,15 +1,9 @@
 # minemizer
 Minimize your data to decrease LLM token usage
 
+See some pretty comparisons at [benchmarks](https://ashirviskas.github.io/)
 
-Pros
-- Most efficient for token usage among tested formats (See [Benchmarks](#benchmarks))
-- Simple
-- Flexible
-- Mostly readable code (not yet vibecoded) and uses at least *some* engineering principles
-
-Cons
-- Not a standard format, so smaller LLMs may not know what to do with it. Bigger LLMs should have no issue, but I can't confirm or deny before I have done any proper benchmarks. 
+PRs are very welcome!
 
 ## Using minemizer
 
@@ -201,7 +195,7 @@ See [token visualization](benchmarks/results/benchmark_tokens.html) for detailed
 
 ## Future work
 
-
+- Deal with auto formatting numbers (floats, i.e. do python `{number:.5g} maybe as optional.), dates (ISO8601 FTW, llms do like it very much) etc.
 - Create presets for different LLM tokenizers/models to maximize token efficiency (less tokens) and/or performance (better benchmarks)
 - Support for type hints to optimize formatting (e.g., dates, numbers).
-- 
+- Per field configuration (custom date format, number precision, unix to datetime etc.)
