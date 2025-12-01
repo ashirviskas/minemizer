@@ -1,7 +1,22 @@
 # minemizer
-Minimize your data to decrease LLM token usage
+Minimize your data to decrease LLM token usage.
 
 See some pretty comparisons at [benchmarks](https://ashirviskas.github.io/)
+
+<img width="1677" height="1115" alt="minemizer_first_bench" src="https://github.com/user-attachments/assets/57ff8c98-9438-46db-9a53-a6fdf6350f16" />
+
+Pros
+- Most efficient for token usage among tested formats
+- Human Readable
+- Simple format (basically CSV when data is flat)
+- Simple implementation with no dependencies
+- Flexible
+- Mostly readable code and uses at least *some* engineering principles
+
+Cons
+- Not battle tested
+- Not a standard format, so smaller LLMs may not know what to do with it. Bigger LLMs should have no issue, but I can't confirm or deny before I have done any proper benchmarks. 
+- Cannot convert the data back to the original format (no parser implemented yet)
 
 PRs are very welcome!
 
