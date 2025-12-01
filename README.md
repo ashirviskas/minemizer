@@ -11,7 +11,7 @@ Pros
 - Simple format (basically CSV when data is flat)
 - Simple implementation with no dependencies
 - Flexible
-- Mostly readable code and uses at least *some* engineering principles
+- No regex in the core, so human readable.
 
 Cons
 - Not battle tested
@@ -194,7 +194,7 @@ _Last updated: 2025-12-01_
 | YAML | 1.8x | 1.8x | 1.8x | 1.8x | 1.7x | 1.3x | 2.1x | 1.7x | 1.4x | 1.5x | 1.5x | 1.7x |
 | TOON | 3.2x | 1.7x | 1.9x | 1.6x | 1.6x | 2.0x | 2.0x | 1.5x | 1.3x | 1.5x | 1.5x | 1.8x |
 | TSON | 3.6x | 3.4x | 3.7x | 2.0x | 2.6x | 2.0x | 2.9x | 1.9x | 1.7x | 1.6x | 2.4x | 2.5x |
-| minemizer | **4.1x** | **3.5x** | **3.7x** | **3.4x** | **3.1x** | 2.0x | **3.7x** | **2.4x** | 1.8x | **2.2x** | 2.9x | **3.0x** |
+| minemizer | **4.1x** | **3.5x** | **3.7x** | **3.6x** | **3.1x** | 2.0x | **3.7x** | **2.4x** | 1.8x | **2.2x** | 2.9x | **3.0x** |
 | minemizer (compact) | 3.7x | 3.4x | 3.6x | 3.3x | 3.0x | **2.1x** | 3.6x | 2.4x | **1.9x** | 2.1x | **2.9x** | 2.9x |
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._

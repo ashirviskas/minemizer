@@ -469,8 +469,8 @@ Original size (JSON pretty): **611 chars**
 | YAML | 384 | 145 | 158 | 149 | 149 | 150.2 | 4.1 |
 | TOON | 438 | 190 | 167 | 159 | 159 | 168.8 | 3.6 |
 | TSON | 328 | 146 | 145 | 113 | 116 | 130.0 | 4.7 |
-| minemizer | 207 | 78 | 85 | 75 | 75 | 78.2 | 7.8 |
-| minemizer (compact) | 184 | 85 | 91 | 74 | 76 | 81.5 | 7.5 |
+| minemizer | 200 | 72 | 79 | 72 | 72 | 73.8 | 8.3 |
+| minemizer (compact) | 180 | 82 | 88 | 74 | 75 | 79.8 | 7.7 |
 
 ### Serialized outputs
 
@@ -584,28 +584,28 @@ N/A - format cannot represent this data
 [{@id,name,department|1,Erik,Engineering},{@id,name,department,remote|2,Rachel,Design,true},{@id,name|3,Hans},{@id,name,department,slack,remote|4,Kenji,Sales,"@kenji",false},{@id,name,remote|5,Mai,true},{@id,name,department|6,Tom,Engineering},{@id,name,slack,remote|7,Priya,"@priya",true},{@id,name,department|8,Nina,Marketing}]
 ```
 
-**minemizer** (207 chars, 78 tokens):
+**minemizer** (200 chars, 74 tokens):
 ```txt
 id; name; department; remote
-1; Erik; Engineering; 
+1; Erik; Engineering
 2; Rachel; Design;true
-3; Hans;; 
+3; Hans
 4; Kenji; Sales;false; slack: @kenji
 5; Mai;;true
-6; Tom; Engineering; 
+6; Tom; Engineering
 7; Priya;;true; slack: @priya
 8; Nina; Marketing;
 ```
 
-**minemizer (compact)** (184 chars, 82 tokens):
+**minemizer (compact)** (180 chars, 80 tokens):
 ```txt
 id;name;department;remote
-1;Erik;Engineering;
+1;Erik;Engineering
 2;Rachel;Design;true
-3;Hans;;
+3;Hans
 4;Kenji;Sales;false;slack:@kenji
 5;Mai;;true
-6;Tom;Engineering;
+6;Tom;Engineering
 7;Priya;;true;slack:@priya
 8;Nina;Marketing;
 ```
@@ -775,8 +775,8 @@ Original size (JSON pretty): **27902 chars**
 | YAML | 22400 | 8081 | 8859 | 7605 | 7158 | 7925.8 | 3.5 |
 | TOON | 14277 | 5388 | 6172 | 4866 | 4434 | 5215.0 | 5.4 |
 | TSON | 14448 | 5433 | 6229 | 4845 | 4483 | 5247.5 | 5.3 |
-| minemizer | 14460 | 5154 | 6044 | 4976 | 4519 | 5173.2 | 5.4 |
-| minemizer (compact) | 13755 | 5262 | 6058 | 4847 | 4386 | 5138.2 | 5.4 |
+| minemizer | 14458 | 5152 | 6042 | 4976 | 4519 | 5172.2 | 5.4 |
+| minemizer (compact) | 13753 | 5260 | 6056 | 4847 | 4386 | 5137.2 | 5.4 |
 
 ### Serialized outputs
 
@@ -942,7 +942,7 @@ Jorge Luis Borges	Argentina	images/ficciones.jpg	Spanish	"https://en.wikipedia.o
 ... (truncated)
 ```
 
-**minemizer** (14460 chars, 5173 tokens):
+**minemizer** (14458 chars, 5172 tokens):
 ```txt
 author; country; imageLink; language; link; pages; title; year
 Chinua Achebe; Nigeria; images/things-fall-apart.jpg; English; https://en.wikipedia.org/wiki/Things_Fall_Apart
@@ -972,7 +972,7 @@ Jorge Luis Borges; Argentina; images/ficciones.jpg; Spanish; https://en.wikipedi
 ... (truncated)
 ```
 
-**minemizer (compact)** (13755 chars, 5138 tokens):
+**minemizer (compact)** (13753 chars, 5137 tokens):
 ```txt
 author;country;imageLink;language;link;pages;title;year
 Chinua Achebe;Nigeria;images/things-fall-apart.jpg;English;https://en.wikipedia.org/wiki/Things_Fall_Apart

@@ -256,6 +256,10 @@ def _serialize(data: list[dict], cfg: Config) -> str:
         w = cfg.wrap_lines
         lines = [f"{w}{line}{w}" for line in lines]
     text_str = "\n".join(lines)
+    text_str = text_str.replace(" \n", "\n")
+    # Not me avoiding regex as much as possible
+    for _ in range(3):
+        text_str = text_str.replace(f"{cfg.delimiter}\n", "\n")
     if text_str.endswith(" "):
         return text_str[:-1]
     return text_str

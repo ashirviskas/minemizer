@@ -315,21 +315,21 @@
         }
       },
       "minemizer": {
-        "chars": 207,
+        "chars": 200,
         "tokens": {
-          "gpt2": 78,
-          "llama": 85,
-          "qwen2.5": 75,
-          "Deepseek-V3.2": 75
+          "gpt2": 72,
+          "llama": 79,
+          "qwen2.5": 72,
+          "Deepseek-V3.2": 72
         }
       },
       "minemizer_compact": {
-        "chars": 184,
+        "chars": 180,
         "tokens": {
-          "gpt2": 85,
-          "llama": 91,
+          "gpt2": 82,
+          "llama": 88,
           "qwen2.5": 74,
-          "Deepseek-V3.2": 76
+          "Deepseek-V3.2": 75
         }
       }
     },
@@ -481,19 +481,19 @@
         }
       },
       "minemizer": {
-        "chars": 14460,
+        "chars": 14458,
         "tokens": {
-          "gpt2": 5154,
-          "llama": 6044,
+          "gpt2": 5152,
+          "llama": 6042,
           "qwen2.5": 4976,
           "Deepseek-V3.2": 4519
         }
       },
       "minemizer_compact": {
-        "chars": 13755,
+        "chars": 13753,
         "tokens": {
-          "gpt2": 5262,
-          "llama": 6058,
+          "gpt2": 5260,
+          "llama": 6056,
           "qwen2.5": 4847,
           "Deepseek-V3.2": 4386
         }

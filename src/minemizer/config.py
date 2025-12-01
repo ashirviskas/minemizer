@@ -79,6 +79,7 @@ class Config:
                 text = text.replace(f"{stuff_a_stripped} {stuff_b_stripped}", f"{stuff_a_stripped}{stuff_b_stripped}")
 
         text = text.replace(" \n", "\n")
+        text = text.replace(" \n", "\n")
 
         return text
 
