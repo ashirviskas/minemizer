@@ -31,6 +31,7 @@ benchmark = [
     "protobuf>=5.0.0",
     "toon-format @ git+https://github.com/toon-format/toon-python.git",
     "tson>=1.0.0",
+    "httpx>=0.28.0",
 ]
 
 
@@ -57,4 +58,15 @@ ignore = []
 typeCheckingMode = "standard"
 reportMissingImports = true
 reportMissingTypeStubs = false
-pythonVersion = "3.12"  # match your version
+pythonVersion = "3.13"
+exclude = [
+    ".venv",
+    ".git",
+    "__pycache__",
+    ".ruff_cache",
+    ".pytest_cache",
+    "build",
+    "dist",
+    "*.egg-info",
+    "node_modules",
+]

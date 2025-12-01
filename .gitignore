@@ -31,3 +31,6 @@ htmlcov/
 tmp/
 
 **coingecko_coins.json
+**countries.json
+**books.json
+**mcp_tools_list.json

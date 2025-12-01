@@ -1,8 +1,0 @@
-[
-  {"id": 1, "name": "Alice", "skills": ["python", "go", "rust"]},
-  {"id": 2, "name": "Bob", "skills": ["javascript", "typescript"]},
-  {"id": 3, "name": "Carol", "skills": ["java", "kotlin", "scala", "groovy"]},
-  {"id": 4, "name": "David", "skills": ["c", "cpp"]},
-  {"id": 5, "name": "Eva", "skills": ["ruby", "elixir", "erlang"]},
-  {"id": 6, "name": "Frank", "skills": ["swift"]}
-]

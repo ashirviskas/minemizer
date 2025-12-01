@@ -199,8 +199,27 @@ _Last updated: 2025-12-01_
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._
 
-See [token visualization](benchmarks/results/benchmark_tokens.html) for detailed tokenization comparison across different tokenizers (gpt2, llama, qwen2.5, phi4).
+See [token visualization](benchmarks/results/compression/benchmark_tokens.html) for detailed tokenization comparison across different tokenizers.
 <!-- BENCHMARK_END -->
+
+## Running Benchmarks
+
+```bash
+# Install benchmark dependencies
+uv sync --group benchmark
+
+# Run compression benchmarks (token efficiency)
+uv run python -m benchmarks compression
+
+# Generate synthetic data for LLM benchmarks
+uv run python -m benchmarks generate --sizes 50,100,1000,5000
+
+# Run LLM accuracy benchmarks (requires local llama.cpp server)
+uv run python -m benchmarks llm --model "your-model" --data nested_1000 --queries 50
+
+# Generate HTML report from LLM results
+uv run python -m benchmarks report --include-all
+```
 
 ## Installation
 
