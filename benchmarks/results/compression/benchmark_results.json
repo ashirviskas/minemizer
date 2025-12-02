@@ -1,0 +1,917 @@
+{
+  "fixtures": {
+    "simple_flat": {
+      "json_pretty": {
+        "chars": 763,
+        "tokens": {
+          "gpt2": 384,
+          "llama": 334,
+          "qwen2.5": 264,
+          "deepseek": 270
+        }
+      },
+      "json_min": {
+        "chars": 522,
+        "tokens": {
+          "gpt2": 152,
+          "llama": 165,
+          "qwen2.5": 137,
+          "deepseek": 150
+        }
+      },
+      "csv": {
+        "chars": 234,
+        "tokens": {
+          "gpt2": 95,
+          "llama": 101,
+          "qwen2.5": 77,
+          "deepseek": 91
+        }
+      },
+      "tsv": {
+        "chars": 234,
+        "tokens": {
+          "gpt2": 95,
+          "llama": 101,
+          "qwen2.5": 77,
+          "deepseek": 92
+        }
+      },
+      "yaml": {
+        "chars": 489,
+        "tokens": {
+          "gpt2": 163,
+          "llama": 180,
+          "qwen2.5": 169,
+          "deepseek": 172
+        }
+      },
+      "toon": {
+        "chars": 246,
+        "tokens": {
+          "gpt2": 98,
+          "llama": 103,
+          "qwen2.5": 96,
+          "deepseek": 93
+        }
+      },
+      "tson": {
+        "chars": 229,
+        "tokens": {
+          "gpt2": 90,
+          "llama": 95,
+          "qwen2.5": 80,
+          "deepseek": 86
+        }
+      },
+      "minemizer": {
+        "chars": 251,
+        "tokens": {
+          "gpt2": 74,
+          "llama": 83,
+          "qwen2.5": 72,
+          "deepseek": 75
+        }
+      },
+      "minemizer_compact": {
+        "chars": 224,
+        "tokens": {
+          "gpt2": 85,
+          "llama": 91,
+          "qwen2.5": 77,
+          "deepseek": 83
+        }
+      }
+    },
+    "nested_objects": {
+      "json_pretty": {
+        "chars": 1039,
+        "tokens": {
+          "gpt2": 590,
+          "llama": 435,
+          "qwen2.5": 348,
+          "deepseek": 349
+        }
+      },
+      "json_min": {
+        "chars": 618,
+        "tokens": {
+          "gpt2": 188,
+          "llama": 211,
+          "qwen2.5": 174,
+          "deepseek": 187
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 629,
+        "tokens": {
+          "gpt2": 264,
+          "llama": 246,
+          "qwen2.5": 229,
+          "deepseek": 228
+        }
+      },
+      "toon": {
+        "chars": 675,
+        "tokens": {
+          "gpt2": 315,
+          "llama": 238,
+          "qwen2.5": 223,
+          "deepseek": 224
+        }
+      },
+      "tson": {
+        "chars": 306,
+        "tokens": {
+          "gpt2": 136,
+          "llama": 141,
+          "qwen2.5": 110,
+          "deepseek": 124
+        }
+      },
+      "minemizer": {
+        "chars": 325,
+        "tokens": {
+          "gpt2": 126,
+          "llama": 132,
+          "qwen2.5": 121,
+          "deepseek": 120
+        }
+      },
+      "minemizer_compact": {
+        "chars": 290,
+        "tokens": {
+          "gpt2": 132,
+          "llama": 139,
+          "qwen2.5": 117,
+          "deepseek": 119
+        }
+      }
+    },
+    "lists_of_primitives": {
+      "json_pretty": {
+        "chars": 610,
+        "tokens": {
+          "gpt2": 382,
+          "llama": 280,
+          "qwen2.5": 217,
+          "deepseek": 223
+        }
+      },
+      "json_min": {
+        "chars": 330,
+        "tokens": {
+          "gpt2": 115,
+          "llama": 125,
+          "qwen2.5": 103,
+          "deepseek": 115
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 341,
+        "tokens": {
+          "gpt2": 153,
+          "llama": 157,
+          "qwen2.5": 149,
+          "deepseek": 152
+        }
+      },
+      "toon": {
+        "chars": 339,
+        "tokens": {
+          "gpt2": 161,
+          "llama": 141,
+          "qwen2.5": 137,
+          "deepseek": 142
+        }
+      },
+      "tson": {
+        "chars": 168,
+        "tokens": {
+          "gpt2": 80,
+          "llama": 79,
+          "qwen2.5": 65,
+          "deepseek": 78
+        }
+      },
+      "minemizer": {
+        "chars": 188,
+        "tokens": {
+          "gpt2": 81,
+          "llama": 79,
+          "qwen2.5": 71,
+          "deepseek": 68
+        }
+      },
+      "minemizer_compact": {
+        "chars": 165,
+        "tokens": {
+          "gpt2": 83,
+          "llama": 83,
+          "qwen2.5": 70,
+          "deepseek": 71
+        }
+      }
+    },
+    "sparse_data": {
+      "json_pretty": {
+        "chars": 611,
+        "tokens": {
+          "gpt2": 323,
+          "llama": 285,
+          "qwen2.5": 227,
+          "deepseek": 229
+        }
+      },
+      "json_min": {
+        "chars": 400,
+        "tokens": {
+          "gpt2": 131,
+          "llama": 146,
+          "qwen2.5": 121,
+          "deepseek": 126
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 384,
+        "tokens": {
+          "gpt2": 145,
+          "llama": 158,
+          "qwen2.5": 149,
+          "deepseek": 150
+        }
+      },
+      "toon": {
+        "chars": 438,
+        "tokens": {
+          "gpt2": 190,
+          "llama": 167,
+          "qwen2.5": 159,
+          "deepseek": 160
+        }
+      },
+      "tson": {
+        "chars": 328,
+        "tokens": {
+          "gpt2": 146,
+          "llama": 145,
+          "qwen2.5": 113,
+          "deepseek": 117
+        }
+      },
+      "minemizer": {
+        "chars": 200,
+        "tokens": {
+          "gpt2": 72,
+          "llama": 79,
+          "qwen2.5": 72,
+          "deepseek": 73
+        }
+      },
+      "minemizer_compact": {
+        "chars": 180,
+        "tokens": {
+          "gpt2": 82,
+          "llama": 88,
+          "qwen2.5": 74,
+          "deepseek": 76
+        }
+      }
+    },
+    "complex_mixed": {
+      "json_pretty": {
+        "chars": 1320,
+        "tokens": {
+          "gpt2": 768,
+          "llama": 560,
+          "qwen2.5": 455,
+          "deepseek": 428
+        }
+      },
+      "json_min": {
+        "chars": 760,
+        "tokens": {
+          "gpt2": 224,
+          "llama": 284,
+          "qwen2.5": 246,
+          "deepseek": 239
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 818,
+        "tokens": {
+          "gpt2": 374,
+          "llama": 338,
+          "qwen2.5": 306,
+          "deepseek": 279
+        }
+      },
+      "toon": {
+        "chars": 881,
+        "tokens": {
+          "gpt2": 434,
+          "llama": 329,
+          "qwen2.5": 304,
+          "deepseek": 279
+        }
+      },
+      "tson": {
+        "chars": 453,
+        "tokens": {
+          "gpt2": 207,
+          "llama": 237,
+          "qwen2.5": 203,
+          "deepseek": 194
+        }
+      },
+      "minemizer": {
+        "chars": 403,
+        "tokens": {
+          "gpt2": 157,
+          "llama": 203,
+          "qwen2.5": 193,
+          "deepseek": 161
+        }
+      },
+      "minemizer_compact": {
+        "chars": 361,
+        "tokens": {
+          "gpt2": 173,
+          "llama": 214,
+          "qwen2.5": 190,
+          "deepseek": 159
+        }
+      }
+    },
+    "books": {
+      "json_pretty": {
+        "chars": 27902,
+        "tokens": {
+          "gpt2": 12188,
+          "llama": 11626,
+          "qwen2.5": 9434,
+          "deepseek": 8955
+        }
+      },
+      "json_min": {
+        "chars": 22501,
+        "tokens": {
+          "gpt2": 7103,
+          "llama": 8035,
+          "qwen2.5": 6637,
+          "deepseek": 6166
+        }
+      },
+      "csv": {
+        "chars": 14071,
+        "tokens": {
+          "gpt2": 5354,
+          "llama": 6151,
+          "qwen2.5": 4799,
+          "deepseek": 4463
+        }
+      },
+      "tsv": {
+        "chars": 14057,
+        "tokens": {
+          "gpt2": 5564,
+          "llama": 6360,
+          "qwen2.5": 4883,
+          "deepseek": 4680
+        }
+      },
+      "yaml": {
+        "chars": 22400,
+        "tokens": {
+          "gpt2": 8081,
+          "llama": 8859,
+          "qwen2.5": 7605,
+          "deepseek": 7159
+        }
+      },
+      "toon": {
+        "chars": 14277,
+        "tokens": {
+          "gpt2": 5388,
+          "llama": 6172,
+          "qwen2.5": 4866,
+          "deepseek": 4435
+        }
+      },
+      "tson": {
+        "chars": 14448,
+        "tokens": {
+          "gpt2": 5433,
+          "llama": 6229,
+          "qwen2.5": 4845,
+          "deepseek": 4484
+        }
+      },
+      "minemizer": {
+        "chars": 14458,
+        "tokens": {
+          "gpt2": 5152,
+          "llama": 6042,
+          "qwen2.5": 4976,
+          "deepseek": 4520
+        }
+      },
+      "minemizer_compact": {
+        "chars": 13753,
+        "tokens": {
+          "gpt2": 5260,
+          "llama": 6056,
+          "qwen2.5": 4847,
+          "deepseek": 4387
+        }
+      }
+    },
+    "countries": {
+      "json_pretty": {
+        "chars": 1133948,
+        "tokens": {
+          "gpt2": 677260,
+          "llama": 565880,
+          "qwen2.5": 474014,
+          "deepseek": 402626
+        }
+      },
+      "json_min": {
+        "chars": 787962,
+        "tokens": {
+          "gpt2": 339487,
+          "llama": 425660,
+          "qwen2.5": 365037,
+          "deepseek": 304093
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 641939,
+        "tokens": {
+          "gpt2": 345580,
+          "llama": 251610,
+          "qwen2.5": 219269,
+          "deepseek": 206631
+        }
+      },
+      "toon": {
+        "chars": 691140,
+        "tokens": {
+          "gpt2": 397301,
+          "llama": 246360,
+          "qwen2.5": 215450,
+          "deepseek": 202875
+        }
+      },
+      "tson": {
+        "chars": 423383,
+        "tokens": {
+          "gpt2": 210056,
+          "llama": 196499,
+          "qwen2.5": 158349,
+          "deepseek": 158554
+        }
+      },
+      "minemizer": {
+        "chars": 323130,
+        "tokens": {
+          "gpt2": 166573,
+          "llama": 152369,
+          "qwen2.5": 133672,
+          "deepseek": 120115
+        }
+      },
+      "minemizer_compact": {
+        "chars": 299485,
+        "tokens": {
+          "gpt2": 170841,
+          "llama": 156354,
+          "qwen2.5": 133597,
+          "deepseek": 124200
+        }
+      }
+    },
+    "large_non_uniform_nested_mixed": {
+      "json_pretty": {
+        "chars": 2402,
+        "tokens": {
+          "gpt2": 1292,
+          "llama": 1003,
+          "qwen2.5": 816,
+          "deepseek": 802
+        }
+      },
+      "json_min": {
+        "chars": 1500,
+        "tokens": {
+          "gpt2": 446,
+          "llama": 522,
+          "qwen2.5": 449,
+          "deepseek": 457
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 1573,
+        "tokens": {
+          "gpt2": 661,
+          "llama": 617,
+          "qwen2.5": 559,
+          "deepseek": 533
+        }
+      },
+      "toon": {
+        "chars": 1766,
+        "tokens": {
+          "gpt2": 841,
+          "llama": 625,
+          "qwen2.5": 572,
+          "deepseek": 545
+        }
+      },
+      "tson": {
+        "chars": 1275,
+        "tokens": {
+          "gpt2": 525,
+          "llama": 560,
+          "qwen2.5": 462,
+          "deepseek": 489
+        }
+      },
+      "minemizer": {
+        "chars": 1203,
+        "tokens": {
+          "gpt2": 383,
+          "llama": 452,
+          "qwen2.5": 400,
+          "deepseek": 389
+        }
+      },
+      "minemizer_compact": {
+        "chars": 1072,
+        "tokens": {
+          "gpt2": 409,
+          "llama": 462,
+          "qwen2.5": 382,
+          "deepseek": 385
+        }
+      }
+    },
+    "large_non_uniform_nested_numerical": {
+      "json_pretty": {
+        "chars": 2947,
+        "tokens": {
+          "gpt2": 1718,
+          "llama": 1542,
+          "qwen2.5": 1332,
+          "deepseek": 1170
+        }
+      },
+      "json_min": {
+        "chars": 1873,
+        "tokens": {
+          "gpt2": 755,
+          "llama": 976,
+          "qwen2.5": 884,
+          "deepseek": 749
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 2085,
+        "tokens": {
+          "gpt2": 1033,
+          "llama": 1171,
+          "qwen2.5": 1077,
+          "deepseek": 894
+        }
+      },
+      "toon": {
+        "chars": 2318,
+        "tokens": {
+          "gpt2": 1249,
+          "llama": 1178,
+          "qwen2.5": 1090,
+          "deepseek": 906
+        }
+      },
+      "tson": {
+        "chars": 1642,
+        "tokens": {
+          "gpt2": 823,
+          "llama": 993,
+          "qwen2.5": 907,
+          "deepseek": 747
+        }
+      },
+      "minemizer": {
+        "chars": 1534,
+        "tokens": {
+          "gpt2": 632,
+          "llama": 940,
+          "qwen2.5": 883,
+          "deepseek": 699
+        }
+      },
+      "minemizer_compact": {
+        "chars": 1361,
+        "tokens": {
+          "gpt2": 676,
+          "llama": 875,
+          "qwen2.5": 809,
+          "deepseek": 642
+        }
+      }
+    },
+    "large_non_uniform_nested_text": {
+      "json_pretty": {
+        "chars": 4214,
+        "tokens": {
+          "gpt2": 1498,
+          "llama": 1268,
+          "qwen2.5": 997,
+          "deepseek": 986
+        }
+      },
+      "json_min": {
+        "chars": 3359,
+        "tokens": {
+          "gpt2": 658,
+          "llama": 792,
+          "qwen2.5": 634,
+          "deepseek": 647
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 3387,
+        "tokens": {
+          "gpt2": 818,
+          "llama": 843,
+          "qwen2.5": 716,
+          "deepseek": 703
+        }
+      },
+      "toon": {
+        "chars": 3534,
+        "tokens": {
+          "gpt2": 974,
+          "llama": 846,
+          "qwen2.5": 718,
+          "deepseek": 705
+        }
+      },
+      "tson": {
+        "chars": 3173,
+        "tokens": {
+          "gpt2": 721,
+          "llama": 831,
+          "qwen2.5": 644,
+          "deepseek": 689
+        }
+      },
+      "minemizer": {
+        "chars": 2809,
+        "tokens": {
+          "gpt2": 522,
+          "llama": 619,
+          "qwen2.5": 510,
+          "deepseek": 500
+        }
+      },
+      "minemizer_compact": {
+        "chars": 2694,
+        "tokens": {
+          "gpt2": 565,
+          "llama": 672,
+          "qwen2.5": 534,
+          "deepseek": 527
+        }
+      }
+    },
+    "mcp_tools_list": {
+      "json_pretty": {
+        "chars": 51663,
+        "tokens": {
+          "gpt2": 27574,
+          "llama": 13539,
+          "qwen2.5": 11210,
+          "deepseek": 11303
+        }
+      },
+      "json_min": {
+        "chars": 30724,
+        "tokens": {
+          "gpt2": 6840,
+          "llama": 7315,
+          "qwen2.5": 6368,
+          "deepseek": 6977
+        }
+      },
+      "csv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "tsv": {
+        "chars": null,
+        "tokens": {
+          "gpt2": null,
+          "llama": null,
+          "qwen2.5": null,
+          "deepseek": null
+        }
+      },
+      "yaml": {
+        "chars": 38139,
+        "tokens": {
+          "gpt2": 16770,
+          "llama": 8915,
+          "qwen2.5": 7927,
+          "deepseek": 7997
+        }
+      },
+      "toon": {
+        "chars": 38376,
+        "tokens": {
+          "gpt2": 17296,
+          "llama": 8649,
+          "qwen2.5": 7670,
+          "deepseek": 7767
+        }
+      },
+      "tson": {
+        "chars": 25878,
+        "tokens": {
+          "gpt2": 7318,
+          "llama": 7045,
+          "qwen2.5": 5889,
+          "deepseek": 6731
+        }
+      },
+      "minemizer": {
+        "chars": 23383,
+        "tokens": {
+          "gpt2": 5559,
+          "llama": 5767,
+          "qwen2.5": 5319,
+          "deepseek": 5342
+        }
+      },
+      "minemizer_compact": {
+        "chars": 21912,
+        "tokens": {
+          "gpt2": 5672,
+          "llama": 5726,
+          "qwen2.5": 5112,
+          "deepseek": 5216
+        }
+      }
+    }
+  }
+}

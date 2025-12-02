@@ -31,8 +31,11 @@ def convert_to_format(data: list[dict], format_name: str) -> str | None:
         "yaml": lambda d: yaml.dump(d, default_flow_style=False, allow_unicode=True),
         "toon": toon_encode,
         "tson": tson.dumps,
+        # minemizer variants - default now has header_repeat_interval=100
         "minemizer": minemize,
+        "minemizer_no_repeat": lambda d: minemize(d, header_repeat_interval=None),
         "minemizer_compact": lambda d: minemize(d, preset=presets.compact),
+        "minemizer_compact_no_repeat": lambda d: minemize(d, preset=presets.compact, header_repeat_interval=None),
     }
 
     converter = converters.get(format_name)

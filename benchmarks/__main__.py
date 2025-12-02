@@ -291,12 +291,32 @@ def _generate_llm_report_html(all_results: list[tuple[str, dict]]) -> str:
         "<meta charset='utf-8'>",
         "<title>LLM Accuracy Benchmarks</title>",
         "<style>",
-        "body { font-family: system-ui, sans-serif; margin: 20px; }",
-        "table { border-collapse: collapse; margin: 20px 0; }",
-        "th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: right; }",
-        "th { background: #f0f0f0; }",
-        "td:first-child { text-align: left; }",
-        ".best { font-weight: bold; color: #228855; }",
+        "body { font-family: system-ui, sans-serif; margin: 20px; max-width: 1200px; }",
+        "h1 { color: #333; }",
+        "h2 { color: #555; margin-top: 30px; }",
+        ".meta { color: #666; background: #f9f9f9; padding: 12px; border-radius: 6px; margin: 10px 0; }",
+        ".meta strong { color: #333; }",
+        "table { border-collapse: collapse; margin: 20px 0; width: 100%; }",
+        "th, td { border: 1px solid #ddd; padding: 10px 14px; text-align: right; }",
+        "th { background: #f0f0f0; font-weight: 600; }",
+        "td:first-child, th:first-child { text-align: left; }",
+        ".best { font-weight: bold; color: #228855; background: #e8f5e9; }",
+        ".worst { color: #c62828; background: #ffebee; }",
+        ".tokens { color: #1565c0; }",
+        ".chars { color: #7b1fa2; }",
+        ".efficiency { color: #2e7d32; }",
+        ".summary-box { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0; }",
+        ".summary-box h3 { margin: 0 0 10px 0; color: #1565c0; }",
+        ".query-breakdown { margin-top: 20px; }",
+        ".query-breakdown details { margin: 5px 0; }",
+        ".query-breakdown summary { cursor: pointer; padding: 5px; background: #f5f5f5; border-radius: 4px; }",
+        ".query-list { font-size: 13px; max-height: 300px; overflow-y: auto; }",
+        ".query-item { padding: 8px; border-bottom: 1px solid #eee; }",
+        ".query-item.correct { background: #e8f5e9; }",
+        ".query-item.incorrect { background: #ffebee; }",
+        ".query-q { font-weight: 500; }",
+        ".query-expected { color: #2e7d32; }",
+        ".query-actual { color: #c62828; }",
         "</style>",
         "</head><body>",
         "<h1>LLM Accuracy Benchmarks</h1>",
@@ -307,22 +327,110 @@ def _generate_llm_report_html(all_results: list[tuple[str, dict]]) -> str:
         results = data["results"]
 
         html.append(f"<h2>{meta['model']}</h2>")
+        html.append("<div class='meta'>")
+        html.append(f"<strong>Dataset:</strong> {meta['data_file']} ({meta['data_size']:,} records)<br>")
+        html.append(f"<strong>Queries:</strong> {meta['n_queries']}<br>")
+        html.append(f"<strong>Date:</strong> {meta['date'][:10]}<br>")
+        html.append(f"<strong>Endpoint:</strong> {meta['endpoint']}<br>")
+        html.append(f"<strong>Seed:</strong> {meta['seed']}")
+        html.append("</div>")
+
+        # Find best/worst for highlighting
+        valid_results = {k: v for k, v in results.items() if v.get("total_queries", 0) > 0}
+        if valid_results:
+            best_acc = max(r["accuracy"] for r in valid_results.values())
+            worst_acc = min(r["accuracy"] for r in valid_results.values())
+            min_tokens = min(r.get("tokens", float("inf")) for r in valid_results.values() if r.get("tokens"))
+        else:
+            best_acc = worst_acc = 0
+            min_tokens = 0
+
+        # Main results table
+        html.append("<table>")
         html.append(
-            f"<p>Data: {meta['data_file']} ({meta['data_size']} records) | Queries: {meta['n_queries']} | Date: {meta['date'][:10]}</p>"  # noqa: E501
+            "<tr><th>Format</th><th>Accuracy</th><th class='tokens'>Tokens</th>"
+            "<th class='chars'>Chars</th><th class='efficiency'>Chars/Token</th>"
+            "<th>Avg Latency</th><th>Queries</th></tr>"
         )
 
-        html.append("<table>")
-        html.append("<tr><th>Format</th><th>Accuracy</th><th>Avg Latency</th></tr>")
-
-        best_acc = max(r["accuracy"] for r in results.values())
-
         for fmt, res in results.items():
-            cls = " class='best'" if res["accuracy"] == best_acc else ""
+            acc = res.get("accuracy", 0)
+            tokens = res.get("tokens", 0)
+            chars = res.get("chars", 0)
+            latency = res.get("avg_latency_ms", 0)
+            total = res.get("total_queries", 0)
+            chars_per_tok = chars / tokens if tokens else 0
+
+            # Determine row class
+            acc_cls = ""
+            if acc == best_acc and total > 0:
+                acc_cls = " class='best'"
+            elif acc == worst_acc and total > 0 and best_acc != worst_acc:
+                acc_cls = " class='worst'"
+
+            tok_cls = " class='best'" if tokens == min_tokens and tokens > 0 else ""
+
             html.append(
-                f"<tr><td>{fmt}</td><td{cls}>{res['accuracy']:.1%}</td><td>{res['avg_latency_ms']:.0f}ms</td></tr>"
+                f"<tr><td>{fmt}</td>"
+                f"<td{acc_cls}>{acc:.1%}</td>"
+                f"<td{tok_cls}>{tokens:,}</td>"
+                f"<td>{chars:,}</td>"
+                f"<td>{chars_per_tok:.2f}</td>"
+                f"<td>{latency:.0f}ms</td>"
+                f"<td>{total}</td></tr>"
             )
 
         html.append("</table>")
+
+        # Summary box comparing minemizer variants
+        minemizer_results = {k: v for k, v in results.items() if "minemizer" in k.lower()}
+        json_results = {k: v for k, v in results.items() if "json" in k.lower()}
+
+        if minemizer_results and json_results:
+            html.append("<div class='summary-box'>")
+            html.append("<h3>Minemizer vs JSON Comparison</h3>")
+
+            # Get best minemizer and json_pretty for comparison
+            best_mine = max(minemizer_results.items(), key=lambda x: x[1].get("accuracy", 0))
+            json_pretty = json_results.get("json_pretty", list(json_results.values())[0] if json_results else {})
+
+            mine_tok = best_mine[1].get("tokens", 0)
+            json_tok = json_pretty.get("tokens", 0) if isinstance(json_pretty, dict) else 0
+            token_savings = (1 - mine_tok / json_tok) * 100 if json_tok else 0
+
+            mine_acc = best_mine[1].get("accuracy", 0)
+            json_acc = json_pretty.get("accuracy", 0) if isinstance(json_pretty, dict) else 0
+            acc_diff = (mine_acc - json_acc) * 100
+
+            html.append(f"<p><strong>Best minemizer variant:</strong> {best_mine[0]}</p>")
+            html.append(f"<p><strong>Token savings vs JSON:</strong> {token_savings:.1f}%</p>")
+            html.append(f"<p><strong>Accuracy difference:</strong> {acc_diff:+.1f}%</p>")
+            html.append("</div>")
+
+        # Query breakdown per format (collapsible)
+        html.append("<div class='query-breakdown'>")
+        html.append("<h3>Query Details</h3>")
+
+        for fmt, res in results.items():
+            queries = res.get("queries", [])
+            if not queries:
+                continue
+
+            correct_count = sum(1 for q in queries if q.get("correct"))
+            html.append(f"<details><summary>{fmt}: {correct_count}/{len(queries)} correct</summary>")
+            html.append("<div class='query-list'>")
+
+            for q in queries:
+                status_cls = "correct" if q.get("correct") else "incorrect"
+                html.append(f"<div class='query-item {status_cls}'>")
+                html.append(f"<div class='query-q'>Q: {q.get('question', '')}</div>")
+                html.append(f"<div class='query-expected'>Expected: {q.get('expected', '')}</div>")
+                html.append(f"<div class='query-actual'>Actual: {q.get('actual', '')}</div>")
+                html.append("</div>")
+
+            html.append("</div></details>")
+
+        html.append("</div>")
 
     html.extend(["</body></html>"])
     return "\n".join(html)

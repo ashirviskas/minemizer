@@ -8,9 +8,21 @@ from minemizer import config, minemize
 @pytest.fixture(autouse=True)
 def reset_config():
     """Reset global config before each test."""
-    original = (config.delimiter, config.use_spaces, config.sparsity_threshold, config.sparse_indicator)
+    original = (
+        config.delimiter,
+        config.use_spaces,
+        config.sparsity_threshold,
+        config.sparse_indicator,
+        config.header_repeat_interval,
+    )
     yield
-    config.delimiter, config.use_spaces, config.sparsity_threshold, config.sparse_indicator = original
+    (
+        config.delimiter,
+        config.use_spaces,
+        config.sparsity_threshold,
+        config.sparse_indicator,
+        config.header_repeat_interval,
+    ) = original
 
 
 def test_minemize_basic():
@@ -409,3 +421,98 @@ def test_cleanup_nested_sparse_structures():
     assert ": {" not in result
     # Nested sparse dicts should use ":{" pattern
     assert ":{" in result
+
+
+# =============================================================================
+# Header Repeat Interval Tests
+# =============================================================================
+
+
+def test_header_repeat_interval_default():
+    """Test that default header_repeat_interval is 100."""
+    assert config.header_repeat_interval == 100
+
+
+def test_header_repeat_interval_with_data():
+    """Test header repetition with 250 rows (should repeat at 100, 200)."""
+    data = [{"id": i, "name": f"person_{i}"} for i in range(250)]
+    result = minemize(data)
+    lines = result.split("\n")
+
+    header = "id; name"
+    header_indices = [i for i, line in enumerate(lines) if line == header]
+
+    # Should appear at: 0, 101, 202 (after 100th and 200th data rows)
+    assert len(header_indices) == 3
+    assert header_indices[0] == 0
+    assert header_indices[1] == 101  # After 100 data rows (100 data + 1 header)
+    assert header_indices[2] == 202  # After 200 data rows (200 data + 2 headers)
+
+
+def test_header_repeat_interval_none():
+    """Test that header_repeat_interval=None disables repetition."""
+    data = [{"id": i, "name": f"person_{i}"} for i in range(250)]
+    result = minemize(data, header_repeat_interval=None)
+    lines = result.split("\n")
+
+    header = "id; name"
+    header_count = sum(1 for line in lines if line == header)
+
+    # Should only appear once at the beginning
+    assert header_count == 1
+    assert lines[0] == header
+
+
+def test_header_repeat_interval_custom():
+    """Test custom header_repeat_interval value."""
+    data = [{"id": i} for i in range(25)]
+    result = minemize(data, header_repeat_interval=10)
+    lines = result.split("\n")
+
+    header = "id"
+    header_indices = [i for i, line in enumerate(lines) if line == header]
+
+    # Should appear at: 0, 11, 22 (after 10th and 20th data rows)
+    assert len(header_indices) == 3
+    assert header_indices[0] == 0
+    assert header_indices[1] == 11
+    assert header_indices[2] == 22
+
+
+def test_header_repeat_interval_not_at_end():
+    """Test that header is not repeated after the last row."""
+    data = [{"id": i} for i in range(100)]  # Exactly 100 rows
+    result = minemize(data, header_repeat_interval=100)
+    lines = result.split("\n")
+
+    header = "id"
+    header_count = sum(1 for line in lines if line == header)
+
+    # Should only appear once (not repeated after row 100 since it's the last)
+    assert header_count == 1
+
+
+def test_header_repeat_interval_with_separator():
+    """Test header repetition with header_separator (markdown-style)."""
+    from minemizer import presets
+
+    data = [{"a": i, "b": i * 2} for i in range(25)]
+    result = minemize(data, preset=presets.markdown, header_repeat_interval=10)
+    lines = result.split("\n")
+
+    # Count header blocks (header + separator)
+    header_block_count = sum(1 for line in lines if "---" in line)
+
+    # Should have 3 separator rows (initial + 2 repeats)
+    assert header_block_count == 3
+
+
+def test_config_derive_with_none():
+    """Test that derive() correctly handles explicit None values."""
+    from minemizer.config import Config
+
+    cfg = Config(header_repeat_interval=100)
+    derived = cfg.derive(header_repeat_interval=None)
+
+    assert derived.header_repeat_interval is None
+    assert cfg.header_repeat_interval == 100  # Original unchanged

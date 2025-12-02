@@ -1,6 +1,10 @@
 """Global configuration for minemizer."""
 
 from dataclasses import dataclass, replace
+from typing import Any
+
+# Sentinel for "not provided" (distinct from None)
+_NOT_PROVIDED: Any = object()
 
 
 @dataclass
@@ -22,6 +26,8 @@ class Config:
     header_separator: str | None = None
     wrap_lines: str | None = None
     common_optimizations: bool = True  # Use :true/:false/:null (single tokens in most tokenizers)
+    header_repeat_interval: int | None = 100  # Repeat header every N data rows (None = no repeat)
+    strip_trailing_delimiter: bool = True  # Strip trailing delimiter before newlines (disable for markdown)
 
     @property
     def spaced_delimiter(self) -> str:
@@ -84,8 +90,11 @@ class Config:
         return text
 
     def derive(self, **overrides) -> "Config":
-        """Create a new Config with non-None overrides applied."""
-        filtered = {k: v for k, v in overrides.items() if v is not None}
+        """Create a new Config with overrides applied.
+
+        Uses _NOT_PROVIDED sentinel to distinguish between "not provided" and explicit None.
+        """
+        filtered = {k: v for k, v in overrides.items() if v is not _NOT_PROVIDED}
         return replace(self, **filtered) if filtered else self
 
 
@@ -111,6 +120,7 @@ class presets:  # noqa: N801 - lowercase intentional for API style
         use_spaces=True,
         header_separator="---",
         wrap_lines="|",
+        strip_trailing_delimiter=False,  # Keep trailing | for proper markdown tables
     )
 
     # CSV: standard comma-separated values

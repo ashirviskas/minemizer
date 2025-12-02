@@ -105,7 +105,19 @@ class LLMAccuracyBenchmark:
         self.model = model
         self.endpoint = endpoint
         self.concurrency = concurrency
-        self.formats = formats or ["json_pretty", "json_min", "yaml", "minemizer", "minemizer_compact"]
+        self.formats = formats or [
+            "json_pretty",
+            "json_min",
+            "yaml",
+            "csv",
+            "tsv",
+            "toon",
+            "tson",
+            "minemizer",
+            "minemizer_no_repeat",
+            "minemizer_compact",
+            "minemizer_compact_no_repeat",
+        ]
         self.save_interval = save_interval
         self.verbose = verbose
 

@@ -4,7 +4,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
 
-from minemizer.config import Config
+from minemizer.config import _NOT_PROVIDED, Config
 from minemizer.config import config as _global_config
 
 
@@ -245,11 +245,19 @@ def _serialize(data: list[dict], cfg: Config) -> str:
     rows = [cfg.cleanup(_format_row(item, header, cfg)) for item in data]
     header_str = cfg.cleanup(cfg.spaced_delimiter.join(h.to_string() for h in header))
 
-    lines = [header_str]
+    # Build header block (header + optional separator)
+    header_block = [header_str]
     if cfg.header_separator:
         sep_row = cfg.spaced_delimiter.join(cfg.header_separator for _ in header)
-        lines.append(sep_row)
-    lines.extend(rows)
+        header_block.append(sep_row)
+
+    # Insert header at start and optionally repeat every N rows
+    lines = list(header_block)
+    for i, row in enumerate(rows):
+        lines.append(row)
+        # Insert header after every N data rows (not after the last row)
+        if cfg.header_repeat_interval and (i + 1) % cfg.header_repeat_interval == 0 and i < len(rows) - 1:
+            lines.extend(header_block)
 
     # Wrap lines with delimiter (e.g., for markdown tables)
     if cfg.wrap_lines:
@@ -257,9 +265,10 @@ def _serialize(data: list[dict], cfg: Config) -> str:
         lines = [f"{w}{line}{w}" for line in lines]
     text_str = "\n".join(lines)
     text_str = text_str.replace(" \n", "\n")
-    # Not me avoiding regex as much as possible
-    for _ in range(3):
-        text_str = text_str.replace(f"{cfg.delimiter}\n", "\n")
+    # Strip trailing delimiter before newlines (but not for markdown tables)
+    if cfg.strip_trailing_delimiter:
+        for _ in range(3):
+            text_str = text_str.replace(f"{cfg.delimiter}\n", "\n")
     if text_str.endswith(" "):
         return text_str[:-1]
     return text_str
@@ -272,13 +281,14 @@ def minemize(
     data: list | dict,
     *,
     preset: Config | None = None,
-    delimiter: str | None = None,
-    use_spaces: bool | None = None,
-    sparsity_threshold: float | None = None,
-    sparse_indicator: str | None = None,
-    header_separator: str | None = None,
-    wrap_lines: str | None = None,
-    common_optimizations: bool | None = None,
+    delimiter: str | None = _NOT_PROVIDED,
+    use_spaces: bool | None = _NOT_PROVIDED,
+    sparsity_threshold: float | None = _NOT_PROVIDED,
+    sparse_indicator: str | None = _NOT_PROVIDED,
+    header_separator: str | None = _NOT_PROVIDED,
+    wrap_lines: str | None = _NOT_PROVIDED,
+    common_optimizations: bool | None = _NOT_PROVIDED,
+    header_repeat_interval: int | None = _NOT_PROVIDED,
 ) -> str:
     """Minimize your data into a compact string format.
 
@@ -292,6 +302,7 @@ def minemize(
         header_separator: Separator row after header, e.g., "---" for markdown tables
         wrap_lines: Wrap each line with this string (e.g., "|" for markdown tables)
         common_optimizations: Use :true/:false/:null for single-token encoding (default: True)
+        header_repeat_interval: Repeat header/schema every N data rows (default: None = no repeat)
 
     Returns:
         str: The minemized representation
@@ -304,6 +315,9 @@ def minemize(
 
         # Custom options
         minemize(data, delimiter="|", header_separator="---")
+
+        # Repeat header every 100 rows for better LLM context
+        minemize(data, header_repeat_interval=100)
     """
     if isinstance(data, dict):
         data = [data]
@@ -322,5 +336,6 @@ def minemize(
         header_separator=header_separator,
         wrap_lines=wrap_lines,
         common_optimizations=common_optimizations,
+        header_repeat_interval=header_repeat_interval,
     )
     return _serialize(data, cfg)
