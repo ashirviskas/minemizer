@@ -7,6 +7,10 @@ name = "minemizer"
 version = "0.1.0"
 description = "Minemize your stuff"
 readme = "README.md"
+license = "MPL-2.0"
+authors = [
+    {name = "Matas Minelga", email = "minematas@gmail.com"},
+]
 requires-python = ">=3.12"
 dependencies = []
 
