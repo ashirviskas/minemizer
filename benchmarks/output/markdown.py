@@ -43,8 +43,8 @@ def generate_markdown(results: BenchmarkResults) -> str:
             "",
             "_Higher is better. ✗ = format cannot represent this data type. \\*\\* = average from partial data._",
             "",
-            "See [token visualization](benchmarks/results/compression/benchmark_tokens.html) for detailed "
-            "tokenization comparison across different tokenizers.",
+            "See [interactive benchmarks](https://ashirviskas.github.io/) or [markdown](benchmarks/results/full_report.md) for detailed "
+            "tokenization and accuracy comparison across different tokenizers and LLMs.",
             "",
         ]
     )

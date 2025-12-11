@@ -8,14 +8,16 @@ See some pretty comparisons at [benchmarks](https://ashirviskas.github.io/)
 Pros
 - Most efficient for token usage among tested formats
 - Human Readable
-- Simple format (basically CSV when data is flat)
+- Simple format - basically CSV when data is flat
 - Simple implementation with no dependencies
+- Second highest accuracy benchmarks on tested LLMs (YAML won in some cases, but at much higher token usage and within margin of error)
 - Flexible
-- No regex in the core, so human readable.
+- No regex in the core, so it is human readable
 
 Cons
 - Not battle tested
-- Not a standard format, so smaller LLMs may not know what to do with it. Bigger LLMs should have no issue, but I can't confirm or deny before I have done any proper benchmarks. 
+- Not a standard format 
+- Not finalized yet
 - Cannot convert the data back to the original format (no parser implemented yet)
 
 PRs are very welcome!
@@ -199,7 +201,7 @@ _Last updated: 2025-12-01_
 
 _Higher is better. ✗ = format cannot represent this data type. \*\* = average from partial data._
 
-See [token visualization](benchmarks/results/compression/benchmark_tokens.html) for detailed tokenization comparison across different tokenizers.
+See [interactive benchmarks](https://ashirviskas.github.io/) or [markdown](benchmarks/results/full_report.md) for detailed tokenization and accuracy comparison across different tokenizers and LLMs.
 <!-- BENCHMARK_END -->
 
 ## Running Benchmarks
