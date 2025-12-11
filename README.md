@@ -226,8 +226,23 @@ uv run python -m benchmarks report --include-all
 
 ## Installation
 
+### pip
 
+```bash
+pip install git+https://github.com/ashirviskas/minemizer.git
+```
 
+### uv
+
+```bash
+uv add git+https://github.com/ashirviskas/minemizer.git
+```
+
+### poetry
+
+```bash
+poetry add git+https://github.com/ashirviskas/minemizer.git
+```
 
 
 ## Future work
