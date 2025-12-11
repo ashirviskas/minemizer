@@ -5,7 +5,7 @@ See some pretty comparisons at [benchmarks](https://ashirviskas.github.io/)
 
 <img width="1677" height="1115" alt="minemizer_first_bench" src="https://github.com/user-attachments/assets/57ff8c98-9438-46db-9a53-a6fdf6350f16" />
 
-Pros
+### Pros
 - Most efficient for token usage among tested formats
 - Human Readable
 - Simple format - basically CSV when data is flat
@@ -14,7 +14,7 @@ Pros
 - Flexible
 - No regex in the core, so it is human readable
 
-Cons
+### Cons
 - Not battle tested
 - Not a standard format 
 - Not finalized yet
