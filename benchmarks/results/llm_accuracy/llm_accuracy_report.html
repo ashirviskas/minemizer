@@ -67,22 +67,15 @@ td:first-child, th:first-child { text-align: left; }
 <h3>nested_1000</h3>
 <table class='summary-table'>
 <tr><th>Format</th><th>Efficiency</th><th>Acc</th><th>Tokens</th><th>og_chars/tok</th><th>Latency (WIP)</th></tr>
-<tr><td data-sort='minemizer'>minemizer</td><td class='col-best' style='background:#afff96;' data-sort='1.1831'>1.18</td><td style='background:#b4fb99;' data-sort='0.4775'>47.8%</td><td style='background:#b4fb99;' data-sort='33454'>33.5k</td><td style='background:#bcf59e;' data-sort='6.8824'>6.9</td><td data-sort='4090'>4090ms</td></tr>
-<tr><td data-sort='minemizer_compact'>minemizer_compact</td><td style='background:#b3fc98;' data-sort='1.1442'>1.14</td><td style='background:#c3f1a2;' data-sort='0.4425'>44.2%</td><td style='background:#b2fc98;' data-sort='32054'>32.1k</td><td style='background:#b8f89b;' data-sort='7.1828'>7.2</td><td data-sort='3977'>3977ms</td></tr>
-<tr><td data-sort='minemizer_compact_no_repeat'>minemizer_compact_no_repeat</td><td style='background:#bcf59e;' data-sort='1.0588'>1.06</td><td style='background:#d1e7ab;' data-sort='0.4075'>40.8%</td><td style='background:#b2fc98;' data-sort='31902'>31.9k</td><td style='background:#b7f99b;' data-sort='7.2172'>7.2</td><td data-sort='3687'>3687ms</td></tr>
-<tr><td data-sort='minemizer_no_repeat'>minemizer_no_repeat</td><td style='background:#c0f3a0;' data-sort='1.0208'>1.02</td><td style='background:#d0e7ab;' data-sort='0.4100'>41.0%</td><td style='background:#b4fb99;' data-sort='33292'>33.3k</td><td style='background:#bcf59e;' data-sort='6.9159'>6.9</td><td data-sort='3876'>3876ms</td></tr>
-<tr><td data-sort='tson'>tson</td><td style='background:#d3e5ac;' data-sort='0.8363'>0.84</td><td style='background:#ffc8c8;' data-sort='0.3000'>30.0%</td><td class='col-best' style='background:#afff96;' data-sort='29733'>29.7k</td><td class='col-best' style='background:#afff96;' data-sort='7.7436'>7.7</td><td data-sort='3632'>3632ms</td></tr>
-<tr><td data-sort='yaml'>yaml</td><td style='background:#e2dbb6;' data-sort='0.6937'>0.69</td><td class='col-best' style='background:#afff96;' data-sort='0.4900'>49.0%</td><td style='background:#dae1b1;' data-sort='58546'>58.5k</td><td style='background:#ecd4bc;' data-sort='3.9326'>3.9</td><td data-sort='8244'>8244ms</td></tr>
-<tr><td data-sort='json_min'>json_min</td><td style='background:#e5d9b8;' data-sort='0.6655'>0.67</td><td style='background:#d8e2af;' data-sort='0.3925'>39.2%</td><td style='background:#cbeba8;' data-sort='48886'>48.9k</td><td style='background:#dfddb4;' data-sort='4.7097'>4.7</td><td data-sort='5454'>5454ms</td></tr>
-<tr><td data-sort='toon'>toon</td><td style='background:#ead6ba;' data-sort='0.6229'>0.62</td><td style='background:#c0f2a1;' data-sort='0.4475'>44.8%</td><td style='background:#dbe0b2;' data-sort='59552'>59.6k</td><td style='background:#edd4bd;' data-sort='3.8663'>3.9</td><td data-sort='8381'>8381ms</td></tr>
-<tr><td data-sort='json_pretty'>json_pretty</td><td style='background:#ffc8c8;' data-sort='0.4250'>0.42</td><td style='background:#caeca7;' data-sort='0.4250'>42.5%</td><td style='background:#ffc8c8;' data-sort='82886'>82.9k</td><td style='background:#ffc8c8;' data-sort='2.7778'>2.8</td><td data-sort='6232'>6232ms</td></tr>
-</table>
-<p class='metric-explainer'><strong>Efficiency</strong> = Accuracy × (JSON tokens ÷ Format tokens). Higher is better — balances accuracy with token savings.</p>
-<h3>nested_50</h3>
-<table class='summary-table'>
-<tr><th>Format</th><th>Efficiency</th><th>Acc</th><th>Tokens</th><th>og_chars/tok</th><th>Latency (WIP)</th></tr>
-<tr><td data-sort='json_min'>json_min</td><td class='col-best' style='background:#d7e3af;' data-sort='0.6225'>0.62</td><td class='col-best' style='background:#afff96;' data-sort='0.3800'>38.0%</td><td class='col-best' style='background:#afff96;' data-sort='2665'>2.7k</td><td class='col-best' style='background:#afff96;' data-sort='4.3231'>4.3</td><td data-sort='283'>283ms</td></tr>
-<tr><td data-sort='json_pretty'>json_pretty</td><td style='background:#d7e3af;' data-sort='0.0000'>0.00</td><td style='background:#ffc8c8;' data-sort='0.0000'>0.0%</td><td style='background:#ffc8c8;' data-sort='4366'>4.4k</td><td style='background:#ffc8c8;' data-sort='2.6388'>2.6</td><td data-sort='270'>270ms</td></tr>
+<tr><td data-sort='minemizer'>minemizer</td><td class='col-best gradient-cell' style='background-color:#afff78;' data-sort='1.1831'>1.18</td><td class='gradient-cell' style='background-color:#b4fb7b;' data-sort='0.4775'>47.8%</td><td class='gradient-cell' style='background-color:#b4fb7b;' data-sort='33454'>33.5k</td><td class='gradient-cell' style='background-color:#bcf580;' data-sort='6.8824'>6.9</td><td data-sort='4090'>4090ms</td></tr>
+<tr><td data-sort='minemizer_compact'>minemizer_compact</td><td class='gradient-cell' style='background-color:#b3fc7a;' data-sort='1.1442'>1.14</td><td class='gradient-cell' style='background-color:#c3f184;' data-sort='0.4425'>44.2%</td><td class='gradient-cell' style='background-color:#b2fc7a;' data-sort='32054'>32.1k</td><td class='gradient-cell' style='background-color:#b8f87d;' data-sort='7.1828'>7.2</td><td data-sort='3977'>3977ms</td></tr>
+<tr><td data-sort='minemizer_compact_no_repeat'>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#bcf580;' data-sort='1.0588'>1.06</td><td class='gradient-cell' style='background-color:#d1e78d;' data-sort='0.4075'>40.8%</td><td class='gradient-cell' style='background-color:#b2fc7a;' data-sort='31902'>31.9k</td><td class='gradient-cell' style='background-color:#b7f97d;' data-sort='7.2172'>7.2</td><td data-sort='3687'>3687ms</td></tr>
+<tr><td data-sort='minemizer_no_repeat'>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#c0f382;' data-sort='1.0208'>1.02</td><td class='gradient-cell' style='background-color:#d0e78d;' data-sort='0.4100'>41.0%</td><td class='gradient-cell' style='background-color:#b4fb7b;' data-sort='33292'>33.3k</td><td class='gradient-cell' style='background-color:#bcf580;' data-sort='6.9159'>6.9</td><td data-sort='3876'>3876ms</td></tr>
+<tr><td data-sort='tson'>tson</td><td class='gradient-cell' style='background-color:#d3e58e;' data-sort='0.8363'>0.84</td><td class='gradient-cell' style='background-color:#ffc8aa;' data-sort='0.3000'>30.0%</td><td class='col-best gradient-cell' style='background-color:#afff78;' data-sort='29733'>29.7k</td><td class='col-best gradient-cell' style='background-color:#afff78;' data-sort='7.7436'>7.7</td><td data-sort='3632'>3632ms</td></tr>
+<tr><td data-sort='yaml'>yaml</td><td class='gradient-cell' style='background-color:#e2db98;' data-sort='0.6937'>0.69</td><td class='col-best gradient-cell' style='background-color:#afff78;' data-sort='0.4900'>49.0%</td><td class='gradient-cell' style='background-color:#dae193;' data-sort='58546'>58.5k</td><td class='gradient-cell' style='background-color:#ecd49e;' data-sort='3.9326'>3.9</td><td data-sort='8244'>8244ms</td></tr>
+<tr><td data-sort='json_min'>json_min</td><td class='gradient-cell' style='background-color:#e5d99a;' data-sort='0.6655'>0.67</td><td class='gradient-cell' style='background-color:#d8e291;' data-sort='0.3925'>39.2%</td><td class='gradient-cell' style='background-color:#cbeb8a;' data-sort='48886'>48.9k</td><td class='gradient-cell' style='background-color:#dfdd96;' data-sort='4.7097'>4.7</td><td data-sort='5454'>5454ms</td></tr>
+<tr><td data-sort='toon'>toon</td><td class='gradient-cell' style='background-color:#ead69c;' data-sort='0.6229'>0.62</td><td class='gradient-cell' style='background-color:#c0f283;' data-sort='0.4475'>44.8%</td><td class='gradient-cell' style='background-color:#dbe094;' data-sort='59552'>59.6k</td><td class='gradient-cell' style='background-color:#edd49f;' data-sort='3.8663'>3.9</td><td data-sort='8381'>8381ms</td></tr>
+<tr><td data-sort='json_pretty'>json_pretty</td><td class='gradient-cell' style='background-color:#ffc8aa;' data-sort='0.4250'>0.42</td><td class='gradient-cell' style='background-color:#caec89;' data-sort='0.4250'>42.5%</td><td class='gradient-cell' style='background-color:#ffc8aa;' data-sort='82886'>82.9k</td><td class='gradient-cell' style='background-color:#ffc8aa;' data-sort='2.7778'>2.8</td><td data-sort='6232'>6232ms</td></tr>
 </table>
 <p class='metric-explainer'><strong>Efficiency</strong> = Accuracy × (JSON tokens ÷ Format tokens). Higher is better — balances accuracy with token savings.</p>
 </div>
@@ -93,7 +86,6 @@ td:first-child, th:first-child { text-align: left; }
 <div class='sidebar-tab active' data-model='Qwen3-VL-30B-A3B-Instruct-Q4_K_M.gguf' title='Qwen3-VL-30B-A3B-Instruct-Q4_K_M.gguf'>Qwen3-VL-30B-A3B-I...</div>
 <div class='sidebar-tab' data-model='Qwen3-VL-8B-Instruct-Q8_0' title='Qwen3-VL-8B-Instruct-Q8_0'>Qwen3-VL-8B-Instru...</div>
 <div class='sidebar-tab' data-model='gpt-oss-20b-Q8_0-low' title='gpt-oss-20b-Q8_0-low'>gpt-oss-20b-Q8_0-low</div>
-<div class='sidebar-tab' data-model='Qwen3-0.6B-Q8_0' title='Qwen3-0.6B-Q8_0'>Qwen3-0.6B-Q8_0</div>
 <div class='sidebar-tab' data-model='Phi-4-mini-instruct-Q8_0' title='Phi-4-mini-instruct-Q8_0'>Phi-4-mini-instruc...</div>
 </div>
 </div>
@@ -101,7 +93,6 @@ td:first-child, th:first-child { text-align: left; }
 <div class='tab-group'>
 <div class='tabs' id='dataset-tabs'>
 <div class='tab active' data-dataset='nested_1000'>nested_1000</div>
-<div class='tab' data-dataset='nested_50'>nested_50</div>
 </div>
 </div>
 <div class='tab-content active' id='content-Qwen3-VL-30B-A3B-Instruct-Q4_K_M_gguf-nested_1000' data-model='Qwen3-VL-30B-A3B-Instruct-Q4_K_M.gguf' data-dataset='nested_1000'>
@@ -109,13 +100,13 @@ td:first-child, th:first-child { text-align: left; }
 <table>
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>yaml</td><td class='best'>80.0%</td><td>61,436</td><td>151,241</td><td>2.5</td><td>18577ms</td></tr>
-<tr><td>json_min</td><td style='background:#c7eea5;'>65.0%</td><td>51,900</td><td>148,240</td><td>2.9</td><td>11098ms</td></tr>
-<tr><td>toon</td><td style='background:#c7eea5;'>65.0%</td><td>62,442</td><td>169,250</td><td>2.7</td><td>19448ms</td></tr>
-<tr><td>minemizer</td><td style='background:#c7eea5;'>65.0%</td><td>36,341</td><td>71,848</td><td>2.0</td><td>8367ms</td></tr>
-<tr><td>minemizer_compact</td><td style='background:#c7eea5;'>65.0%</td><td>35,068</td><td>65,768</td><td>1.9</td><td>8172ms</td></tr>
-<tr><td>minemizer_compact_no_repeat</td><td style='background:#d7e3af;'>55.0%</td><td>34,915</td><td>65,291</td><td>1.9</td><td>7569ms</td></tr>
-<tr><td>json_pretty</td><td style='background:#dfdeb4;'>50.0%</td><td>85,900</td><td>230,241</td><td>2.7</td><td>2795ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#dfdeb4;'>50.0%</td><td>36,179</td><td>71,299</td><td>2.0</td><td>7958ms</td></tr>
+<tr><td>json_min</td><td class='gradient-cell' style='background-color:#c7ee87;'>65.0%</td><td>51,900</td><td>148,240</td><td>2.9</td><td>11098ms</td></tr>
+<tr><td>toon</td><td class='gradient-cell' style='background-color:#c7ee87;'>65.0%</td><td>62,442</td><td>169,250</td><td>2.7</td><td>19448ms</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#c7ee87;'>65.0%</td><td>36,341</td><td>71,848</td><td>2.0</td><td>8367ms</td></tr>
+<tr><td>minemizer_compact</td><td class='gradient-cell' style='background-color:#c7ee87;'>65.0%</td><td>35,068</td><td>65,768</td><td>1.9</td><td>8172ms</td></tr>
+<tr><td>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#d7e391;'>55.0%</td><td>34,915</td><td>65,291</td><td>1.9</td><td>7569ms</td></tr>
+<tr><td>json_pretty</td><td class='gradient-cell' style='background-color:#dfde96;'>50.0%</td><td>85,900</td><td>230,241</td><td>2.7</td><td>2795ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#dfde96;'>50.0%</td><td>36,179</td><td>71,299</td><td>2.0</td><td>7958ms</td></tr>
 <tr><td>tson</td><td class='worst'>30.0%</td><td class='best'>32,121</td><td>69,305</td><td>2.2</td><td>7133ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
@@ -1062,13 +1053,13 @@ td:first-child, th:first-child { text-align: left; }
 <table>
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>minemizer</td><td class='best'>58.0%</td><td>36,337</td><td>71,848</td><td>2.0</td><td>3175ms</td></tr>
-<tr><td>yaml</td><td style='background:#b7f89b;'>56.0%</td><td>61,432</td><td>151,241</td><td>2.5</td><td>6600ms</td></tr>
-<tr><td>minemizer_compact</td><td style='background:#b7f89b;'>56.0%</td><td>35,064</td><td>65,768</td><td>1.9</td><td>3202ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#c0f2a1;'>54.0%</td><td>36,175</td><td>71,299</td><td>2.0</td><td>3166ms</td></tr>
-<tr><td>tson</td><td style='background:#d2e6ac;'>50.0%</td><td class='best'>32,117</td><td>69,305</td><td>2.2</td><td>2883ms</td></tr>
-<tr><td>minemizer_compact_no_repeat</td><td style='background:#d2e6ac;'>50.0%</td><td>34,911</td><td>65,291</td><td>1.9</td><td>3080ms</td></tr>
-<tr><td>toon</td><td style='background:#e4dab7;'>46.0%</td><td>62,438</td><td>169,250</td><td>2.7</td><td>6255ms</td></tr>
-<tr><td>json_min</td><td style='background:#edd4bc;'>44.0%</td><td>51,896</td><td>148,240</td><td>2.9</td><td>4151ms</td></tr>
+<tr><td>yaml</td><td class='gradient-cell' style='background-color:#b7f87d;'>56.0%</td><td>61,432</td><td>151,241</td><td>2.5</td><td>6600ms</td></tr>
+<tr><td>minemizer_compact</td><td class='gradient-cell' style='background-color:#b7f87d;'>56.0%</td><td>35,064</td><td>65,768</td><td>1.9</td><td>3202ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#c0f283;'>54.0%</td><td>36,175</td><td>71,299</td><td>2.0</td><td>3166ms</td></tr>
+<tr><td>tson</td><td class='gradient-cell' style='background-color:#d2e68e;'>50.0%</td><td class='best'>32,117</td><td>69,305</td><td>2.2</td><td>2883ms</td></tr>
+<tr><td>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#d2e68e;'>50.0%</td><td>34,911</td><td>65,291</td><td>1.9</td><td>3080ms</td></tr>
+<tr><td>toon</td><td class='gradient-cell' style='background-color:#e4da99;'>46.0%</td><td>62,438</td><td>169,250</td><td>2.7</td><td>6255ms</td></tr>
+<tr><td>json_min</td><td class='gradient-cell' style='background-color:#edd49e;'>44.0%</td><td>51,896</td><td>148,240</td><td>2.9</td><td>4151ms</td></tr>
 <tr><td>json_pretty</td><td class='worst'>40.0%</td><td>85,896</td><td>230,241</td><td>2.7</td><td>10601ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
@@ -3365,13 +3356,13 @@ td:first-child, th:first-child { text-align: left; }
 <table>
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>toon</td><td class='best'>50.0%</td><td>56,695</td><td>169,250</td><td>3.0</td><td>3788ms</td></tr>
-<tr><td>yaml</td><td style='background:#b2fc98;'>48.0%</td><td>55,691</td><td>151,241</td><td>2.7</td><td>3689ms</td></tr>
-<tr><td>json_pretty</td><td style='background:#baf79d;'>44.0%</td><td>79,907</td><td>230,241</td><td>2.9</td><td>5081ms</td></tr>
-<tr><td>json_min</td><td style='background:#baf79d;'>44.0%</td><td>45,907</td><td>148,240</td><td>3.2</td><td>3073ms</td></tr>
-<tr><td>minemizer</td><td style='background:#d1e7ab;'>32.0%</td><td>30,600</td><td>71,848</td><td>2.3</td><td>2818ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#d5e4ad;'>30.0%</td><td>30,438</td><td>71,299</td><td>2.3</td><td>2691ms</td></tr>
-<tr><td>minemizer_compact_no_repeat</td><td style='background:#e8d7b9;'>20.0%</td><td>28,922</td><td>65,291</td><td>2.3</td><td>2672ms</td></tr>
-<tr><td>minemizer_compact</td><td style='background:#ebd5bc;'>18.0%</td><td>29,075</td><td>65,768</td><td>2.3</td><td>2918ms</td></tr>
+<tr><td>yaml</td><td class='gradient-cell' style='background-color:#b2fc7a;'>48.0%</td><td>55,691</td><td>151,241</td><td>2.7</td><td>3689ms</td></tr>
+<tr><td>json_pretty</td><td class='gradient-cell' style='background-color:#baf77f;'>44.0%</td><td>79,907</td><td>230,241</td><td>2.9</td><td>5081ms</td></tr>
+<tr><td>json_min</td><td class='gradient-cell' style='background-color:#baf77f;'>44.0%</td><td>45,907</td><td>148,240</td><td>3.2</td><td>3073ms</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#d1e78d;'>32.0%</td><td>30,600</td><td>71,848</td><td>2.3</td><td>2818ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#d5e48f;'>30.0%</td><td>30,438</td><td>71,299</td><td>2.3</td><td>2691ms</td></tr>
+<tr><td>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#e8d79b;'>20.0%</td><td>28,922</td><td>65,291</td><td>2.3</td><td>2672ms</td></tr>
+<tr><td>minemizer_compact</td><td class='gradient-cell' style='background-color:#ebd59e;'>18.0%</td><td>29,075</td><td>65,768</td><td>2.3</td><td>2918ms</td></tr>
 <tr><td>tson</td><td class='worst'>8.0%</td><td class='best'>27,379</td><td>69,305</td><td>2.5</td><td>2804ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
@@ -5772,568 +5763,18 @@ We need to check if any address city equals Miravale. Let's scan data. The data 
 </div></details>
 </div>
 </div>
-<div class='tab-content' id='content-Qwen3-0_6B-Q8_0-nested_50' data-model='Qwen3-0.6B-Q8_0' data-dataset='nested_50'>
-<div class='meta-info'><strong>Qwen3-0.6B-Q8_0</strong> on nested_50 (50 records) — 50 queries — 2025-12-02</div>
-<table>
-<tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
-<tr><td>json_min</td><td class='best'>38.0%</td><td class='best'>2,665</td><td>7,420</td><td>2.8</td><td>283ms</td></tr>
-<tr><td>json_pretty</td><td class='worst'>0.0%</td><td>4,366</td><td>11,521</td><td>2.6</td><td>270ms</td></tr>
-</table>
-<div class='query-breakdown'>
-<h3>Query Details</h3>
-<details><summary>json_min: 19/50 correct (38%)</summary>
-<div class='query-list'>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id 9t6vxd?</div>
-<div class='query-expected'>Expected: Plexwick</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Duskdale? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 788 Iron Lane?</div>
-<div class='query-expected'>Expected: nvqjt7</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id gv0e38?</div>
-<div class='query-expected'>Expected: Sardoria</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id v3a3zm?</div>
-<div class='query-expected'>Expected: Draland</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id nvqjt7?</div>
-<div class='query-expected'>Expected: Vornmore</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 76 Willow Avenue?</div>
-<div class='query-expected'>Expected: jexq77</div>
-<div class='query-actual'>Actual: A: x9q7m2</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Miramore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Ashaton? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id spk9p3?</div>
-<div class='query-expected'>Expected: Plexmore</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id zw9xa3?</div>
-<div class='query-expected'>Expected: Vornford</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id e9vift?</div>
-<div class='query-expected'>Expected: Tornford</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 690 Crystal Street?</div>
-<div class='query-expected'>Expected: irodxm</div>
-<div class='query-actual'>Actual: A: x5c34d</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Vornmore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: What is the id of the person who lives on 941 Ember Drive?</div>
-<div class='query-expected'>Expected: 65kxvf</div>
-<div class='query-actual'>Actual: A: 65kxvf</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Plexmore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 689 Golden Avenue?</div>
-<div class='query-expected'>Expected: r62gds</div>
-<div class='query-actual'>Actual: A: x9q7m2</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id t3w5uz?</div>
-<div class='query-expected'>Expected: Ashaford</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Brixton? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Zaraport? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Brixport? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the zip for person with id z7srcb?</div>
-<div class='query-expected'>Expected: PA785</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 339 Willow Court?</div>
-<div class='query-expected'>Expected: jlteiy</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Glenford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 806 Willow Drive?</div>
-<div class='query-expected'>Expected: lpu0dk</div>
-<div class='query-actual'>Actual: A: x9q7m2</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 806 Willow Drive?</div>
-<div class='query-expected'>Expected: lpu0dk</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Tornford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 949 Silver Road?</div>
-<div class='query-expected'>Expected: q5c34d</div>
-<div class='query-actual'>Actual: A: 6qicat</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 765 Crystal Place?</div>
-<div class='query-expected'>Expected: 8w5rtw</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Ashaford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 225 Shadow Court?</div>
-<div class='query-expected'>Expected: znofy6</div>
-<div class='query-actual'>Actual: A: x9q7m2</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Zaramore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id nftu2g?</div>
-<div class='query-expected'>Expected: Thelreich</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 973 Silver Avenue?</div>
-<div class='query-expected'>Expected: 4q0b8i</div>
-<div class='query-actual'>Actual: A: x4q0b8i</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Miramore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id zw9xa3?</div>
-<div class='query-expected'>Expected: Velmark</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 689 Golden Avenue?</div>
-<div class='query-expected'>Expected: r62gds</div>
-<div class='query-actual'>Actual: A: x9q7m2</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: What is the id of the person who lives on 941 Ember Drive?</div>
-<div class='query-expected'>Expected: 65kxvf</div>
-<div class='query-actual'>Actual: A: 65kxvf</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 392 Ember Court?</div>
-<div class='query-expected'>Expected: a0l725</div>
-<div class='query-actual'>Actual: A: x9q7m2</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 392 Ember Court?</div>
-<div class='query-expected'>Expected: a0l725</div>
-<div class='query-actual'>Actual: A: x9q7m2</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id ruyf38?</div>
-<div class='query-expected'>Expected: Miramore</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Tornhill? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id sv55ps?</div>
-<div class='query-expected'>Expected: Lornia</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: What is the id of the person who lives on 33 Ember Lane?</div>
-<div class='query-expected'>Expected: xaji0y</div>
-<div class='query-actual'>Actual: A: xaji0y</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id 8w5rtw?</div>
-<div class='query-expected'>Expected: Thelheim</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Ashavale? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id a0l725?</div>
-<div class='query-expected'>Expected: Zarawick</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id a52960?</div>
-<div class='query-expected'>Expected: Glenwick</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item correct'>
-<div class='query-q'>Q: Is there anyone living in Duskford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id v08hhx?</div>
-<div class='query-expected'>Expected: Tornhill</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-</div></details>
-<details><summary>json_pretty: 0/50 correct (0%)</summary>
-<div class='query-list'>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id 9t6vxd?</div>
-<div class='query-expected'>Expected: Plexwick</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Duskdale? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES  
-Q: Is there anyone living in Duskdale? Answer yes or no.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 788 Iron Lane?</div>
-<div class='query-expected'>Expected: nvqjt7</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id gv0e38?</div>
-<div class='query-expected'>Expected: Sardoria</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id v3a3zm?</div>
-<div class='query-expected'>Expected: Draland</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id nvqjt7?</div>
-<div class='query-expected'>Expected: Vornmore</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 76 Willow Avenue?</div>
-<div class='query-expected'>Expected: jexq77</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Miramore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES  
-Q: Is there anyone living in Miramore? Answer yes or no.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Ashaton? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: ANSWER YES  
-Q: Is there anyone living in Ashaton? Answer yes or no.  
-A: YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id spk9p3?</div>
-<div class='query-expected'>Expected: Plexmore</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id zw9xa3?</div>
-<div class='query-expected'>Expected: Vornford</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id e9vift?</div>
-<div class='query-expected'>Expected: Tornford</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 690 Crystal Street?</div>
-<div class='query-expected'>Expected: irodxm</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Vornmore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: Okay, let's tackle the second question first. The user is asking if there's anyone living in Vornmore. I need to look through the provided data.
-
-Looking at the list, there's a person with the id "v08hhx" whose address is in Vornhill. The city is listed as "Vornhill" in their address. The question is about Vornmore, so I need to check if Vornmore is the same as Vornhill. 
-
-Wait, the city in the address for that person is "Vornhill", not Vornmore. So unless there's a</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 941 Ember Drive?</div>
-<div class='query-expected'>Expected: 65kxvf</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Plexmore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: Okay, let's tackle the second question first. The user is asking if there's anyone living in Plexmore. I need to look through the provided data.
-
-Looking at the list, there's a person with the id "l1n759" whose address is "Crestmore". The other addresses are in different cities like Zarawick, Ashaford, etc. So, the answer should be yes. 
-
-Wait, let me double-check. The question is about Plexmore, which is listed as "Crestmore" in the data. Yes, that's correct. So the answer is yes.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 689 Golden Avenue?</div>
-<div class='query-expected'>Expected: r62gds</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id t3w5uz?</div>
-<div class='query-expected'>Expected: Ashaford</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Brixton? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: ANSWER YES  
-Q: Is there anyone living in Brixton? Answer yes or no.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Zaraport? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: Okay, let's tackle the second question first. The user is asking if there's anyone living in Zaraport. I need to look through the provided data.
-
-Looking at the addresses, Zaraport is mentioned in the address section. The entry for the person with id "a0l725" has the address "Zarawick" in the city. Wait, the city is Zarawick, but the street is "392 Ember Court". Then there's another entry with the same city but different street? Let me check again.
-
-Wait, looking at the list, the person with id "</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Brixport? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: ANSWER YES  
-Q: Is there anyone living in Brixport? Answer yes or no.  
-A: ANSWER YES</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the zip for person with id z7srcb?</div>
-<div class='query-expected'>Expected: PA785</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 339 Willow Court?</div>
-<div class='query-expected'>Expected: jlteiy</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Glenford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES  
-Q: Is there anyone living in Glenford? Answer yes or no.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 806 Willow Drive?</div>
-<div class='query-expected'>Expected: lpu0dk</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 806 Willow Drive?</div>
-<div class='query-expected'>Expected: lpu0dk</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Tornford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: ANSWER YES  
-Q: Is there anyone living in Tornford? Answer yes or no.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 949 Silver Road?</div>
-<div class='query-expected'>Expected: q5c34d</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 765 Crystal Place?</div>
-<div class='query-expected'>Expected: 8w5rtw</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Ashaford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: Okay, let's tackle the second question first. The user is asking if there's anyone living in Ashaford. I need to look through the provided data.
-
-Looking at the addresses, the person with id "t3w5uz" has Ashaford as the city. Their address is "Ashaford" in the city field. The other addresses in the list don't mention Ashaford. So the answer should be yes. 
-
-Wait, let me double-check. The other entries have cities like "Plexhaven", "Ashaford", "Vornmore", etc. So yes, there is</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 225 Shadow Court?</div>
-<div class='query-expected'>Expected: znofy6</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Zaramore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES  
-Q: Is there anyone living in Zaramore? Answer yes or no.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id nftu2g?</div>
-<div class='query-expected'>Expected: Thelreich</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 973 Silver Avenue?</div>
-<div class='query-expected'>Expected: 4q0b8i</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Miramore? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: A: YES  
-Q: Is there anyone living in Miramore? Answer yes or no.</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id zw9xa3?</div>
-<div class='query-expected'>Expected: Velmark</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 689 Golden Avenue?</div>
-<div class='query-expected'>Expected: r62gds</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 941 Ember Drive?</div>
-<div class='query-expected'>Expected: 65kxvf</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 392 Ember Court?</div>
-<div class='query-expected'>Expected: a0l725</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 392 Ember Court?</div>
-<div class='query-expected'>Expected: a0l725</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id ruyf38?</div>
-<div class='query-expected'>Expected: Miramore</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Tornhill? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: Okay, let's tackle the second question first. The user is asking if there's anyone living in Tornhill. I need to look through the provided data.
-
-Looking at the list, there's a person named Jomar Sazel with the address in Tornhill. The address for that person is "Ashadale" in the "address" section. Wait, no, let me check again. Wait, the address for Jomar Sazel is "Ashadale" in the "city" field. But the question is about Tornhill. So I need to see if any other person has a</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id sv55ps?</div>
-<div class='query-expected'>Expected: Lornia</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the id of the person who lives on 33 Ember Lane?</div>
-<div class='query-expected'>Expected: xaji0y</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the country for person with id 8w5rtw?</div>
-<div class='query-expected'>Expected: Thelheim</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Ashavale? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: Okay, let's tackle the second question first. The user is asking if there's anyone living in Ashavale. I need to look through the provided data.
-
-Looking at the addresses, the person with id "a0l725" has a street "392 Ember Court" and city "Zarawick", country "Vorvia". The other entries don't mention Ashavale. The question is about Ashavale, which I don't see in the data. So the answer should be no, there isn't anyone living there. But wait, let me double-check. The street in</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id a0l725?</div>
-<div class='query-expected'>Expected: Zarawick</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id a52960?</div>
-<div class='query-expected'>Expected: Glenwick</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: Is there anyone living in Duskford? Answer yes or no.</div>
-<div class='query-expected'>Expected: yes</div>
-<div class='query-actual'>Actual: Okay, let's tackle the second question first. The user is asking if there's anyone living in Duskford. I need to look through the provided data.
-
-Looking at the list, the addresses are given with street, city, zip, and country. Let me scan each entry. The first person's address is 33 Ember Lane, Zarawick, zip NA165, Myrgard. Then Lodor Tiven's address is 95 Stone Lane, Plexhaven, PU759, Draland. Kalix Zutos is 82 Silver Lane, Ashaford, LV</div>
-</div>
-<div class='query-item incorrect'>
-<div class='query-q'>Q: What is the city for person with id v08hhx?</div>
-<div class='query-expected'>Expected: Tornhill</div>
-<div class='query-actual'>Actual: A: ANSWER</div>
-</div>
-</div></details>
-</div>
-</div>
 <div class='tab-content' id='content-Phi-4-mini-instruct-Q8_0-nested_1000' data-model='Phi-4-mini-instruct-Q8_0' data-dataset='nested_1000'>
 <div class='meta-info'><strong>Phi-4-mini-instruct-Q8_0</strong> on nested_1000 (1,000 records) — 50 queries — 2025-12-02</div>
 <table>
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>minemizer_compact</td><td class='best'>38.0%</td><td>29,011</td><td>65,768</td><td>2.3</td><td>1615ms</td></tr>
 <tr><td>minemizer_compact_no_repeat</td><td class='best'>38.0%</td><td>28,858</td><td>65,291</td><td>2.3</td><td>1428ms</td></tr>
-<tr><td>json_pretty</td><td style='background:#b3fb98;'>36.0%</td><td>79,843</td><td>230,241</td><td>2.9</td><td>6448ms</td></tr>
-<tr><td>minemizer</td><td style='background:#b3fb98;'>36.0%</td><td>30,536</td><td>71,848</td><td>2.4</td><td>1998ms</td></tr>
-<tr><td>tson</td><td style='background:#bdf59e;'>32.0%</td><td class='best'>27,315</td><td>69,305</td><td>2.5</td><td>1708ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#c1f2a1;'>30.0%</td><td>30,374</td><td>71,299</td><td>2.3</td><td>1687ms</td></tr>
-<tr><td>toon</td><td style='background:#dedeb3;'>18.0%</td><td>56,631</td><td>169,250</td><td>3.0</td><td>4035ms</td></tr>
-<tr><td>yaml</td><td style='background:#ecd4bc;'>12.0%</td><td>55,627</td><td>151,241</td><td>2.7</td><td>4110ms</td></tr>
+<tr><td>json_pretty</td><td class='gradient-cell' style='background-color:#b3fb7a;'>36.0%</td><td>79,843</td><td>230,241</td><td>2.9</td><td>6448ms</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#b3fb7a;'>36.0%</td><td>30,536</td><td>71,848</td><td>2.4</td><td>1998ms</td></tr>
+<tr><td>tson</td><td class='gradient-cell' style='background-color:#bdf580;'>32.0%</td><td class='best'>27,315</td><td>69,305</td><td>2.5</td><td>1708ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#c1f283;'>30.0%</td><td>30,374</td><td>71,299</td><td>2.3</td><td>1687ms</td></tr>
+<tr><td>toon</td><td class='gradient-cell' style='background-color:#dede95;'>18.0%</td><td>56,631</td><td>169,250</td><td>3.0</td><td>4035ms</td></tr>
+<tr><td>yaml</td><td class='gradient-cell' style='background-color:#ecd49e;'>12.0%</td><td>55,627</td><td>151,241</td><td>2.7</td><td>4110ms</td></tr>
 <tr><td>json_min</td><td class='worst'>4.0%</td><td>45,843</td><td>148,240</td><td>3.2</td><td>3493ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>

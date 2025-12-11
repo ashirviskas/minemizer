@@ -1,39 +1,71 @@
 <!DOCTYPE html>
-<html><head>
+<html data-theme='dark'><head>
 <meta charset='utf-8'>
 <title>Minemizer Benchmark Report</title>
 <style>
 
-body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; max-width: 1400px; }
-h1, h2, h3 { color: #333; }
+:root {
+  --bg: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+  --text: #e8e8e8; --text-secondary: #a0a0a0; --border: #3a3a5a;
+  --accent: #4a9eff; --accent-hover: #3a8eef;
+  --best: #4ade80; --worst: #f87171; --table-header: #252545;
+  --token-bg: #2a2a4a; --token-border: #4a4a6a;
+  --stat-chars-bg: #1e3a5f; --stat-chars-border: #2e5a8f; --stat-chars-text: #7cb3e8;
+  --stat-tokens-bg: #3d2a4a; --stat-tokens-border: #5d4a6a; --stat-tokens-text: #c89ed8;
+  --stat-og-bg: #1e3d2a; --stat-og-border: #2e5d4a; --stat-og-text: #7ed8a7;
+  --stat-enc-bg: #3d2a1e; --stat-enc-border: #5d4a2e; --stat-enc-text: #d8a87e;
+  --summary-box-bg: #1e3a5f; --summary-box-border: #2e5a8f; --summary-box-text: #7cb3e8;
+  --correct-bg: #1e3d2a; --incorrect-bg: #3d1e1e;
+}
+[data-theme='light'] {
+  --bg: #ffffff; --bg-secondary: #f5f5f5; --bg-tertiary: #e8e8e8;
+  --text: #333333; --text-secondary: #666666; --border: #dddddd;
+  --accent: #4a9eff; --accent-hover: #3a8eef;
+  --best: #228855; --worst: #c62828; --table-header: #f0f0f0;
+  --token-bg: #f5f5f5; --token-border: #cccccc;
+  --stat-chars-bg: #e3f2fd; --stat-chars-border: #90caf9; --stat-chars-text: #1565c0;
+  --stat-tokens-bg: #f3e5f5; --stat-tokens-border: #ce93d8; --stat-tokens-text: #7b1fa2;
+  --stat-og-bg: #e8f5e9; --stat-og-border: #a5d6a7; --stat-og-text: #2e7d32;
+  --stat-enc-bg: #fff3e0; --stat-enc-border: #ffcc80; --stat-enc-text: #e65100;
+  --summary-box-bg: #e3f2fd; --summary-box-border: #90caf9; --summary-box-text: #1565c0;
+  --correct-bg: #f1f8e9; --incorrect-bg: #ffebee;
+}
+body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; max-width: 1400px;
+  background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+h1, h2, h3 { color: var(--text); }
+a { color: var(--accent); }
+.theme-toggle { position: fixed; top: 16px; right: 16px; padding: 8px 14px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary);
+  color: var(--text); font-size: 14px; transition: all 0.2s; z-index: 1000; }
+.theme-toggle:hover { background: var(--bg-tertiary); border-color: var(--accent); }
 table { border-collapse: collapse; margin: 15px 0; }
-th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: right; }
-th { background: #f0f0f0; font-weight: 600; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: right; }
+th { background: var(--table-header); font-weight: 600; }
 td:first-child, th:first-child { text-align: left; }
-.best { font-weight: bold; color: #228855; }
+.best { font-weight: bold; color: var(--best); }
 .partial-best { font-weight: bold; }
-.worst { color: #c62828; }
-.na { color: #999; font-style: italic; }
+.worst { color: var(--worst); }
+.na { color: var(--text-secondary); font-style: italic; }
 
 /* Summary table */
 .summary-section { margin-bottom: 30px; }
 .summary-table { width: auto; min-width: 680px; }
 .summary-table th, .summary-table td { padding: 8px 12px; }
 .summary-table th { cursor: pointer; user-select: none; }
-.summary-table th:hover { background: #e0e0e0; }
-.summary-table th::after { content: ' ↕'; font-size: 10px; color: #999; }
-.summary-table th.sorted-asc::after { content: ' ▲'; color: #333; }
-.summary-table th.sorted-desc::after { content: ' ▼'; color: #333; }
+.summary-table th:hover { background: var(--bg-tertiary); }
+.summary-table th::after { content: ' ↕'; font-size: 10px; color: var(--text-secondary); }
+.summary-table th.sorted-asc::after { content: ' ▲'; color: var(--text); }
+.summary-table th.sorted-desc::after { content: ' ▼'; color: var(--text); }
 .summary-table .col-best { font-weight: bold; }
-.metric-explainer { font-size: 13px; color: #666; margin-top: 8px; }
+.metric-explainer { font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
 
 /* Section tabs */
-.section-tabs { display: flex; gap: 0; margin: 30px 0 0 0; border-bottom: 3px solid #4a9eff; }
-.section-tab { padding: 12px 24px; cursor: pointer; background: #e8e8e8; border: 1px solid #ddd;
+.section-tabs { display: flex; gap: 0; margin: 30px 0 0 0; border-bottom: 3px solid var(--accent); }
+.section-tab { padding: 12px 24px; cursor: pointer; background: var(--bg-secondary); border: 1px solid var(--border);
   border-bottom: none; border-radius: 8px 8px 0 0; margin-right: 4px; font-weight: 500;
-  transition: all 0.2s; user-select: none; }
-.section-tab:hover { background: #d8d8d8; }
-.section-tab.active { background: #4a9eff; color: white; border-color: #4a9eff; }
+  transition: all 0.2s; user-select: none; color: var(--text); }
+.section-tab:hover { background: var(--bg-tertiary); }
+.section-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
 .section-content { display: none; padding: 20px 0; }
 .section-content.active { display: block; }
 
@@ -41,65 +73,79 @@ td:first-child, th:first-child { text-align: left; }
 .page-layout { display: flex; gap: 20px; }
 .sidebar { position: sticky; top: 20px; align-self: flex-start; width: 140px; flex-shrink: 0; }
 .main-content { flex: 1; max-width: 1100px; }
-.sidebar-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 13px; }
+.sidebar-label { font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; font-size: 13px; }
 .sidebar-tabs { display: flex; flex-direction: column; gap: 4px; }
-.sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid #ddd;
-  border-radius: 6px; background: #f5f5f5; transition: all 0.2s; user-select: none;
-  text-align: center; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sidebar-tab:hover { background: #e8e8e8; border-color: #ccc; }
-.sidebar-tab.active { background: #4a9eff; border-color: #4a9eff; color: white; font-weight: bold; }
-.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid #ddd; }
+.sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg-secondary); transition: all 0.2s; user-select: none;
+  text-align: center; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+.sidebar-tab:hover { background: var(--bg-tertiary); border-color: var(--accent); }
+.sidebar-tab.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: bold; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid var(--border); }
 .tab { padding: 10px 20px; cursor: pointer; border: 1px solid transparent; border-bottom: none;
-  border-radius: 8px 8px 0 0; background: #f5f5f5; margin-bottom: -2px; transition: all 0.2s; user-select: none; }
-.tab:hover { background: #e8e8e8; }
-.tab.active { background: white; border-color: #ddd; border-bottom-color: white; font-weight: bold; }
+  border-radius: 8px 8px 0 0; background: var(--bg-secondary); margin-bottom: -2px; transition: all 0.2s;
+  user-select: none; color: var(--text); }
+.tab:hover { background: var(--bg-tertiary); }
+.tab.active { background: var(--bg); border-color: var(--border); border-bottom-color: var(--bg); font-weight: bold; }
 .tab-content { display: none; padding: 20px 0; }
 .tab-content.active { display: block; }
 
 /* Meta and details */
-.meta-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px; }
-.fixture-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px; }
-.summary-box { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0; }
-.summary-box h3 { margin: 0 0 10px 0; color: #1565c0; font-size: 14px; }
+.meta-info { color: var(--text-secondary); font-size: 14px; margin: 15px 0; padding: 10px;
+  background: var(--bg-secondary); border-radius: 4px; }
+.fixture-info { color: var(--text-secondary); font-size: 14px; margin: 15px 0; padding: 10px;
+  background: var(--bg-secondary); border-radius: 4px; }
+.summary-box { background: var(--summary-box-bg); padding: 15px; border-radius: 8px; margin: 20px 0;
+  border: 1px solid var(--summary-box-border); }
+.summary-box h3 { margin: 0 0 10px 0; color: var(--summary-box-text); font-size: 14px; }
 .summary-box p { margin: 5px 0; font-size: 13px; }
 .query-breakdown { margin-top: 20px; }
 .query-breakdown details { margin: 5px 0; }
-.query-breakdown summary { cursor: pointer; padding: 8px 12px; background: #f5f5f5; border-radius: 4px; font-size: 13px; }
-.query-breakdown summary:hover { background: #e8e8e8; }
-.query-list { font-size: 12px; max-height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px; margin-top: 5px; }
-.query-item { padding: 8px 12px; border-bottom: 1px solid #eee; }
+.query-breakdown summary { cursor: pointer; padding: 8px 12px; background: var(--bg-secondary);
+  border-radius: 4px; font-size: 13px; color: var(--text); }
+.query-breakdown summary:hover { background: var(--bg-tertiary); }
+.query-list { font-size: 12px; max-height: 400px; overflow-y: auto; border: 1px solid var(--border);
+  border-radius: 4px; margin-top: 5px; }
+.query-item { padding: 8px 12px; border-bottom: 1px solid var(--border); }
 .query-item:last-child { border-bottom: none; }
-.query-item.correct { background: #f1f8e9; }
-.query-item.incorrect { background: #ffebee; }
+.query-item.correct { background: var(--correct-bg); }
+.query-item.incorrect { background: var(--incorrect-bg); }
 .query-q { font-weight: 500; margin-bottom: 4px; }
-.query-expected { color: #2e7d32; }
-.query-actual { color: #555; }
-.query-item.incorrect .query-actual { color: #c62828; }
+.query-expected { color: var(--best); }
+.query-actual { color: var(--text-secondary); }
+.query-item.incorrect .query-actual { color: var(--worst); }
 
 /* Compression token visualization */
 .format { margin: 20px 0; }
-.format-header { font-weight: bold; margin-bottom: 8px; color: #555; }
+.format-header { font-weight: bold; margin-bottom: 8px; color: var(--text-secondary); }
 .format-header-row { display: flex; align-items: center; gap: 10px; }
-.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: #f5f5f5;
+.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: var(--bg-secondary);
   padding: 15px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
-.token { display: inline; border: 1px solid #ccc; border-radius: 3px; padding: 1px 2px; margin: 1px; }
-.token-space { background: #ffe8e8 !important; border-color: #daa !important; }
-.token-newline { background: #f0e8ff !important; color: #999; border-color: #c8b8e8 !important; }
+.token { display: inline; border: 1px solid var(--token-border); border-radius: 3px; padding: 1px 2px; margin: 1px; }
+.token-space { background: #4a2a2a !important; border-color: #6a4a4a !important; }
+.token-newline { background: #3a2a4a !important; color: #999; border-color: #5a4a6a !important; }
+[data-theme='light'] .token-space { background: #ffe8e8 !important; border-color: #daa !important; }
+[data-theme='light'] .token-newline { background: #f0e8ff !important; border-color: #c8b8e8 !important; }
 .comparison-table { font-size: 13px; margin: 15px 0 25px 0; }
 .comparison-table th, .comparison-table td { padding: 6px 10px; }
-.stats { color: #666; font-size: 13px; display: block; margin-top: 4px; }
+.stats { color: var(--text-secondary); font-size: 13px; display: block; margin-top: 4px; }
 .stat-item { display: inline-block; margin-right: 12px; padding: 3px 10px; border-radius: 4px; border: 1px solid; }
-.stat-chars { background: #e3f2fd; border-color: #90caf9; color: #1565c0; }
-.stat-tokens { background: #f3e5f5; border-color: #ce93d8; color: #7b1fa2; }
-.stat-og { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
-.stat-enc { background: #fff3e0; border-color: #ffcc80; color: #e65100; }
-.copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid #ccc;
-  border-radius: 4px; background: #fff; color: #555; transition: all 0.2s; }
-.copy-btn:hover { background: #f0f0f0; border-color: #999; }
-.copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }
+.stat-chars { background: var(--stat-chars-bg); border-color: var(--stat-chars-border); color: var(--stat-chars-text); }
+.stat-tokens { background: var(--stat-tokens-bg); border-color: var(--stat-tokens-border); color: var(--stat-tokens-text); }
+.stat-og { background: var(--stat-og-bg); border-color: var(--stat-og-border); color: var(--stat-og-text); }
+.stat-enc { background: var(--stat-enc-bg); border-color: var(--stat-enc-border); color: var(--stat-enc-text); }
+.copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid var(--border);
+  border-radius: 4px; background: var(--bg-secondary); color: var(--text); transition: all 0.2s; }
+.copy-btn:hover { background: var(--bg-tertiary); border-color: var(--accent); }
+.copy-btn.copied { background: #1e3d2a; border-color: #4ade80; color: #4ade80; }
+[data-theme='light'] .copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }
+
+/* Gradient cells - colors adjusted by JS on theme change */
+.gradient-cell { color: #333; transition: background 0.3s, color 0.3s; }
+[data-theme='dark'] .gradient-cell { color: #fff; }
 
 </style>
 </head><body>
+<button class='theme-toggle' onclick='toggleTheme()'>☀️ Light</button>
 <h1>Minemizer Benchmark Report</h1>
 <p>Compare <a href='https://github.com/ashirviskas/minemizer'>minemizer</a> to other encoding formats for LLM token efficiency.</p>
 <div class='summary-section'>
@@ -108,15 +154,15 @@ td:first-child, th:first-child { text-align: left; }
 <h3>nested_1000</h3>
 <table class='summary-table'>
 <tr><th>Format</th><th>Efficiency</th><th>Acc</th><th>Tokens</th><th>og_chars/tok</th><th>Latency (WIP)</th></tr>
-<tr><td data-sort='minemizer'>minemizer</td><td class='col-best' style='background:#afff96;' data-sort='1.1831'>1.18</td><td style='background:#b4fb99;' data-sort='0.4775'>47.8%</td><td style='background:#b4fb99;' data-sort='33454'>33.5k</td><td style='background:#bcf59e;' data-sort='6.8824'>6.9</td><td data-sort='4090'>4090ms</td></tr>
-<tr><td data-sort='minemizer_compact'>minemizer_compact</td><td style='background:#b3fc98;' data-sort='1.1442'>1.14</td><td style='background:#c3f1a2;' data-sort='0.4425'>44.2%</td><td style='background:#b2fc98;' data-sort='32054'>32.1k</td><td style='background:#b8f89b;' data-sort='7.1828'>7.2</td><td data-sort='3977'>3977ms</td></tr>
-<tr><td data-sort='minemizer_compact_no_repeat'>minemizer_compact_no_repeat</td><td style='background:#bcf59e;' data-sort='1.0588'>1.06</td><td style='background:#d1e7ab;' data-sort='0.4075'>40.8%</td><td style='background:#b2fc98;' data-sort='31902'>31.9k</td><td style='background:#b7f99b;' data-sort='7.2172'>7.2</td><td data-sort='3687'>3687ms</td></tr>
-<tr><td data-sort='minemizer_no_repeat'>minemizer_no_repeat</td><td style='background:#c0f3a0;' data-sort='1.0208'>1.02</td><td style='background:#d0e7ab;' data-sort='0.4100'>41.0%</td><td style='background:#b4fb99;' data-sort='33292'>33.3k</td><td style='background:#bcf59e;' data-sort='6.9159'>6.9</td><td data-sort='3876'>3876ms</td></tr>
-<tr><td data-sort='tson'>tson</td><td style='background:#d3e5ac;' data-sort='0.8363'>0.84</td><td style='background:#ffc8c8;' data-sort='0.3000'>30.0%</td><td class='col-best' style='background:#afff96;' data-sort='29733'>29.7k</td><td class='col-best' style='background:#afff96;' data-sort='7.7436'>7.7</td><td data-sort='3632'>3632ms</td></tr>
-<tr><td data-sort='yaml'>yaml</td><td style='background:#e2dbb6;' data-sort='0.6937'>0.69</td><td class='col-best' style='background:#afff96;' data-sort='0.4900'>49.0%</td><td style='background:#dae1b1;' data-sort='58546'>58.5k</td><td style='background:#ecd4bc;' data-sort='3.9326'>3.9</td><td data-sort='8244'>8244ms</td></tr>
-<tr><td data-sort='json_min'>json_min</td><td style='background:#e5d9b8;' data-sort='0.6655'>0.67</td><td style='background:#d8e2af;' data-sort='0.3925'>39.2%</td><td style='background:#cbeba8;' data-sort='48886'>48.9k</td><td style='background:#dfddb4;' data-sort='4.7097'>4.7</td><td data-sort='5454'>5454ms</td></tr>
-<tr><td data-sort='toon'>toon</td><td style='background:#ead6ba;' data-sort='0.6229'>0.62</td><td style='background:#c0f2a1;' data-sort='0.4475'>44.8%</td><td style='background:#dbe0b2;' data-sort='59552'>59.6k</td><td style='background:#edd4bd;' data-sort='3.8663'>3.9</td><td data-sort='8381'>8381ms</td></tr>
-<tr><td data-sort='json_pretty'>json_pretty</td><td style='background:#ffc8c8;' data-sort='0.4250'>0.42</td><td style='background:#caeca7;' data-sort='0.4250'>42.5%</td><td style='background:#ffc8c8;' data-sort='82886'>82.9k</td><td style='background:#ffc8c8;' data-sort='2.7778'>2.8</td><td data-sort='6232'>6232ms</td></tr>
+<tr><td data-sort='minemizer'>minemizer</td><td class='gradient-cell col-best' style='background-color:#afff96;' data-light='#afff96' data-dark='#28b428' data-sort='1.1831'>1.18</td><td class='gradient-cell' style='background-color:#b4fb99;' data-light='#b4fb99' data-dark='#31ac29' data-sort='0.4775'>47.8%</td><td class='gradient-cell' style='background-color:#b4fb99;' data-light='#b4fb99' data-dark='#31ab29' data-sort='33454'>33.5k</td><td class='gradient-cell' style='background-color:#bcf59e;' data-light='#bcf59e' data-dark='#409f2b' data-sort='6.8824'>6.9</td><td data-sort='4090'>4090ms</td></tr>
+<tr><td data-sort='minemizer_compact'>minemizer_compact</td><td class='gradient-cell' style='background-color:#b3fc98;' data-light='#b3fc98' data-dark='#2fad29' data-sort='1.1442'>1.14</td><td class='gradient-cell' style='background-color:#c3f1a2;' data-light='#c3f1a2' data-dark='#4a962d' data-sort='0.4425'>44.2%</td><td class='gradient-cell' style='background-color:#b2fc98;' data-light='#b2fc98' data-dark='#2eae28' data-sort='32054'>32.1k</td><td class='gradient-cell' style='background-color:#b8f89b;' data-light='#b8f89b' data-dark='#37a62a' data-sort='7.1828'>7.2</td><td data-sort='3977'>3977ms</td></tr>
+<tr><td data-sort='minemizer_compact_no_repeat'>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#bcf59e;' data-light='#bcf59e' data-dark='#3ea02b' data-sort='1.0588'>1.06</td><td class='gradient-cell' style='background-color:#d1e7ab;' data-light='#d1e7ab' data-dark='#647f30' data-sort='0.4075'>40.8%</td><td class='gradient-cell' style='background-color:#b2fc98;' data-light='#b2fc98' data-dark='#2daf28' data-sort='31902'>31.9k</td><td class='gradient-cell' style='background-color:#b7f99b;' data-light='#b7f99b' data-dark='#36a72a' data-sort='7.2172'>7.2</td><td data-sort='3687'>3687ms</td></tr>
+<tr><td data-sort='minemizer_no_repeat'>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#c0f3a0;' data-light='#c0f3a0' data-dark='#459a2c' data-sort='1.0208'>1.02</td><td class='gradient-cell' style='background-color:#d0e7ab;' data-light='#d0e7ab' data-dark='#628130' data-sort='0.4100'>41.0%</td><td class='gradient-cell' style='background-color:#b4fb99;' data-light='#b4fb99' data-dark='#31ab29' data-sort='33292'>33.3k</td><td class='gradient-cell' style='background-color:#bcf59e;' data-light='#bcf59e' data-dark='#3f9f2b' data-sort='6.9159'>6.9</td><td data-sort='3876'>3876ms</td></tr>
+<tr><td data-sort='tson'>tson</td><td class='gradient-cell' style='background-color:#d3e5ac;' data-light='#d3e5ac' data-dark='#687d31' data-sort='0.8363'>0.84</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c' data-sort='0.3000'>30.0%</td><td class='gradient-cell col-best' style='background-color:#afff96;' data-light='#afff96' data-dark='#28b428' data-sort='29733'>29.7k</td><td class='gradient-cell col-best' style='background-color:#afff96;' data-light='#afff96' data-dark='#28b428' data-sort='7.7436'>7.7</td><td data-sort='3632'>3632ms</td></tr>
+<tr><td data-sort='yaml'>yaml</td><td class='gradient-cell' style='background-color:#e2dbb6;' data-light='#e2dbb6' data-dark='#826634' data-sort='0.6937'>0.69</td><td class='gradient-cell col-best' style='background-color:#afff96;' data-light='#afff96' data-dark='#28b428' data-sort='0.4900'>49.0%</td><td class='gradient-cell' style='background-color:#dae1b1;' data-light='#dae1b1' data-dark='#737232' data-sort='58546'>58.5k</td><td class='gradient-cell' style='background-color:#ecd4bc;' data-light='#ecd4bc' data-dark='#935737' data-sort='3.9326'>3.9</td><td data-sort='8244'>8244ms</td></tr>
+<tr><td data-sort='json_min'>json_min</td><td class='gradient-cell' style='background-color:#e5d9b8;' data-light='#e5d9b8' data-dark='#876235' data-sort='0.6655'>0.67</td><td class='gradient-cell' style='background-color:#d8e2af;' data-light='#d8e2af' data-dark='#6f7632' data-sort='0.3925'>39.2%</td><td class='gradient-cell' style='background-color:#cbeba8;' data-light='#cbeba8' data-dark='#5a882f' data-sort='48886'>48.9k</td><td class='gradient-cell' style='background-color:#dfddb4;' data-light='#dfddb4' data-dark='#7d6a34' data-sort='4.7097'>4.7</td><td data-sort='5454'>5454ms</td></tr>
+<tr><td data-sort='toon'>toon</td><td class='gradient-cell' style='background-color:#ead6ba;' data-light='#ead6ba' data-dark='#8f5b36' data-sort='0.6229'>0.62</td><td class='gradient-cell' style='background-color:#c0f2a1;' data-light='#c0f2a1' data-dark='#47992c' data-sort='0.4475'>44.8%</td><td class='gradient-cell' style='background-color:#dbe0b2;' data-light='#dbe0b2' data-dark='#767033' data-sort='59552'>59.6k</td><td class='gradient-cell' style='background-color:#edd4bd;' data-light='#edd4bd' data-dark='#955637' data-sort='3.8663'>3.9</td><td data-sort='8381'>8381ms</td></tr>
+<tr><td data-sort='json_pretty'>json_pretty</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c' data-sort='0.4250'>0.42</td><td class='gradient-cell' style='background-color:#caeca7;' data-light='#caeca7' data-dark='#578a2e' data-sort='0.4250'>42.5%</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c' data-sort='82886'>82.9k</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c' data-sort='2.7778'>2.8</td><td data-sort='6232'>6232ms</td></tr>
 </table>
 <p class='metric-explainer'><strong>Efficiency</strong> = Accuracy × (JSON tokens ÷ Format tokens). Higher is better — balances accuracy with token savings.</p>
 </div>
@@ -132,15 +178,15 @@ td:first-child, th:first-child { text-align: left; }
 <p><em>Normalized (JSON pretty = 1.0x, higher is better)</em></p>
 <table>
 <tr><th>Format</th><th>flat</th><th>nested</th><th>lists</th><th>sparse</th><th>complex</th><th>books</th><th>countries</th><th>large_mixed</th><th>large_num</th><th>large_text</th><th>mcp_tools</th><th>avg</th></tr>
-<tr><td>JSON (pretty)</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td><td>1.0x</td></tr>
-<tr><td>JSON (min)</td><td>2.1x</td><td>2.3x</td><td>2.4x</td><td>2.0x</td><td>2.2x</td><td>1.5x</td><td>1.5x</td><td>2.1x</td><td>1.7x</td><td>1.7x</td><td>2.3x</td><td>2.0x</td></tr>
-<tr><td>CSV</td><td>3.4x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td>2.0x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='partial-best'>2.7x</td></tr>
-<tr><td>TSV</td><td>3.4x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td>2.0x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='partial-best'>2.7x</td></tr>
-<tr><td>YAML</td><td>1.8x</td><td>1.8x</td><td>1.8x</td><td>1.8x</td><td>1.7x</td><td>1.3x</td><td>2.1x</td><td>1.7x</td><td>1.4x</td><td>1.5x</td><td>1.5x</td><td>1.7x</td></tr>
-<tr><td>TOON</td><td>3.2x</td><td>1.7x</td><td>1.9x</td><td>1.6x</td><td>1.6x</td><td>2.0x</td><td>2.0x</td><td>1.5x</td><td>1.3x</td><td>1.5x</td><td>1.5x</td><td>1.8x</td></tr>
-<tr><td>TSON</td><td>3.6x</td><td>3.4x</td><td>3.6x</td><td>2.0x</td><td>2.6x</td><td>2.0x</td><td>2.9x</td><td>1.9x</td><td>1.7x</td><td>1.6x</td><td>2.4x</td><td>2.5x</td></tr>
-<tr><td>minemizer</td><td class='best'>4.1x</td><td class='best'>3.5x</td><td class='best'>3.7x</td><td class='best'>3.6x</td><td class='best'>3.1x</td><td>2.0x</td><td class='best'>3.7x</td><td class='best'>2.4x</td><td>1.8x</td><td class='best'>2.2x</td><td>2.9x</td><td class='best'>3.0x</td></tr>
-<tr><td>minemizer (compact)</td><td>3.7x</td><td>3.4x</td><td>3.6x</td><td>3.3x</td><td>3.0x</td><td class='best'>2.1x</td><td>3.6x</td><td>2.4x</td><td class='best'>1.9x</td><td>2.1x</td><td class='best'>2.9x</td><td>2.9x</td></tr>
+<tr><td>JSON (pretty)</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td></tr>
+<tr><td>JSON (min)</td><td class='gradient-cell' style='background-color:#e3dab6;' data-light='#e3dab6' data-dark='#836535'>2.1x</td><td class='gradient-cell' style='background-color:#d5e4ae;' data-light='#d5e4ae' data-dark='#6b7931'>2.3x</td><td class='gradient-cell' style='background-color:#d5e4ad;' data-light='#d5e4ad' data-dark='#6a7a31'>2.4x</td><td class='gradient-cell' style='background-color:#dfddb4;' data-light='#dfddb4' data-dark='#7c6b34'>2.0x</td><td class='gradient-cell' style='background-color:#d0e8aa;' data-light='#d0e8aa' data-dark='#628230'>2.2x</td><td class='gradient-cell' style='background-color:#d8e2af;' data-light='#d8e2af' data-dark='#707632'>1.5x</td><td class='gradient-cell' style='background-color:#f0d1bf;' data-light='#f0d1bf' data-dark='#9b5138'>1.5x</td><td class='gradient-cell' style='background-color:#c1f2a1;' data-light='#c1f2a1' data-dark='#47982c'>2.1x</td><td class='gradient-cell' style='background-color:#c0f2a1;' data-light='#c0f2a1' data-dark='#47992c'>1.7x</td><td class='gradient-cell' style='background-color:#cee9a9;' data-light='#cee9a9' data-dark='#5e852f'>1.7x</td><td class='gradient-cell' style='background-color:#c8eda5;' data-light='#c8eda5' data-dark='#548d2e'>2.3x</td><td class='gradient-cell' style='background-color:#d7e3af;' data-light='#d7e3af' data-dark='#6f7732'>2.0x</td></tr>
+<tr><td>CSV</td><td class='gradient-cell' style='background-color:#c0f3a0;' data-light='#c0f3a0' data-dark='#46992c'>3.4x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='gradient-cell' style='background-color:#b0fd97;' data-light='#b0fd97' data-dark='#2ab128'>2.0x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='gradient-cell partial-best' style='background-color:#b9f79c;' data-light='#b9f79c' data-dark='#3aa42a'>2.7x</td></tr>
+<tr><td>TSV</td><td class='gradient-cell' style='background-color:#c0f2a1;' data-light='#c0f2a1' data-dark='#46992c'>3.4x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='gradient-cell' style='background-color:#b5fa9a;' data-light='#b5fa9a' data-dark='#33a929'>2.0x</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='na'>✗</td><td class='gradient-cell partial-best' style='background-color:#bbf69d;' data-light='#bbf69d' data-dark='#3da12b'>2.7x</td></tr>
+<tr><td>YAML</td><td class='gradient-cell' style='background-color:#e9d6ba;' data-light='#e9d6ba' data-dark='#8e5b36'>1.8x</td><td class='gradient-cell' style='background-color:#e5d9b8;' data-light='#e5d9b8' data-dark='#876235'>1.8x</td><td class='gradient-cell' style='background-color:#e7d8b9;' data-light='#e7d8b9' data-dark='#8a5f36'>1.8x</td><td class='gradient-cell' style='background-color:#e7d8b9;' data-light='#e7d8b9' data-dark='#8a5f36'>1.8x</td><td class='gradient-cell' style='background-color:#e4dab7;' data-light='#e4dab7' data-dark='#846435'>1.7x</td><td class='gradient-cell' style='background-color:#e5d9b8;' data-light='#e5d9b8' data-dark='#876135'>1.3x</td><td class='gradient-cell' style='background-color:#dfddb4;' data-light='#dfddb4' data-dark='#7c6b34'>2.1x</td><td class='gradient-cell' style='background-color:#dae1b0;' data-light='#dae1b0' data-dark='#737332'>1.7x</td><td class='gradient-cell' style='background-color:#dddeb3;' data-light='#dddeb3' data-dark='#7a6d33'>1.4x</td><td class='gradient-cell' style='background-color:#dbe0b1;' data-light='#dbe0b1' data-dark='#757133'>1.5x</td><td class='gradient-cell' style='background-color:#e9d7ba;' data-light='#e9d7ba' data-dark='#8d5c36'>1.5x</td><td class='gradient-cell' style='background-color:#e4dab7;' data-light='#e4dab7' data-dark='#846435'>1.7x</td></tr>
+<tr><td>TOON</td><td class='gradient-cell' style='background-color:#c6eea4;' data-light='#c6eea4' data-dark='#50912d'>3.2x</td><td class='gradient-cell' style='background-color:#e7d8b9;' data-light='#e7d8b9' data-dark='#8a5f36'>1.7x</td><td class='gradient-cell' style='background-color:#e4dab7;' data-light='#e4dab7' data-dark='#856435'>1.9x</td><td class='gradient-cell' style='background-color:#edd4bc;' data-light='#edd4bc' data-dark='#955637'>1.6x</td><td class='gradient-cell' style='background-color:#e6d8b8;' data-light='#e6d8b8' data-dark='#896035'>1.6x</td><td class='gradient-cell' style='background-color:#b1fd97;' data-light='#b1fd97' data-dark='#2cb028'>2.0x</td><td class='gradient-cell' style='background-color:#e1dcb5;' data-light='#e1dcb5' data-dark='#806834'>2.0x</td><td class='gradient-cell' style='background-color:#e1dcb5;' data-light='#e1dcb5' data-dark='#806734'>1.5x</td><td class='gradient-cell' style='background-color:#e4dab7;' data-light='#e4dab7' data-dark='#856335'>1.3x</td><td class='gradient-cell' style='background-color:#e0ddb4;' data-light='#e0ddb4' data-dark='#7e6a34'>1.5x</td><td class='gradient-cell' style='background-color:#e8d7ba;' data-light='#e8d7ba' data-dark='#8c5d36'>1.5x</td><td class='gradient-cell' style='background-color:#dedeb3;' data-light='#dedeb3' data-dark='#7b6c33'>1.8x</td></tr>
+<tr><td>TSON</td><td class='gradient-cell' style='background-color:#bdf59e;' data-light='#bdf59e' data-dark='#409e2b'>3.6x</td><td class='gradient-cell' style='background-color:#b1fd97;' data-light='#b1fd97' data-dark='#2cb028'>3.4x</td><td class='gradient-cell' style='background-color:#b0fe96;' data-light='#b0fe96' data-dark='#29b228'>3.6x</td><td class='gradient-cell' style='background-color:#dedeb3;' data-light='#dedeb3' data-dark='#7b6c33'>2.0x</td><td class='gradient-cell' style='background-color:#c0f2a1;' data-light='#c0f2a1' data-dark='#47992c'>2.6x</td><td class='gradient-cell' style='background-color:#b2fc98;' data-light='#b2fc98' data-dark='#2daf28'>2.0x</td><td class='gradient-cell' style='background-color:#c5efa4;' data-light='#c5efa4' data-dark='#4f922d'>2.9x</td><td class='gradient-cell' style='background-color:#caeba7;' data-light='#caeba7' data-dark='#588a2e'>1.9x</td><td class='gradient-cell' style='background-color:#c5efa4;' data-light='#c5efa4' data-dark='#4f922d'>1.7x</td><td class='gradient-cell' style='background-color:#d4e5ad;' data-light='#d4e5ad' data-dark='#697c31'>1.6x</td><td class='gradient-cell' style='background-color:#c6eea4;' data-light='#c6eea4' data-dark='#51902d'>2.4x</td><td class='gradient-cell' style='background-color:#c1f1a1;' data-light='#c1f1a1' data-dark='#49972c'>2.5x</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>4.1x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>3.5x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>3.7x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>3.6x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>3.1x</td><td class='gradient-cell' style='background-color:#b0fe96;' data-light='#b0fe96' data-dark='#29b228'>2.0x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>3.7x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>2.4x</td><td class='gradient-cell' style='background-color:#b7f99b;' data-light='#b7f99b' data-dark='#36a72a'>1.8x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>2.2x</td><td class='gradient-cell' style='background-color:#b0fe96;' data-light='#b0fe96' data-dark='#2ab128'>2.9x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>3.0x</td></tr>
+<tr><td>minemizer (compact)</td><td class='gradient-cell' style='background-color:#b9f89c;' data-light='#b9f89c' data-dark='#39a42a'>3.7x</td><td class='gradient-cell' style='background-color:#b0fd97;' data-light='#b0fd97' data-dark='#2bb128'>3.4x</td><td class='gradient-cell' style='background-color:#b1fd97;' data-light='#b1fd97' data-dark='#2daf28'>3.6x</td><td class='gradient-cell' style='background-color:#b7f99b;' data-light='#b7f99b' data-dark='#36a72a'>3.3x</td><td class='gradient-cell' style='background-color:#b2fc98;' data-light='#b2fc98' data-dark='#2eae28'>3.0x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>2.1x</td><td class='gradient-cell' style='background-color:#b1fd97;' data-light='#b1fd97' data-dark='#2cb028'>3.6x</td><td class='gradient-cell' style='background-color:#b0fe96;' data-light='#b0fe96' data-dark='#2ab228'>2.4x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>1.9x</td><td class='gradient-cell' style='background-color:#b8f89b;' data-light='#b8f89b' data-dark='#38a52a'>2.1x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>2.9x</td><td class='gradient-cell' style='background-color:#b2fc98;' data-light='#b2fc98' data-dark='#2eae28'>2.9x</td></tr>
 </table>
 </div>
 <div class='summary-section'>
@@ -148,15 +194,15 @@ td:first-child, th:first-child { text-align: left; }
 <p><em>Average efficiency per tokenizer (normalized)</em></p>
 <table>
 <tr><th>Format</th><th>gpt2</th><th>llama</th><th>qwen2.5</th><th>deepseek</th><th>avg</th></tr>
-<tr><td>JSON (pretty)</td><td style='background:#ffc8c8;'>1.0x</td><td style='background:#ffc8c8;'>1.0x</td><td style='background:#ffc8c8;'>1.0x</td><td style='background:#ffc8c8;'>1.0x</td><td style='background:#ffc8c8;'>1.0x</td></tr>
-<tr><td>JSON (min)</td><td style='background:#d1e7ab;'>2.7x</td><td style='background:#dbe0b1;'>1.8x</td><td style='background:#d9e1b0;'>1.7x</td><td style='background:#dddfb2;'>1.7x</td><td style='background:#d7e3af;'>2.0x</td></tr>
-<tr><td>CSV</td><td style='background:#e0e0e0;'>3.2x</td><td style='background:#e0e0e0;'>2.6x</td><td style='background:#e0e0e0;'>2.7x</td><td style='background:#e0e0e0;'>2.5x</td><td style='background:#e0e0e0;'>2.7x</td></tr>
-<tr><td>TSV</td><td style='background:#e0e0e0;'>3.1x</td><td style='background:#e0e0e0;'>2.6x</td><td style='background:#e0e0e0;'>2.7x</td><td style='background:#e0e0e0;'>2.4x</td><td style='background:#e0e0e0;'>2.7x</td></tr>
-<tr><td>YAML</td><td style='background:#e4dab7;'>2.0x</td><td style='background:#e1dcb5;'>1.7x</td><td style='background:#e5d9b8;'>1.5x</td><td style='background:#e6d8b8;'>1.5x</td><td style='background:#e4dab7;'>1.7x</td></tr>
-<tr><td>TOON</td><td style='background:#e5d9b8;'>2.0x</td><td style='background:#d8e2b0;'>1.9x</td><td style='background:#dcdfb2;'>1.7x</td><td style='background:#dcdfb2;'>1.7x</td><td style='background:#dedeb3;'>1.8x</td></tr>
-<tr><td>TSON</td><td style='background:#c4efa3;'>3.2x</td><td style='background:#c3f1a2;'>2.4x</td><td style='background:#bbf69d;'>2.3x</td><td style='background:#c5efa3;'>2.2x</td><td style='background:#c2f1a2;'>2.5x</td></tr>
-<tr><td>minemizer</td><td style='background:#afff96; font-weight:bold;'>4.0x</td><td style='background:#afff96; font-weight:bold;'>2.8x</td><td style='background:#affe96;'>2.6x</td><td style='background:#afff96; font-weight:bold;'>2.6x</td><td style='background:#afff96; font-weight:bold;'>3.0x</td></tr>
-<tr><td>minemizer (compact)</td><td style='background:#b5fa9a;'>3.8x</td><td style='background:#b4fb99;'>2.7x</td><td style='background:#afff96; font-weight:bold;'>2.6x</td><td style='background:#b1fd97;'>2.6x</td><td style='background:#b3fc98;'>2.9x</td></tr>
+<tr><td>JSON (pretty)</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td><td class='gradient-cell' style='background-color:#ffc8c8;' data-light='#ffc8c8' data-dark='#b43c3c'>1.0x</td></tr>
+<tr><td>JSON (min)</td><td class='gradient-cell' style='background-color:#d1e7ab;' data-light='#d1e7ab' data-dark='#638030'>2.7x</td><td class='gradient-cell' style='background-color:#dbe0b1;' data-light='#dbe0b1' data-dark='#757133'>1.8x</td><td class='gradient-cell' style='background-color:#d9e1b0;' data-light='#d9e1b0' data-dark='#727432'>1.7x</td><td class='gradient-cell' style='background-color:#dddfb2;' data-light='#dddfb2' data-dark='#796e33'>1.7x</td><td class='gradient-cell' style='background-color:#d7e3af;' data-light='#d7e3af' data-dark='#6e7732'>2.0x</td></tr>
+<tr><td>CSV</td><td class='gradient-cell incomplete'>3.2x</td><td class='gradient-cell incomplete'>2.6x</td><td class='gradient-cell incomplete'>2.7x</td><td class='gradient-cell incomplete'>2.5x</td><td class='gradient-cell incomplete'>2.7x</td></tr>
+<tr><td>TSV</td><td class='gradient-cell incomplete'>3.1x</td><td class='gradient-cell incomplete'>2.6x</td><td class='gradient-cell incomplete'>2.7x</td><td class='gradient-cell incomplete'>2.4x</td><td class='gradient-cell incomplete'>2.7x</td></tr>
+<tr><td>YAML</td><td class='gradient-cell' style='background-color:#e4dab7;' data-light='#e4dab7' data-dark='#866335'>2.0x</td><td class='gradient-cell' style='background-color:#e1dcb5;' data-light='#e1dcb5' data-dark='#806834'>1.7x</td><td class='gradient-cell' style='background-color:#e5d9b8;' data-light='#e5d9b8' data-dark='#876135'>1.5x</td><td class='gradient-cell' style='background-color:#e6d8b8;' data-light='#e6d8b8' data-dark='#886035'>1.5x</td><td class='gradient-cell' style='background-color:#e4dab7;' data-light='#e4dab7' data-dark='#856335'>1.7x</td></tr>
+<tr><td>TOON</td><td class='gradient-cell' style='background-color:#e5d9b8;' data-light='#e5d9b8' data-dark='#876235'>2.0x</td><td class='gradient-cell' style='background-color:#d8e2b0;' data-light='#d8e2b0' data-dark='#717532'>1.9x</td><td class='gradient-cell' style='background-color:#dcdfb2;' data-light='#dcdfb2' data-dark='#776f33'>1.7x</td><td class='gradient-cell' style='background-color:#dcdfb2;' data-light='#dcdfb2' data-dark='#776f33'>1.7x</td><td class='gradient-cell' style='background-color:#dedeb3;' data-light='#dedeb3' data-dark='#7b6c33'>1.8x</td></tr>
+<tr><td>TSON</td><td class='gradient-cell' style='background-color:#c4efa3;' data-light='#c4efa3' data-dark='#4e932d'>3.2x</td><td class='gradient-cell' style='background-color:#c3f1a2;' data-light='#c3f1a2' data-dark='#4b952d'>2.4x</td><td class='gradient-cell' style='background-color:#bbf69d;' data-light='#bbf69d' data-dark='#3da12b'>2.3x</td><td class='gradient-cell' style='background-color:#c5efa3;' data-light='#c5efa3' data-dark='#4e922d'>2.2x</td><td class='gradient-cell' style='background-color:#c2f1a2;' data-light='#c2f1a2' data-dark='#4a962c'>2.5x</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>4.0x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>2.8x</td><td class='gradient-cell' style='background-color:#affe96;' data-light='#affe96' data-dark='#29b328'>2.6x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>2.6x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>3.0x</td></tr>
+<tr><td>minemizer (compact)</td><td class='gradient-cell' style='background-color:#b5fa9a;' data-light='#b5fa9a' data-dark='#34a929'>3.8x</td><td class='gradient-cell' style='background-color:#b4fb99;' data-light='#b4fb99' data-dark='#31ab29'>2.7x</td><td class='gradient-cell' style='background-color:#afff96; font-weight:bold;' data-light='#afff96' data-dark='#28b428'>2.6x</td><td class='gradient-cell' style='background-color:#b1fd97;' data-light='#b1fd97' data-dark='#2bb028'>2.6x</td><td class='gradient-cell' style='background-color:#b3fc98;' data-light='#b3fc98' data-dark='#2fad29'>2.9x</td></tr>
 </table>
 </div>
 <div class='summary-section'>
@@ -262,12 +308,12 @@ td:first-child, th:first-child { text-align: left; }
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>minemizer_compact</td><td class='best'>38.0%</td><td>29,011</td><td>65,768</td><td>2.3</td><td>1615ms</td></tr>
 <tr><td>minemizer_compact_no_repeat</td><td class='best'>38.0%</td><td>28,858</td><td>65,291</td><td>2.3</td><td>1428ms</td></tr>
-<tr><td>json_pretty</td><td style='background:#b3fb98;'>36.0%</td><td>79,843</td><td>230,241</td><td>2.9</td><td>6448ms</td></tr>
-<tr><td>minemizer</td><td style='background:#b3fb98;'>36.0%</td><td>30,536</td><td>71,848</td><td>2.4</td><td>1998ms</td></tr>
-<tr><td>tson</td><td style='background:#bdf59e;'>32.0%</td><td class='best'>27,315</td><td>69,305</td><td>2.5</td><td>1708ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#c1f2a1;'>30.0%</td><td>30,374</td><td>71,299</td><td>2.3</td><td>1687ms</td></tr>
-<tr><td>toon</td><td style='background:#dedeb3;'>18.0%</td><td>56,631</td><td>169,250</td><td>3.0</td><td>4035ms</td></tr>
-<tr><td>yaml</td><td style='background:#ecd4bc;'>12.0%</td><td>55,627</td><td>151,241</td><td>2.7</td><td>4110ms</td></tr>
+<tr><td>json_pretty</td><td class='gradient-cell' style='background-color:#b3fb98;' data-light='#b3fb98' data-dark='#30ac29'>36.0%</td><td>79,843</td><td>230,241</td><td>2.9</td><td>6448ms</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#b3fb98;' data-light='#b3fb98' data-dark='#30ac29'>36.0%</td><td>30,536</td><td>71,848</td><td>2.4</td><td>1998ms</td></tr>
+<tr><td>tson</td><td class='gradient-cell' style='background-color:#bdf59e;' data-light='#bdf59e' data-dark='#409e2b'>32.0%</td><td class='best'>27,315</td><td>69,305</td><td>2.5</td><td>1708ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#c1f2a1;' data-light='#c1f2a1' data-dark='#48972c'>30.0%</td><td>30,374</td><td>71,299</td><td>2.3</td><td>1687ms</td></tr>
+<tr><td>toon</td><td class='gradient-cell' style='background-color:#dedeb3;' data-light='#dedeb3' data-dark='#7a6d33'>18.0%</td><td>56,631</td><td>169,250</td><td>3.0</td><td>4035ms</td></tr>
+<tr><td>yaml</td><td class='gradient-cell' style='background-color:#ecd4bc;' data-light='#ecd4bc' data-dark='#935837'>12.0%</td><td>55,627</td><td>151,241</td><td>2.7</td><td>4110ms</td></tr>
 <tr><td>json_min</td><td class='worst'>4.0%</td><td>45,843</td><td>148,240</td><td>3.2</td><td>3493ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
@@ -2564,13 +2610,13 @@ td:first-child, th:first-child { text-align: left; }
 <table>
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>yaml</td><td class='best'>80.0%</td><td>61,436</td><td>151,241</td><td>2.5</td><td>18577ms</td></tr>
-<tr><td>json_min</td><td style='background:#c7eea5;'>65.0%</td><td>51,900</td><td>148,240</td><td>2.9</td><td>11098ms</td></tr>
-<tr><td>toon</td><td style='background:#c7eea5;'>65.0%</td><td>62,442</td><td>169,250</td><td>2.7</td><td>19448ms</td></tr>
-<tr><td>minemizer</td><td style='background:#c7eea5;'>65.0%</td><td>36,341</td><td>71,848</td><td>2.0</td><td>8367ms</td></tr>
-<tr><td>minemizer_compact</td><td style='background:#c7eea5;'>65.0%</td><td>35,068</td><td>65,768</td><td>1.9</td><td>8172ms</td></tr>
-<tr><td>minemizer_compact_no_repeat</td><td style='background:#d7e3af;'>55.0%</td><td>34,915</td><td>65,291</td><td>1.9</td><td>7569ms</td></tr>
-<tr><td>json_pretty</td><td style='background:#dfdeb4;'>50.0%</td><td>85,900</td><td>230,241</td><td>2.7</td><td>2795ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#dfdeb4;'>50.0%</td><td>36,179</td><td>71,299</td><td>2.0</td><td>7958ms</td></tr>
+<tr><td>json_min</td><td class='gradient-cell' style='background-color:#c7eea5;' data-light='#c7eea5' data-dark='#51902e'>65.0%</td><td>51,900</td><td>148,240</td><td>2.9</td><td>11098ms</td></tr>
+<tr><td>toon</td><td class='gradient-cell' style='background-color:#c7eea5;' data-light='#c7eea5' data-dark='#51902e'>65.0%</td><td>62,442</td><td>169,250</td><td>2.7</td><td>19448ms</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#c7eea5;' data-light='#c7eea5' data-dark='#51902e'>65.0%</td><td>36,341</td><td>71,848</td><td>2.0</td><td>8367ms</td></tr>
+<tr><td>minemizer_compact</td><td class='gradient-cell' style='background-color:#c7eea5;' data-light='#c7eea5' data-dark='#51902e'>65.0%</td><td>35,068</td><td>65,768</td><td>1.9</td><td>8172ms</td></tr>
+<tr><td>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#d7e3af;' data-light='#d7e3af' data-dark='#6d7832'>55.0%</td><td>34,915</td><td>65,291</td><td>1.9</td><td>7569ms</td></tr>
+<tr><td>json_pretty</td><td class='gradient-cell' style='background-color:#dfdeb4;' data-light='#dfdeb4' data-dark='#7c6c34'>50.0%</td><td>85,900</td><td>230,241</td><td>2.7</td><td>2795ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#dfdeb4;' data-light='#dfdeb4' data-dark='#7c6c34'>50.0%</td><td>36,179</td><td>71,299</td><td>2.0</td><td>7958ms</td></tr>
 <tr><td>tson</td><td class='worst'>30.0%</td><td class='best'>32,121</td><td>69,305</td><td>2.2</td><td>7133ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
@@ -3517,13 +3563,13 @@ td:first-child, th:first-child { text-align: left; }
 <table>
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>minemizer</td><td class='best'>58.0%</td><td>36,337</td><td>71,848</td><td>2.0</td><td>3175ms</td></tr>
-<tr><td>yaml</td><td style='background:#b7f89b;'>56.0%</td><td>61,432</td><td>151,241</td><td>2.5</td><td>6600ms</td></tr>
-<tr><td>minemizer_compact</td><td style='background:#b7f89b;'>56.0%</td><td>35,064</td><td>65,768</td><td>1.9</td><td>3202ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#c0f2a1;'>54.0%</td><td>36,175</td><td>71,299</td><td>2.0</td><td>3166ms</td></tr>
-<tr><td>tson</td><td style='background:#d2e6ac;'>50.0%</td><td class='best'>32,117</td><td>69,305</td><td>2.2</td><td>2883ms</td></tr>
-<tr><td>minemizer_compact_no_repeat</td><td style='background:#d2e6ac;'>50.0%</td><td>34,911</td><td>65,291</td><td>1.9</td><td>3080ms</td></tr>
-<tr><td>toon</td><td style='background:#e4dab7;'>46.0%</td><td>62,438</td><td>169,250</td><td>2.7</td><td>6255ms</td></tr>
-<tr><td>json_min</td><td style='background:#edd4bc;'>44.0%</td><td>51,896</td><td>148,240</td><td>2.9</td><td>4151ms</td></tr>
+<tr><td>yaml</td><td class='gradient-cell' style='background-color:#b7f89b;' data-light='#b7f89b' data-dark='#37a62a'>56.0%</td><td>61,432</td><td>151,241</td><td>2.5</td><td>6600ms</td></tr>
+<tr><td>minemizer_compact</td><td class='gradient-cell' style='background-color:#b7f89b;' data-light='#b7f89b' data-dark='#37a62a'>56.0%</td><td>35,064</td><td>65,768</td><td>1.9</td><td>3202ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#c0f2a1;' data-light='#c0f2a1' data-dark='#47992c'>54.0%</td><td>36,175</td><td>71,299</td><td>2.0</td><td>3166ms</td></tr>
+<tr><td>tson</td><td class='gradient-cell' style='background-color:#d2e6ac;' data-light='#d2e6ac' data-dark='#667e30'>50.0%</td><td class='best'>32,117</td><td>69,305</td><td>2.2</td><td>2883ms</td></tr>
+<tr><td>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#d2e6ac;' data-light='#d2e6ac' data-dark='#667e30'>50.0%</td><td>34,911</td><td>65,291</td><td>1.9</td><td>3080ms</td></tr>
+<tr><td>toon</td><td class='gradient-cell' style='background-color:#e4dab7;' data-light='#e4dab7' data-dark='#856435'>46.0%</td><td>62,438</td><td>169,250</td><td>2.7</td><td>6255ms</td></tr>
+<tr><td>json_min</td><td class='gradient-cell' style='background-color:#edd4bc;' data-light='#edd4bc' data-dark='#945637'>44.0%</td><td>51,896</td><td>148,240</td><td>2.9</td><td>4151ms</td></tr>
 <tr><td>json_pretty</td><td class='worst'>40.0%</td><td>85,896</td><td>230,241</td><td>2.7</td><td>10601ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
@@ -5820,13 +5866,13 @@ td:first-child, th:first-child { text-align: left; }
 <table>
 <tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>
 <tr><td>toon</td><td class='best'>50.0%</td><td>56,695</td><td>169,250</td><td>3.0</td><td>3788ms</td></tr>
-<tr><td>yaml</td><td style='background:#b2fc98;'>48.0%</td><td>55,691</td><td>151,241</td><td>2.7</td><td>3689ms</td></tr>
-<tr><td>json_pretty</td><td style='background:#baf79d;'>44.0%</td><td>79,907</td><td>230,241</td><td>2.9</td><td>5081ms</td></tr>
-<tr><td>json_min</td><td style='background:#baf79d;'>44.0%</td><td>45,907</td><td>148,240</td><td>3.2</td><td>3073ms</td></tr>
-<tr><td>minemizer</td><td style='background:#d1e7ab;'>32.0%</td><td>30,600</td><td>71,848</td><td>2.3</td><td>2818ms</td></tr>
-<tr><td>minemizer_no_repeat</td><td style='background:#d5e4ad;'>30.0%</td><td>30,438</td><td>71,299</td><td>2.3</td><td>2691ms</td></tr>
-<tr><td>minemizer_compact_no_repeat</td><td style='background:#e8d7b9;'>20.0%</td><td>28,922</td><td>65,291</td><td>2.3</td><td>2672ms</td></tr>
-<tr><td>minemizer_compact</td><td style='background:#ebd5bc;'>18.0%</td><td>29,075</td><td>65,768</td><td>2.3</td><td>2918ms</td></tr>
+<tr><td>yaml</td><td class='gradient-cell' style='background-color:#b2fc98;' data-light='#b2fc98' data-dark='#2eae28'>48.0%</td><td>55,691</td><td>151,241</td><td>2.7</td><td>3689ms</td></tr>
+<tr><td>json_pretty</td><td class='gradient-cell' style='background-color:#baf79d;' data-light='#baf79d' data-dark='#3ca22a'>44.0%</td><td>79,907</td><td>230,241</td><td>2.9</td><td>5081ms</td></tr>
+<tr><td>json_min</td><td class='gradient-cell' style='background-color:#baf79d;' data-light='#baf79d' data-dark='#3ca22a'>44.0%</td><td>45,907</td><td>148,240</td><td>3.2</td><td>3073ms</td></tr>
+<tr><td>minemizer</td><td class='gradient-cell' style='background-color:#d1e7ab;' data-light='#d1e7ab' data-dark='#648030'>32.0%</td><td>30,600</td><td>71,848</td><td>2.3</td><td>2818ms</td></tr>
+<tr><td>minemizer_no_repeat</td><td class='gradient-cell' style='background-color:#d5e4ad;' data-light='#d5e4ad' data-dark='#6a7a31'>30.0%</td><td>30,438</td><td>71,299</td><td>2.3</td><td>2691ms</td></tr>
+<tr><td>minemizer_compact_no_repeat</td><td class='gradient-cell' style='background-color:#e8d7b9;' data-light='#e8d7b9' data-dark='#8c5e36'>20.0%</td><td>28,922</td><td>65,291</td><td>2.3</td><td>2672ms</td></tr>
+<tr><td>minemizer_compact</td><td class='gradient-cell' style='background-color:#ebd5bc;' data-light='#ebd5bc' data-dark='#925837'>18.0%</td><td>29,075</td><td>65,768</td><td>2.3</td><td>2918ms</td></tr>
 <tr><td>tson</td><td class='worst'>8.0%</td><td class='best'>27,379</td><td>69,305</td><td>2.5</td><td>2804ms</td></tr>
 <tr><td>csv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
 <tr><td>tsv</td><td>0.0%</td><td>0</td><td>0</td><td>0.0</td><td>0ms</td></tr>
@@ -8260,6 +8306,41 @@ document.querySelectorAll('#dataset-tabs .tab').forEach(tab => {
 </script>
 </div>
 <script>
+// Switch gradient cells between light and dark colors
+function applyGradientTheme(isDark) {
+  document.querySelectorAll('.gradient-cell:not(.incomplete)').forEach(cell => {
+    const color = isDark ? cell.dataset.dark : cell.dataset.light;
+    if (color) cell.style.backgroundColor = color;
+  });
+}
+
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  const isDark = html.dataset.theme !== 'dark';
+  html.dataset.theme = isDark ? 'dark' : 'light';
+  btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('theme', html.dataset.theme);
+  applyGradientTheme(isDark);
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.dataset.theme = saved;
+    const btn = document.querySelector('.theme-toggle');
+    if (btn) btn.textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  // Apply gradient colors after DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => applyGradientTheme(document.documentElement.dataset.theme === 'dark'));
+  } else {
+    applyGradientTheme(document.documentElement.dataset.theme === 'dark');
+  }
+})();
+
 // Section tab switching
 document.querySelectorAll('#section-tabs .section-tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -8300,11 +8381,50 @@ let currentTokenizer = 'gpt2';
 let currentFixture = 'simple_flat';
 const renderedPanels = new Set();
 
-// Golden ratio color generation (matches Python)
+// Switch gradient cells between light and dark colors
+function applyGradientTheme(isDark) {
+  document.querySelectorAll('.gradient-cell:not(.incomplete)').forEach(cell => {
+    const color = isDark ? cell.dataset.dark : cell.dataset.light;
+    if (color) cell.style.backgroundColor = color;
+  });
+}
+
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  const isDark = html.dataset.theme !== 'dark';
+  html.dataset.theme = isDark ? 'dark' : 'light';
+  btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('theme', html.dataset.theme);
+  applyGradientTheme(isDark);
+  // Re-render tokens with new theme colors
+  renderedPanels.clear();
+  renderPanel(currentTokenizer, currentFixture);
+}
+
+// Load saved theme and apply gradient colors
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.dataset.theme = saved;
+    const btn = document.querySelector('.theme-toggle');
+    if (btn) btn.textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => applyGradientTheme(document.documentElement.dataset.theme === 'dark'));
+  } else {
+    applyGradientTheme(document.documentElement.dataset.theme === 'dark');
+  }
+})();
+
+// Golden ratio color generation - theme-aware
 function hashColor(index) {
   const golden = 0.618033988749895;
   const hue = (index * golden) % 1.0;
-  const sat = 0.5, light = 0.85;
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const sat = isDark ? 0.6 : 0.5;
+  const light = isDark ? 0.45 : 0.8;
   const q = light < 0.5 ? light * (1 + sat) : light + sat - light * sat;
   const p = 2 * light - q;
 
@@ -8326,6 +8446,8 @@ function escapeHtml(text) {
 
 function renderTokens(tokens, truncated) {
   let html = '';
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const textColor = isDark ? '#fff' : '#333';
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i];
     const escaped = escapeHtml(token);
@@ -8336,7 +8458,7 @@ function renderTokens(tokens, truncated) {
       const visible = escaped.replace(/ /g, '·').replace(/\t/g, '→');
       html += "<span class='token token-space'>" + visible + "</span>";
     } else {
-      html += "<span class='token' style='background:" + hashColor(i) + "'>" + escaped + "</span>";
+      html += "<span class='token' style='background:" + hashColor(i) + ";color:" + textColor + "'>" + escaped + "</span>";
     }
   }
   if (truncated) {

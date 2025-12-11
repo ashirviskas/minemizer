@@ -538,18 +538,20 @@ def _llm_summary_table(all_results: list[tuple[str, dict]], models: list[str]) -
     return "\n".join(lines)
 
 
-def _gradient_style(val: float, min_val: float, max_val: float, higher_better: bool) -> str:
-    """Generate cell background gradient style."""
-    if max_val == min_val:
-        return ""
-    ratio = (val - min_val) / (max_val - min_val)
-    if not higher_better:
-        ratio = 1 - ratio  # Invert for "lower is better"
-    # Green gradient: bad=red-ish, good=green-ish
-    r = int(255 - ratio * 80)
-    g = int(200 + ratio * 55)
-    b = int(200 - ratio * 50)
-    return f" style='background:#{r:02x}{g:02x}{b:02x};'"
+def _gradient_colors(ratio: float) -> tuple[str, str]:
+    """Generate light and dark mode gradient colors for a ratio (0=bad, 1=good)."""
+    # Light mode: pastel pink-to-green
+    lr, lg, lb = int(255 - ratio * 80), int(200 + ratio * 55), int(200 - ratio * 50)
+    # Dark mode: saturated red-to-green
+    dr, dg, db = int(180 - ratio * 140), int(60 + ratio * 120), int(60 - ratio * 20)
+    return f"#{lr:02x}{lg:02x}{lb:02x}", f"#{dr:02x}{dg:02x}{db:02x}"
+
+
+def _gradient_cell_attrs(ratio: float, extra_cls: str = "") -> str:
+    """Generate gradient cell attributes with light/dark colors."""
+    light, dark = _gradient_colors(ratio)
+    cls = f"gradient-cell {extra_cls}".strip()
+    return f" class='{cls}' style='background-color:{light};' data-light='{light}' data-dark='{dark}'"
 
 
 def _gradient_style_with_best(val: float, min_val: float, max_val: float, higher_better: bool, is_best: bool) -> str:
@@ -560,11 +562,7 @@ def _gradient_style_with_best(val: float, min_val: float, max_val: float, higher
         ratio = (val - min_val) / (max_val - min_val)
         if not higher_better:
             ratio = 1 - ratio
-    r = int(255 - ratio * 80)
-    g = int(200 + ratio * 55)
-    b = int(200 - ratio * 50)
-    cls = " class='col-best'" if is_best else ""
-    return f"{cls} style='background:#{r:02x}{g:02x}{b:02x};'"
+    return _gradient_cell_attrs(ratio, "col-best" if is_best else "")
 
 
 def _llm_sidebar(models: list[str]) -> str:
@@ -700,10 +698,7 @@ def _accuracy_cell_style(acc: float, best: float, worst: float, valid: bool) -> 
     # Gradient between worst and best
     if best > worst:
         ratio = (acc - worst) / (best - worst)
-        r = int(255 - ratio * 80)
-        g = int(200 + ratio * 55)
-        b = int(200 - ratio * 50)
-        return f" style='background:#{r:02x}{g:02x}{b:02x};'"
+        return _gradient_cell_attrs(ratio)
     return ""
 
 
@@ -837,13 +832,14 @@ def _generate_full_report_html(
 
     html = [
         "<!DOCTYPE html>",
-        "<html><head>",
+        "<html data-theme='dark'><head>",
         "<meta charset='utf-8'>",
         "<title>Minemizer Benchmark Report</title>",
         "<style>",
         _full_report_css(),
         "</style>",
         "</head><body>",
+        "<button class='theme-toggle' onclick='toggleTheme()'>☀️ Light</button>",
         "<h1>Minemizer Benchmark Report</h1>",
         "<p>Compare <a href='https://github.com/ashirviskas/minemizer'>minemizer</a> "
         "to other encoding formats for LLM token efficiency.</p>",
@@ -897,38 +893,70 @@ def _generate_full_report_html(
 
 
 def _full_report_css() -> str:
-    """CSS for full report - includes compression HTML styles."""
+    """CSS for full report - includes compression HTML styles with dark/light mode."""
     return """
-body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; max-width: 1400px; }
-h1, h2, h3 { color: #333; }
+:root {
+  --bg: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+  --text: #e8e8e8; --text-secondary: #a0a0a0; --border: #3a3a5a;
+  --accent: #4a9eff; --accent-hover: #3a8eef;
+  --best: #4ade80; --worst: #f87171; --table-header: #252545;
+  --token-bg: #2a2a4a; --token-border: #4a4a6a;
+  --stat-chars-bg: #1e3a5f; --stat-chars-border: #2e5a8f; --stat-chars-text: #7cb3e8;
+  --stat-tokens-bg: #3d2a4a; --stat-tokens-border: #5d4a6a; --stat-tokens-text: #c89ed8;
+  --stat-og-bg: #1e3d2a; --stat-og-border: #2e5d4a; --stat-og-text: #7ed8a7;
+  --stat-enc-bg: #3d2a1e; --stat-enc-border: #5d4a2e; --stat-enc-text: #d8a87e;
+  --summary-box-bg: #1e3a5f; --summary-box-border: #2e5a8f; --summary-box-text: #7cb3e8;
+  --correct-bg: #1e3d2a; --incorrect-bg: #3d1e1e;
+}
+[data-theme='light'] {
+  --bg: #ffffff; --bg-secondary: #f5f5f5; --bg-tertiary: #e8e8e8;
+  --text: #333333; --text-secondary: #666666; --border: #dddddd;
+  --accent: #4a9eff; --accent-hover: #3a8eef;
+  --best: #228855; --worst: #c62828; --table-header: #f0f0f0;
+  --token-bg: #f5f5f5; --token-border: #cccccc;
+  --stat-chars-bg: #e3f2fd; --stat-chars-border: #90caf9; --stat-chars-text: #1565c0;
+  --stat-tokens-bg: #f3e5f5; --stat-tokens-border: #ce93d8; --stat-tokens-text: #7b1fa2;
+  --stat-og-bg: #e8f5e9; --stat-og-border: #a5d6a7; --stat-og-text: #2e7d32;
+  --stat-enc-bg: #fff3e0; --stat-enc-border: #ffcc80; --stat-enc-text: #e65100;
+  --summary-box-bg: #e3f2fd; --summary-box-border: #90caf9; --summary-box-text: #1565c0;
+  --correct-bg: #f1f8e9; --incorrect-bg: #ffebee;
+}
+body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; max-width: 1400px;
+  background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+h1, h2, h3 { color: var(--text); }
+a { color: var(--accent); }
+.theme-toggle { position: fixed; top: 16px; right: 16px; padding: 8px 14px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary);
+  color: var(--text); font-size: 14px; transition: all 0.2s; z-index: 1000; }
+.theme-toggle:hover { background: var(--bg-tertiary); border-color: var(--accent); }
 table { border-collapse: collapse; margin: 15px 0; }
-th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: right; }
-th { background: #f0f0f0; font-weight: 600; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: right; }
+th { background: var(--table-header); font-weight: 600; }
 td:first-child, th:first-child { text-align: left; }
-.best { font-weight: bold; color: #228855; }
+.best { font-weight: bold; color: var(--best); }
 .partial-best { font-weight: bold; }
-.worst { color: #c62828; }
-.na { color: #999; font-style: italic; }
+.worst { color: var(--worst); }
+.na { color: var(--text-secondary); font-style: italic; }
 
 /* Summary table */
 .summary-section { margin-bottom: 30px; }
 .summary-table { width: auto; min-width: 680px; }
 .summary-table th, .summary-table td { padding: 8px 12px; }
 .summary-table th { cursor: pointer; user-select: none; }
-.summary-table th:hover { background: #e0e0e0; }
-.summary-table th::after { content: ' ↕'; font-size: 10px; color: #999; }
-.summary-table th.sorted-asc::after { content: ' ▲'; color: #333; }
-.summary-table th.sorted-desc::after { content: ' ▼'; color: #333; }
+.summary-table th:hover { background: var(--bg-tertiary); }
+.summary-table th::after { content: ' ↕'; font-size: 10px; color: var(--text-secondary); }
+.summary-table th.sorted-asc::after { content: ' ▲'; color: var(--text); }
+.summary-table th.sorted-desc::after { content: ' ▼'; color: var(--text); }
 .summary-table .col-best { font-weight: bold; }
-.metric-explainer { font-size: 13px; color: #666; margin-top: 8px; }
+.metric-explainer { font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
 
 /* Section tabs */
-.section-tabs { display: flex; gap: 0; margin: 30px 0 0 0; border-bottom: 3px solid #4a9eff; }
-.section-tab { padding: 12px 24px; cursor: pointer; background: #e8e8e8; border: 1px solid #ddd;
+.section-tabs { display: flex; gap: 0; margin: 30px 0 0 0; border-bottom: 3px solid var(--accent); }
+.section-tab { padding: 12px 24px; cursor: pointer; background: var(--bg-secondary); border: 1px solid var(--border);
   border-bottom: none; border-radius: 8px 8px 0 0; margin-right: 4px; font-weight: 500;
-  transition: all 0.2s; user-select: none; }
-.section-tab:hover { background: #d8d8d8; }
-.section-tab.active { background: #4a9eff; color: white; border-color: #4a9eff; }
+  transition: all 0.2s; user-select: none; color: var(--text); }
+.section-tab:hover { background: var(--bg-tertiary); }
+.section-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
 .section-content { display: none; padding: 20px 0; }
 .section-content.active { display: block; }
 
@@ -936,62 +964,75 @@ td:first-child, th:first-child { text-align: left; }
 .page-layout { display: flex; gap: 20px; }
 .sidebar { position: sticky; top: 20px; align-self: flex-start; width: 140px; flex-shrink: 0; }
 .main-content { flex: 1; max-width: 1100px; }
-.sidebar-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 13px; }
+.sidebar-label { font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; font-size: 13px; }
 .sidebar-tabs { display: flex; flex-direction: column; gap: 4px; }
-.sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid #ddd;
-  border-radius: 6px; background: #f5f5f5; transition: all 0.2s; user-select: none;
-  text-align: center; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sidebar-tab:hover { background: #e8e8e8; border-color: #ccc; }
-.sidebar-tab.active { background: #4a9eff; border-color: #4a9eff; color: white; font-weight: bold; }
-.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid #ddd; }
+.sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg-secondary); transition: all 0.2s; user-select: none;
+  text-align: center; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+.sidebar-tab:hover { background: var(--bg-tertiary); border-color: var(--accent); }
+.sidebar-tab.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: bold; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid var(--border); }
 .tab { padding: 10px 20px; cursor: pointer; border: 1px solid transparent; border-bottom: none;
-  border-radius: 8px 8px 0 0; background: #f5f5f5; margin-bottom: -2px; transition: all 0.2s; user-select: none; }
-.tab:hover { background: #e8e8e8; }
-.tab.active { background: white; border-color: #ddd; border-bottom-color: white; font-weight: bold; }
+  border-radius: 8px 8px 0 0; background: var(--bg-secondary); margin-bottom: -2px; transition: all 0.2s;
+  user-select: none; color: var(--text); }
+.tab:hover { background: var(--bg-tertiary); }
+.tab.active { background: var(--bg); border-color: var(--border); border-bottom-color: var(--bg); font-weight: bold; }
 .tab-content { display: none; padding: 20px 0; }
 .tab-content.active { display: block; }
 
 /* Meta and details */
-.meta-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px; }
-.fixture-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px; }
-.summary-box { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0; }
-.summary-box h3 { margin: 0 0 10px 0; color: #1565c0; font-size: 14px; }
+.meta-info { color: var(--text-secondary); font-size: 14px; margin: 15px 0; padding: 10px;
+  background: var(--bg-secondary); border-radius: 4px; }
+.fixture-info { color: var(--text-secondary); font-size: 14px; margin: 15px 0; padding: 10px;
+  background: var(--bg-secondary); border-radius: 4px; }
+.summary-box { background: var(--summary-box-bg); padding: 15px; border-radius: 8px; margin: 20px 0;
+  border: 1px solid var(--summary-box-border); }
+.summary-box h3 { margin: 0 0 10px 0; color: var(--summary-box-text); font-size: 14px; }
 .summary-box p { margin: 5px 0; font-size: 13px; }
 .query-breakdown { margin-top: 20px; }
 .query-breakdown details { margin: 5px 0; }
-.query-breakdown summary { cursor: pointer; padding: 8px 12px; background: #f5f5f5; border-radius: 4px; font-size: 13px; }
-.query-breakdown summary:hover { background: #e8e8e8; }
-.query-list { font-size: 12px; max-height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px; margin-top: 5px; }
-.query-item { padding: 8px 12px; border-bottom: 1px solid #eee; }
+.query-breakdown summary { cursor: pointer; padding: 8px 12px; background: var(--bg-secondary);
+  border-radius: 4px; font-size: 13px; color: var(--text); }
+.query-breakdown summary:hover { background: var(--bg-tertiary); }
+.query-list { font-size: 12px; max-height: 400px; overflow-y: auto; border: 1px solid var(--border);
+  border-radius: 4px; margin-top: 5px; }
+.query-item { padding: 8px 12px; border-bottom: 1px solid var(--border); }
 .query-item:last-child { border-bottom: none; }
-.query-item.correct { background: #f1f8e9; }
-.query-item.incorrect { background: #ffebee; }
+.query-item.correct { background: var(--correct-bg); }
+.query-item.incorrect { background: var(--incorrect-bg); }
 .query-q { font-weight: 500; margin-bottom: 4px; }
-.query-expected { color: #2e7d32; }
-.query-actual { color: #555; }
-.query-item.incorrect .query-actual { color: #c62828; }
+.query-expected { color: var(--best); }
+.query-actual { color: var(--text-secondary); }
+.query-item.incorrect .query-actual { color: var(--worst); }
 
 /* Compression token visualization */
 .format { margin: 20px 0; }
-.format-header { font-weight: bold; margin-bottom: 8px; color: #555; }
+.format-header { font-weight: bold; margin-bottom: 8px; color: var(--text-secondary); }
 .format-header-row { display: flex; align-items: center; gap: 10px; }
-.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: #f5f5f5;
+.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: var(--bg-secondary);
   padding: 15px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
-.token { display: inline; border: 1px solid #ccc; border-radius: 3px; padding: 1px 2px; margin: 1px; }
-.token-space { background: #ffe8e8 !important; border-color: #daa !important; }
-.token-newline { background: #f0e8ff !important; color: #999; border-color: #c8b8e8 !important; }
+.token { display: inline; border: 1px solid var(--token-border); border-radius: 3px; padding: 1px 2px; margin: 1px; }
+.token-space { background: #4a2a2a !important; border-color: #6a4a4a !important; }
+.token-newline { background: #3a2a4a !important; color: #999; border-color: #5a4a6a !important; }
+[data-theme='light'] .token-space { background: #ffe8e8 !important; border-color: #daa !important; }
+[data-theme='light'] .token-newline { background: #f0e8ff !important; border-color: #c8b8e8 !important; }
 .comparison-table { font-size: 13px; margin: 15px 0 25px 0; }
 .comparison-table th, .comparison-table td { padding: 6px 10px; }
-.stats { color: #666; font-size: 13px; display: block; margin-top: 4px; }
+.stats { color: var(--text-secondary); font-size: 13px; display: block; margin-top: 4px; }
 .stat-item { display: inline-block; margin-right: 12px; padding: 3px 10px; border-radius: 4px; border: 1px solid; }
-.stat-chars { background: #e3f2fd; border-color: #90caf9; color: #1565c0; }
-.stat-tokens { background: #f3e5f5; border-color: #ce93d8; color: #7b1fa2; }
-.stat-og { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
-.stat-enc { background: #fff3e0; border-color: #ffcc80; color: #e65100; }
-.copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid #ccc;
-  border-radius: 4px; background: #fff; color: #555; transition: all 0.2s; }
-.copy-btn:hover { background: #f0f0f0; border-color: #999; }
-.copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }
+.stat-chars { background: var(--stat-chars-bg); border-color: var(--stat-chars-border); color: var(--stat-chars-text); }
+.stat-tokens { background: var(--stat-tokens-bg); border-color: var(--stat-tokens-border); color: var(--stat-tokens-text); }
+.stat-og { background: var(--stat-og-bg); border-color: var(--stat-og-border); color: var(--stat-og-text); }
+.stat-enc { background: var(--stat-enc-bg); border-color: var(--stat-enc-border); color: var(--stat-enc-text); }
+.copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid var(--border);
+  border-radius: 4px; background: var(--bg-secondary); color: var(--text); transition: all 0.2s; }
+.copy-btn:hover { background: var(--bg-tertiary); border-color: var(--accent); }
+.copy-btn.copied { background: #1e3d2a; border-color: #4ade80; color: #4ade80; }
+[data-theme='light'] .copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }
+
+/* Gradient cells - colors adjusted by JS on theme change */
+.gradient-cell { color: #333; transition: background 0.3s, color 0.3s; }
+[data-theme='dark'] .gradient-cell { color: #fff; }
 """
 
 
@@ -1071,6 +1112,41 @@ document.querySelectorAll('#dataset-tabs .tab').forEach(tab => {{
 def _full_report_script() -> str:
     """JavaScript for full report section tabs and sorting."""
     return """<script>
+// Switch gradient cells between light and dark colors
+function applyGradientTheme(isDark) {
+  document.querySelectorAll('.gradient-cell:not(.incomplete)').forEach(cell => {
+    const color = isDark ? cell.dataset.dark : cell.dataset.light;
+    if (color) cell.style.backgroundColor = color;
+  });
+}
+
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  const isDark = html.dataset.theme !== 'dark';
+  html.dataset.theme = isDark ? 'dark' : 'light';
+  btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('theme', html.dataset.theme);
+  applyGradientTheme(isDark);
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.dataset.theme = saved;
+    const btn = document.querySelector('.theme-toggle');
+    if (btn) btn.textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }
+  // Apply gradient colors after DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => applyGradientTheme(document.documentElement.dataset.theme === 'dark'));
+  } else {
+    applyGradientTheme(document.documentElement.dataset.theme === 'dark');
+  }
+})();
+
 // Section tab switching
 document.querySelectorAll('#section-tabs .section-tab').forEach(tab => {
   tab.addEventListener('click', () => {

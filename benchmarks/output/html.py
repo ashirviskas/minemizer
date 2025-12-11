@@ -16,6 +16,22 @@ from benchmarks.config import (
 )
 from benchmarks.core.formats import convert_to_format
 
+
+def _gradient_colors(ratio: float) -> tuple[str, str]:
+    """Generate light and dark mode gradient colors for a ratio (0=bad, 1=good)."""
+    lr, lg, lb = int(255 - ratio * 80), int(200 + ratio * 55), int(200 - ratio * 50)
+    dr, dg, db = int(180 - ratio * 140), int(60 + ratio * 120), int(60 - ratio * 20)
+    return f"#{lr:02x}{lg:02x}{lb:02x}", f"#{dr:02x}{dg:02x}{db:02x}"
+
+
+def _gradient_cell(ratio: float, content: str, extra_cls: str = "", extra_style: str = "") -> str:
+    """Generate a td with gradient colors."""
+    light, dark = _gradient_colors(ratio)
+    cls = f"gradient-cell {extra_cls}".strip()
+    style = f"background-color:{light};{extra_style}"
+    return f"<td class='{cls}' style='{style}' data-light='{light}' data-dark='{dark}'>{content}</td>"
+
+
 if TYPE_CHECKING:
     from transformers import PreTrainedTokenizerBase
 
@@ -142,63 +158,100 @@ def _truncate_output(output: str) -> tuple[str, bool]:
 
 def _html_head() -> str:
     return """<!DOCTYPE html>
-<html><head>
+<html data-theme='dark'><head>
 <meta charset='utf-8'>
 <title>Minemizer Token Visualization</title>
 <style>
-body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; }
-h1, h2, h3 { color: #333; }
+:root {
+  --bg: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+  --text: #e8e8e8; --text-secondary: #a0a0a0; --border: #3a3a5a;
+  --accent: #4a9eff; --accent-hover: #3a8eef;
+  --best: #4ade80; --table-header: #252545;
+  --token-bg: #2a2a4a; --token-border: #4a4a6a;
+  --stat-chars-bg: #1e3a5f; --stat-chars-border: #2e5a8f; --stat-chars-text: #7cb3e8;
+  --stat-tokens-bg: #3d2a4a; --stat-tokens-border: #5d4a6a; --stat-tokens-text: #c89ed8;
+  --stat-og-bg: #1e3d2a; --stat-og-border: #2e5d4a; --stat-og-text: #7ed8a7;
+  --stat-enc-bg: #3d2a1e; --stat-enc-border: #5d4a2e; --stat-enc-text: #d8a87e;
+}
+[data-theme='light'] {
+  --bg: #ffffff; --bg-secondary: #f5f5f5; --bg-tertiary: #e8e8e8;
+  --text: #333333; --text-secondary: #666666; --border: #dddddd;
+  --accent: #4a9eff; --accent-hover: #3a8eef;
+  --best: #228855; --table-header: #f0f0f0;
+  --token-bg: #f5f5f5; --token-border: #cccccc;
+  --stat-chars-bg: #e3f2fd; --stat-chars-border: #90caf9; --stat-chars-text: #1565c0;
+  --stat-tokens-bg: #f3e5f5; --stat-tokens-border: #ce93d8; --stat-tokens-text: #7b1fa2;
+  --stat-og-bg: #e8f5e9; --stat-og-border: #a5d6a7; --stat-og-text: #2e7d32;
+  --stat-enc-bg: #fff3e0; --stat-enc-border: #ffcc80; --stat-enc-text: #e65100;
+}
+body { font-family: system-ui, sans-serif; margin: 0; padding: 20px;
+  background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+h1, h2, h3 { color: var(--text); }
+a { color: var(--accent); }
+.theme-toggle { position: fixed; top: 16px; right: 16px; padding: 8px 14px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary);
+  color: var(--text); font-size: 14px; transition: all 0.2s; z-index: 1000; }
+.theme-toggle:hover { background: var(--bg-tertiary); border-color: var(--accent); }
 .format { margin: 20px 0; }
-.format-header { font-weight: bold; margin-bottom: 8px; color: #555; }
-.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: #f5f5f5;
+.format-header { font-weight: bold; margin-bottom: 8px; color: var(--text-secondary); }
+.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: var(--bg-secondary);
   padding: 15px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
-.token { display: inline; border: 1px solid #ccc; border-radius: 3px; padding: 1px 2px; margin: 1px; }
-.token-space { background: #ffe8e8 !important; border-color: #daa !important; }
-.token-newline { background: #f0e8ff !important; color: #999; border-color: #c8b8e8 !important; }
-.na { color: #999; font-style: italic; }
+.token { display: inline; border: 1px solid var(--token-border); border-radius: 3px; padding: 1px 2px; margin: 1px; }
+.token-space { background: #4a2a2a !important; border-color: #6a4a4a !important; }
+.token-newline { background: #3a2a4a !important; color: #999; border-color: #5a4a6a !important; }
+[data-theme='light'] .token-space { background: #ffe8e8 !important; border-color: #daa !important; }
+[data-theme='light'] .token-newline { background: #f0e8ff !important; border-color: #c8b8e8 !important; }
+.na { color: var(--text-secondary); font-style: italic; }
 table { border-collapse: collapse; margin: 20px 0; }
-th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: right; }
-th { background: #f0f0f0; font-weight: 600; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: right; }
+th { background: var(--table-header); font-weight: 600; }
 td:first-child, th:first-child { text-align: left; }
-.best { font-weight: bold; color: #228855; }
+.best { font-weight: bold; color: var(--best); }
 .partial-best { font-weight: bold; }
 .summary-section { margin-bottom: 30px; }
 .page-layout { display: flex; gap: 20px; }
 .sidebar { position: sticky; top: 20px; align-self: flex-start; width: 120px; flex-shrink: 0; }
 .main-content { flex: 1; max-width: 1100px; }
-.sidebar-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 13px; }
+.sidebar-label { font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; font-size: 13px; }
 .sidebar-tabs { display: flex; flex-direction: column; gap: 4px; }
-.sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid #ddd;
-  border-radius: 6px; background: #f5f5f5; transition: all 0.2s; user-select: none;
-  text-align: center; font-size: 13px; }
-.sidebar-tab:hover { background: #e8e8e8; border-color: #ccc; }
-.sidebar-tab.active { background: #4a9eff; border-color: #4a9eff; color: white; font-weight: bold; }
-.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid #ddd; }
+.sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg-secondary); transition: all 0.2s; user-select: none;
+  text-align: center; font-size: 13px; color: var(--text); }
+.sidebar-tab:hover { background: var(--bg-tertiary); border-color: var(--accent); }
+.sidebar-tab.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: bold; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid var(--border); }
 .tab { padding: 10px 20px; cursor: pointer; border: 1px solid transparent; border-bottom: none;
-  border-radius: 8px 8px 0 0; background: #f5f5f5; margin-bottom: -2px; transition: all 0.2s;
-  user-select: none; }
-.tab:hover { background: #e8e8e8; }
-.tab.active { background: white; border-color: #ddd; border-bottom-color: white; font-weight: bold; }
+  border-radius: 8px 8px 0 0; background: var(--bg-secondary); margin-bottom: -2px; transition: all 0.2s;
+  user-select: none; color: var(--text); }
+.tab:hover { background: var(--bg-tertiary); }
+.tab.active { background: var(--bg); border-color: var(--border); border-bottom-color: var(--bg); font-weight: bold; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-.fixture-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px;
-  background: #f9f9f9; border-radius: 4px; }
+.fixture-info { color: var(--text-secondary); font-size: 14px; margin: 15px 0; padding: 10px;
+  background: var(--bg-secondary); border-radius: 4px; }
 .comparison-table { font-size: 13px; margin: 15px 0 25px 0; }
 .comparison-table th, .comparison-table td { padding: 6px 10px; }
-.stats { color: #666; font-size: 13px; display: block; margin-top: 4px; }
+.stats { color: var(--text-secondary); font-size: 13px; display: block; margin-top: 4px; }
 .stat-item { display: inline-block; margin-right: 12px; padding: 3px 10px;
   border-radius: 4px; border: 1px solid; }
-.stat-chars { background: #e3f2fd; border-color: #90caf9; color: #1565c0; }
-.stat-tokens { background: #f3e5f5; border-color: #ce93d8; color: #7b1fa2; }
-.stat-og { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
-.stat-enc { background: #fff3e0; border-color: #ffcc80; color: #e65100; }
+.stat-chars { background: var(--stat-chars-bg); border-color: var(--stat-chars-border); color: var(--stat-chars-text); }
+.stat-tokens { background: var(--stat-tokens-bg); border-color: var(--stat-tokens-border); color: var(--stat-tokens-text); }
+.stat-og { background: var(--stat-og-bg); border-color: var(--stat-og-border); color: var(--stat-og-text); }
+.stat-enc { background: var(--stat-enc-bg); border-color: var(--stat-enc-border); color: var(--stat-enc-text); }
 .format-header-row { display: flex; align-items: center; gap: 10px; }
-.copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid #ccc;
-  border-radius: 4px; background: #fff; color: #555; transition: all 0.2s; }
-.copy-btn:hover { background: #f0f0f0; border-color: #999; }
-.copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }
+.copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid var(--border);
+  border-radius: 4px; background: var(--bg-secondary); color: var(--text); transition: all 0.2s; }
+.copy-btn:hover { background: var(--bg-tertiary); border-color: var(--accent); }
+.copy-btn.copied { background: #1e3d2a; border-color: #4ade80; color: #4ade80; }
+[data-theme='light'] .copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }
+/* Gradient cells - dark mode colors set via JS */
+.gradient-cell { color: #333; transition: background-color 0.3s, color 0.3s; }
+.gradient-cell.incomplete { background-color: #e0e0e0; }
+[data-theme='dark'] .gradient-cell { color: #fff; }
+[data-theme='dark'] .gradient-cell.incomplete { background-color: #4a4a6a; color: #ccc; }
 </style>
-</head><body>"""
+</head><body>
+<button class='theme-toggle' onclick='toggleTheme()'>☀️ Light</button>"""
 
 
 def _html_intro() -> str:
@@ -230,8 +283,24 @@ def _summary_table(results: BenchmarkResults, tokenizer_names: list[str]) -> str
     ratios, best_per, baselines = _compute_fixture_ratios(results)
     best_avg, format_complete = _compute_averages(ratios, fixture_names, len(results.fixtures))
 
+    # Compute min/max per fixture column for gradients
+    col_extremes: dict[str, tuple[float, float]] = {}
+    for f in fixture_names:
+        vals = [ratios[fmt].get(f) for fmt in FORMATS if ratios[fmt].get(f) is not None]
+        if vals:
+            col_extremes[f] = (min(vals), max(vals))
+
+    # Compute min/max for avg column
+    avgs = []
     for fmt in FORMATS:
-        row = _summary_row(fmt, fixture_names, ratios, best_per, best_avg, format_complete)
+        vals = [ratios[fmt].get(f) for f in fixture_names if ratios[fmt].get(f) is not None]
+        if vals:
+            avgs.append(sum(vals) / len(vals))
+    if avgs:
+        col_extremes["avg"] = (min(avgs), max(avgs))
+
+    for fmt in FORMATS:
+        row = _summary_row(fmt, fixture_names, ratios, best_per, best_avg, format_complete, col_extremes)
         lines.append("<tr>" + "".join(row) + "</tr>")
 
     lines.extend(["</table>", "</div>"])
@@ -322,11 +391,50 @@ let currentTokenizer = '{tokenizer_names[0]}';
 let currentFixture = '{first_fixture}';
 const renderedPanels = new Set();
 
-// Golden ratio color generation (matches Python)
+// Switch gradient cells between light and dark colors
+function applyGradientTheme(isDark) {{
+  document.querySelectorAll('.gradient-cell:not(.incomplete)').forEach(cell => {{
+    const color = isDark ? cell.dataset.dark : cell.dataset.light;
+    if (color) cell.style.backgroundColor = color;
+  }});
+}}
+
+// Theme toggle
+function toggleTheme() {{
+  const html = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  const isDark = html.dataset.theme !== 'dark';
+  html.dataset.theme = isDark ? 'dark' : 'light';
+  btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('theme', html.dataset.theme);
+  applyGradientTheme(isDark);
+  // Re-render tokens with new theme colors
+  renderedPanels.clear();
+  renderPanel(currentTokenizer, currentFixture);
+}}
+
+// Load saved theme and apply gradient colors
+(function() {{
+  const saved = localStorage.getItem('theme');
+  if (saved) {{
+    document.documentElement.dataset.theme = saved;
+    const btn = document.querySelector('.theme-toggle');
+    if (btn) btn.textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+  }}
+  if (document.readyState === 'loading') {{
+    document.addEventListener('DOMContentLoaded', () => applyGradientTheme(document.documentElement.dataset.theme === 'dark'));
+  }} else {{
+    applyGradientTheme(document.documentElement.dataset.theme === 'dark');
+  }}
+}})();
+
+// Golden ratio color generation - theme-aware
 function hashColor(index) {{
   const golden = 0.618033988749895;
   const hue = (index * golden) % 1.0;
-  const sat = 0.5, light = 0.85;
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const sat = isDark ? 0.6 : 0.5;
+  const light = isDark ? 0.45 : 0.8;
   const q = light < 0.5 ? light * (1 + sat) : light + sat - light * sat;
   const p = 2 * light - q;
 
@@ -348,6 +456,8 @@ function escapeHtml(text) {{
 
 function renderTokens(tokens, truncated) {{
   let html = '';
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const textColor = isDark ? '#fff' : '#333';
   for (let i = 0; i < tokens.length; i++) {{
     const token = tokens[i];
     const escaped = escapeHtml(token);
@@ -358,7 +468,7 @@ function renderTokens(tokens, truncated) {{
       const visible = escaped.replace(/ /g, '·').replace(/\\t/g, '→');
       html += "<span class='token token-space'>" + visible + "</span>";
     }} else {{
-      html += "<span class='token' style='background:" + hashColor(i) + "'>" + escaped + "</span>";
+      html += "<span class='token' style='background:" + hashColor(i) + ";color:" + textColor + "'>" + escaped + "</span>";
     }}
   }}
   if (truncated) {{
@@ -544,8 +654,8 @@ def _compute_averages(ratios, fixture_names, total):
     return best, complete
 
 
-def _summary_row(fmt, fixture_names, ratios, best_per, best_avg, complete):
-    """Generate summary table row."""
+def _summary_row(fmt, fixture_names, ratios, best_per, best_avg, complete, col_extremes):
+    """Generate summary table row with gradient coloring."""
     label = FORMAT_LABELS[fmt]
     row = [f"<td>{label}</td>"]
     vals = []
@@ -556,18 +666,19 @@ def _summary_row(fmt, fixture_names, ratios, best_per, best_avg, complete):
             row.append("<td class='na'>✗</td>")
         else:
             vals.append(r)
-            cls = " class='best'" if r == best_per[f] else ""
-            row.append(f"<td{cls}>{r:.1f}x</td>")
+            mn, mx = col_extremes.get(f, (r, r))
+            ratio = 0.5 if mx == mn else (r - mn) / (mx - mn)
+            extra_style = " font-weight:bold;" if r == best_per[f] else ""
+            row.append(_gradient_cell(ratio, f"{r:.1f}x", extra_style=extra_style))
 
     if vals:
         avg = sum(vals) / len(vals)
         is_complete = complete.get(fmt, False)
-        if is_complete and avg == best_avg:
-            row.append(f"<td class='best'>{avg:.1f}x</td>")
-        elif not is_complete:
-            row.append(f"<td class='partial-best'>{avg:.1f}x</td>")
-        else:
-            row.append(f"<td>{avg:.1f}x</td>")
+        mn, mx = col_extremes.get("avg", (avg, avg))
+        ratio = 0.5 if mx == mn else (avg - mn) / (mx - mn)
+        extra_style = " font-weight:bold;" if is_complete and avg == best_avg else ""
+        extra_cls = "" if is_complete else "partial-best"
+        row.append(_gradient_cell(ratio, f"{avg:.1f}x", extra_cls=extra_cls, extra_style=extra_style))
     else:
         row.append("<td class='na'>N/A</td>")
 
@@ -635,16 +746,11 @@ def _tokenizer_row(fmt, tokenizer_names, data, complete, extremes):
         if val is None:
             row.append("<td class='na'>✗</td>")
         elif not is_complete:
-            row.append(f"<td style='background:#e0e0e0;'>{val:.1f}x</td>")
+            row.append(f"<td class='gradient-cell incomplete'>{val:.1f}x</td>")
         else:
             mn, mx = extremes.get(col, (val, val))
             ratio = 0.5 if mx == mn else (val - mn) / (mx - mn)
-            r = int(255 - ratio * 80)
-            g = int(200 + ratio * 55)
-            b = int(200 - ratio * 50)
-            style = f"background:#{r:02x}{g:02x}{b:02x};"
-            if val == mx:
-                style += " font-weight:bold;"
-            row.append(f"<td style='{style}'>{val:.1f}x</td>")
+            extra_style = " font-weight:bold;" if val == mx else ""
+            row.append(_gradient_cell(ratio, f"{val:.1f}x", extra_style=extra_style))
 
     return row
