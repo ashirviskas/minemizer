@@ -2,9 +2,18 @@
 
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING
 
-from benchmarks.config import FORMAT_LABELS, FORMATS, MAX_EXAMPLE_CHARS, MAX_EXAMPLE_LINES, SHORT_NAMES, TOKENIZERS
+from benchmarks.config import (
+    FORMAT_LABELS,
+    FORMATS,
+    MAX_COPY_CHARS,
+    MAX_EXAMPLE_CHARS,
+    MAX_EXAMPLE_LINES,
+    SHORT_NAMES,
+    TOKENIZERS,
+)
 from benchmarks.core.formats import convert_to_format
 
 if TYPE_CHECKING:
@@ -21,17 +30,114 @@ def generate_html(
     """Generate HTML with token visualization."""
     tokenizer_names = list(tokenizers.keys())
 
+    # Pre-compute all data for JS rendering
+    data_blob = _build_data_blob(results, fixtures, tokenizers, tokenizer_names)
+
     html = [
         _html_head(),
         _html_intro(),
         _summary_table(results, tokenizer_names),
         _tokenizer_format_table(results, tokenizer_names),
-        _comparison_section(results, fixtures, tokenizers, tokenizer_names),
+        _comparison_section(results, tokenizer_names),
+        f"<script>const BENCHMARK_DATA = {json.dumps(data_blob, separators=(',', ':'))};</script>",
         _html_script(tokenizer_names, results.fixtures[0].fixture_name),
         "</body></html>",
     ]
 
     return "\n".join(html)
+
+
+def _build_data_blob(
+    results: BenchmarkResults,
+    fixtures: dict[str, list[dict]],
+    tokenizers: dict[str, PreTrainedTokenizerBase],
+    tokenizer_names: list[str],
+) -> dict:
+    """Build the data blob for JS rendering."""
+    # Format outputs: fixture -> format -> {output, truncated, copyOutput}
+    format_outputs: dict[str, dict[str, dict]] = {}
+
+    # Token data: tokenizer -> fixture -> format -> [token strings]
+    token_data: dict[str, dict[str, dict[str, list[str]]]] = {t: {} for t in tokenizer_names}
+
+    # Stats: fixture -> format -> {chars, tokens: {tokenizer: count}}
+    stats: dict[str, dict[str, dict]] = {}
+
+    # Base chars for each fixture (JSON pretty chars)
+    base_chars: dict[str, int] = {}
+
+    for fixture in results.fixtures:
+        fixture_name = fixture.fixture_name
+        data = fixtures[fixture_name]
+
+        format_outputs[fixture_name] = {}
+        stats[fixture_name] = {}
+
+        # Get base chars from JSON pretty
+        json_result = next(r for r in fixture.results if r.format_name == "json_pretty")
+        base_chars[fixture_name] = json_result.chars or 0
+
+        for tok_name in tokenizer_names:
+            token_data[tok_name][fixture_name] = {}
+
+        for fmt in FORMATS:
+            result = next(r for r in fixture.results if r.format_name == fmt)
+            output = convert_to_format(data, fmt)
+
+            if output is None:
+                format_outputs[fixture_name][fmt] = None
+                stats[fixture_name][fmt] = None
+                for tok_name in tokenizer_names:
+                    token_data[tok_name][fixture_name][fmt] = None
+                continue
+
+            # Truncate for display
+            display_output, truncated = _truncate_output(output)
+
+            # Truncate for copy (larger limit)
+            copy_output = output[:MAX_COPY_CHARS] if len(output) > MAX_COPY_CHARS else output
+            copy_truncated = len(output) > MAX_COPY_CHARS
+
+            format_outputs[fixture_name][fmt] = {
+                "display": display_output,
+                "copy": copy_output,
+                "truncated": truncated,
+                "copyTruncated": copy_truncated,
+                "fullChars": len(output),
+            }
+
+            # Stats
+            stats[fixture_name][fmt] = {
+                "chars": result.chars,
+                "tokens": {t: result.tokens.get(t, 0) for t in tokenizer_names},
+            }
+
+            # Tokenize for each tokenizer
+            for tok_name in tokenizer_names:
+                tokenizer = tokenizers[tok_name]
+                token_ids = tokenizer.encode(display_output)
+                tokens = [tokenizer.decode([tid]) for tid in token_ids]
+                token_data[tok_name][fixture_name][fmt] = tokens
+
+    return {
+        "formatOutputs": format_outputs,
+        "tokenData": token_data,
+        "stats": stats,
+        "baseChars": base_chars,
+        "formatLabels": FORMAT_LABELS,
+        "formats": FORMATS,
+        "tokenizerModels": TOKENIZERS,
+    }
+
+
+def _truncate_output(output: str) -> tuple[str, bool]:
+    """Truncate output for display."""
+    lines_list = output.split("\n")
+    if len(lines_list) > MAX_EXAMPLE_LINES:
+        return "\n".join(lines_list[:MAX_EXAMPLE_LINES]), True
+    if len(output) > MAX_EXAMPLE_CHARS:
+        return output[:MAX_EXAMPLE_CHARS], True
+    return output, False
 
 
 def _html_head() -> str:
@@ -158,11 +264,9 @@ def _tokenizer_format_table(results: BenchmarkResults, tokenizer_names: list[str
 
 def _comparison_section(
     results: BenchmarkResults,
-    fixtures: dict[str, list[dict]],
-    tokenizers: dict[str, PreTrainedTokenizerBase],
     tokenizer_names: list[str],
 ) -> str:
-    """Generate interactive comparison section."""
+    """Generate interactive comparison section with placeholders for JS rendering."""
     lines = [
         "<div class='summary-section'>",
         "<h2>Comparisons</h2>",
@@ -174,12 +278,16 @@ def _comparison_section(
         _fixture_tabs(results.fixtures),
     ]
 
-    # Generate content for each combination
+    # Generate placeholder containers for each tokenizer × fixture combination
     for i, tok_name in enumerate(tokenizer_names):
         for j, fixture in enumerate(results.fixtures):
             active = " active" if i == 0 and j == 0 else ""
-            content = _fixture_content(tok_name, fixture, fixtures[fixture.fixture_name], tokenizers[tok_name], active)
-            lines.append(content)
+            content_id = f"content-{tok_name}-{fixture.fixture_name}"
+            lines.append(
+                f"<div class='tab-content{active}' id='{content_id}' "
+                f"data-tokenizer='{tok_name}' data-fixture='{fixture.fixture_name}'>"
+                f"</div>"
+            )
 
     lines.extend(["</div>", "</div>"])
     return "\n".join(lines)
@@ -208,169 +316,158 @@ def _fixture_tabs(fixtures: list) -> str:
     return "\n".join(lines)
 
 
-def _fixture_content(
-    tok_name: str,
-    fixture,
-    data: list[dict],
-    tokenizer: PreTrainedTokenizerBase,
-    active: str,
-) -> str:
-    json_result = next(r for r in fixture.results if r.format_name == "json_pretty")
-    base_chars = json_result.chars or 0
-
-    content_id = f"content-{tok_name}-{fixture.fixture_name}"
-    lines = [
-        f"<div class='tab-content{active}' id='{content_id}' "
-        f"data-tokenizer='{tok_name}' data-fixture='{fixture.fixture_name}'>",
-        f"<div class='fixture-info'><strong>{fixture.fixture_name}.json</strong> — "
-        f"Original: {base_chars} chars — Tokenizer: {tok_name} ({TOKENIZERS.get(tok_name, '')})</div>",
-        _comparison_table(fixture, tok_name, base_chars),
-    ]
-
-    for fmt in FORMATS:
-        result = next(r for r in fixture.results if r.format_name == fmt)
-        lines.append(_format_block(fmt, result, data, tokenizer, tok_name, fixture.fixture_name, base_chars))
-
-    lines.append("</div>")
-    return "\n".join(lines)
-
-
-def _comparison_table(fixture, tok_name: str, base_chars: int) -> str:
-    lines = [
-        "<table class='comparison-table'>",
-        "<tr><th>Format</th><th>Chars</th><th>Tokens</th><th>chars_og/tok</th><th>enc_chars/tok</th></tr>",
-    ]
-
-    for fmt in FORMATS:
-        result = next(r for r in fixture.results if r.format_name == fmt)
-        label = FORMAT_LABELS[fmt]
-        if result.chars is None:
-            lines.append(f"<tr><td>{label}</td><td colspan='4' class='na'>N/A</td></tr>")
-        else:
-            tok_count = result.tokens.get(tok_name) or 0
-            og_per = base_chars / tok_count if tok_count else 0
-            enc_per = result.chars / tok_count if tok_count else 0
-            lines.append(
-                f"<tr><td>{label}</td><td>{result.chars:,}</td><td>{tok_count:,}</td>"
-                f"<td>{og_per:.1f}</td><td>{enc_per:.1f}</td></tr>"
-            )
-
-    lines.append("</table>")
-    return "\n".join(lines)
-
-
-def _format_block(
-    fmt: str,
-    result,
-    data: list[dict],
-    tokenizer: PreTrainedTokenizerBase,
-    tok_name: str,
-    fixture_name: str,
-    base_chars: int,
-) -> str:
-    label = FORMAT_LABELS[fmt]
-    output = convert_to_format(data, fmt)
-
-    if output is None:
-        return f"<div class='format'><div class='format-header'>{label}: <span class='na'>N/A</span></div></div>"
-
-    tok_count = result.tokens.get(tok_name) or 0
-    chars_count = result.chars or 0
-    og_per = base_chars / tok_count if tok_count else 0
-    enc_per = chars_count / tok_count if tok_count else 0
-    copy_id = f"copy-{tok_name}-{fixture_name}-{fmt}"
-
-    escaped = output.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-    # Truncate for display
-    display = output
-    truncated = False
-    lines_list = output.split("\n")
-    if len(lines_list) > MAX_EXAMPLE_LINES:
-        display = "\n".join(lines_list[:MAX_EXAMPLE_LINES])
-        truncated = True
-    elif len(output) > MAX_EXAMPLE_CHARS:
-        display = output[:MAX_EXAMPLE_CHARS]
-        truncated = True
-
-    token_ids = tokenizer.encode(display)
-    tokens = [tokenizer.decode([tid]) for tid in token_ids]
-    token_html = _render_tokens(tokens, truncated)
-
-    return f"""<div class='format'>
-<div class='format-header-row'>
-  <span class='format-header'>{label}</span>
-  <button class='copy-btn' onclick='copyText("{copy_id}")'>Copy</button>
-</div>
-<textarea id='{copy_id}' style='display:none'>{escaped}</textarea>
-<div class='stats'>
-  <span class='stat-item stat-chars'>chars: <b>{chars_count:,}</b></span>
-  <span class='stat-item stat-tokens'>tokens: <b>{tok_count:,}</b></span>
-  <span class='stat-item stat-og'>chars_og/tok: <b>{og_per:.1f}</b></span>
-  <span class='stat-item stat-enc'>enc_chars/tok: <b>{enc_per:.1f}</b></span>
-</div>
-<div class='tokens'>{token_html}</div>
-</div>"""
-
-
-def _render_tokens(tokens: list[str], truncated: bool) -> str:
-    spans = []
-    for idx, token in enumerate(tokens):
-        color = _hash_color(idx)
-        escaped = token.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
-        if "\n" in token:
-            visible = escaped.replace("\n", "↵")
-            spans.append(f"<span class='token token-newline'>{visible}</span><br>")
-        elif token.strip() == "" and token:
-            visible = escaped.replace(" ", "·").replace("\t", "→")
-            spans.append(f"<span class='token token-space'>{visible}</span>")
-        else:
-            spans.append(f"<span class='token' style='background:{color}'>{escaped}</span>")
-    if truncated:
-        spans.append("<br><em>... (truncated)</em>")
-    return "".join(spans)
-
-
-def _hash_color(index: int) -> str:
-    """Generate pastel color using golden ratio distribution."""
-    golden = 0.618033988749895
-    hue = (index * golden) % 1.0
-    # HSL to RGB (pastel)
-    sat, light = 0.5, 0.85
-    q = light * (1 + sat) if light < 0.5 else light + sat - light * sat
-    p = 2 * light - q
-
-    def h2rgb(t: float) -> int:
-        t = t % 1.0
-        if t < 1 / 6:
-            return int((p + (q - p) * 6 * t) * 255)
-        if t < 1 / 2:
-            return int(q * 255)
-        if t < 2 / 3:
-            return int((p + (q - p) * (2 / 3 - t) * 6) * 255)
-        return int(p * 255)
-
-    return f"#{h2rgb(hue + 1 / 3):02x}{h2rgb(hue):02x}{h2rgb(hue - 1 / 3):02x}"
-
-
 def _html_script(tokenizer_names: list[str], first_fixture: str) -> str:
     return f"""<script>
 let currentTokenizer = '{tokenizer_names[0]}';
 let currentFixture = '{first_fixture}';
+const renderedPanels = new Set();
+
+// Golden ratio color generation (matches Python)
+function hashColor(index) {{
+  const golden = 0.618033988749895;
+  const hue = (index * golden) % 1.0;
+  const sat = 0.5, light = 0.85;
+  const q = light < 0.5 ? light * (1 + sat) : light + sat - light * sat;
+  const p = 2 * light - q;
+
+  function h2rgb(t) {{
+    t = ((t % 1.0) + 1.0) % 1.0;
+    if (t < 1/6) return Math.round((p + (q - p) * 6 * t) * 255);
+    if (t < 1/2) return Math.round(q * 255);
+    if (t < 2/3) return Math.round((p + (q - p) * (2/3 - t) * 6) * 255);
+    return Math.round(p * 255);
+  }}
+
+  const r = h2rgb(hue + 1/3), g = h2rgb(hue), b = h2rgb(hue - 1/3);
+  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}}
+
+function escapeHtml(text) {{
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}}
+
+function renderTokens(tokens, truncated) {{
+  let html = '';
+  for (let i = 0; i < tokens.length; i++) {{
+    const token = tokens[i];
+    const escaped = escapeHtml(token);
+    if (token.includes('\\n')) {{
+      const visible = escaped.replace(/\\n/g, '↵');
+      html += "<span class='token token-newline'>" + visible + "</span><br>";
+    }} else if (token.trim() === '' && token.length > 0) {{
+      const visible = escaped.replace(/ /g, '·').replace(/\\t/g, '→');
+      html += "<span class='token token-space'>" + visible + "</span>";
+    }} else {{
+      html += "<span class='token' style='background:" + hashColor(i) + "'>" + escaped + "</span>";
+    }}
+  }}
+  if (truncated) {{
+    html += "<br><em>... (truncated)</em>";
+  }}
+  return html;
+}}
+
+function renderFormatBlock(fmt, tokName, fixtureName) {{
+  const data = BENCHMARK_DATA;
+  const formatData = data.formatOutputs[fixtureName]?.[fmt];
+  const label = data.formatLabels[fmt];
+
+  if (!formatData) {{
+    return "<div class='format'><div class='format-header'>" + label + ": <span class='na'>N/A</span></div></div>";
+  }}
+
+  const stats = data.stats[fixtureName][fmt];
+  const baseChars = data.baseChars[fixtureName];
+  const tokCount = stats.tokens[tokName] || 0;
+  const charsCount = stats.chars || 0;
+  const ogPer = tokCount ? (baseChars / tokCount).toFixed(1) : '0.0';
+  const encPer = tokCount ? (charsCount / tokCount).toFixed(1) : '0.0';
+
+  const tokens = data.tokenData[tokName][fixtureName][fmt] || [];
+  const tokenHtml = renderTokens(tokens, formatData.truncated);
+
+  const copyId = 'copy-' + fixtureName + '-' + fmt;
+
+  return `<div class='format'>
+<div class='format-header-row'>
+  <span class='format-header'>${{label}}</span>
+  <button class='copy-btn' onclick='copyText("${{copyId}}", "${{fixtureName}}", "${{fmt}}")'>Copy</button>
+</div>
+<div class='stats'>
+  <span class='stat-item stat-chars'>chars: <b>${{charsCount.toLocaleString()}}</b></span>
+  <span class='stat-item stat-tokens'>tokens: <b>${{tokCount.toLocaleString()}}</b></span>
+  <span class='stat-item stat-og'>chars_og/tok: <b>${{ogPer}}</b></span>
+  <span class='stat-item stat-enc'>enc_chars/tok: <b>${{encPer}}</b></span>
+</div>
+<div class='tokens'>${{tokenHtml}}</div>
+</div>`;
+}}
+
+function renderComparisonTable(fixtureName, tokName) {{
+  const data = BENCHMARK_DATA;
+  const baseChars = data.baseChars[fixtureName];
+
+  let html = `<table class='comparison-table'>
+<tr><th>Format</th><th>Chars</th><th>Tokens</th><th>chars_og/tok</th><th>enc_chars/tok</th></tr>`;
+
+  for (const fmt of data.formats) {{
+    const label = data.formatLabels[fmt];
+    const stats = data.stats[fixtureName]?.[fmt];
+
+    if (!stats) {{
+      html += `<tr><td>${{label}}</td><td colspan='4' class='na'>N/A</td></tr>`;
+    }} else {{
+      const tokCount = stats.tokens[tokName] || 0;
+      const ogPer = tokCount ? (baseChars / tokCount).toFixed(1) : '0.0';
+      const encPer = tokCount ? (stats.chars / tokCount).toFixed(1) : '0.0';
+      html += `<tr><td>${{label}}</td><td>${{stats.chars.toLocaleString()}}</td><td>${{tokCount.toLocaleString()}}</td><td>${{ogPer}}</td><td>${{encPer}}</td></tr>`;
+    }}
+  }}
+
+  html += '</table>';
+  return html;
+}}
+
+function renderPanel(tokName, fixtureName) {{
+  const panelId = 'content-' + tokName + '-' + fixtureName;
+  const panel = document.getElementById(panelId);
+  if (!panel || renderedPanels.has(panelId)) return;
+
+  const data = BENCHMARK_DATA;
+  const baseChars = data.baseChars[fixtureName];
+  const tokenizerModel = data.tokenizerModels[tokName] || '';
+
+  let html = `<div class='fixture-info'><strong>${{fixtureName}}.json</strong> — Original: ${{baseChars}} chars — Tokenizer: ${{tokName}} (${{tokenizerModel}})</div>`;
+  html += renderComparisonTable(fixtureName, tokName);
+
+  for (const fmt of data.formats) {{
+    html += renderFormatBlock(fmt, tokName, fixtureName);
+  }}
+
+  panel.innerHTML = html;
+  renderedPanels.add(panelId);
+}}
 
 function updateContent() {{
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   const el = document.getElementById('content-' + currentTokenizer + '-' + currentFixture);
-  if (el) el.classList.add('active');
+  if (el) {{
+    el.classList.add('active');
+    renderPanel(currentTokenizer, currentFixture);
+  }}
 }}
 
-function copyText(id) {{
-  const textarea = document.getElementById(id);
-  if (!textarea) return;
-  navigator.clipboard.writeText(textarea.value).then(() => {{
-    const btn = document.querySelector(`button[onclick="copyText('${{id}}')"]`);
+function copyText(id, fixtureName, fmt) {{
+  const data = BENCHMARK_DATA;
+  const formatData = data.formatOutputs[fixtureName]?.[fmt];
+  if (!formatData) return;
+
+  const text = formatData.copy;
+  navigator.clipboard.writeText(text).then(() => {{
+    const btn = document.querySelector(`button[onclick*="${{id}}"]`);
     if (btn) {{
-      btn.textContent = 'Copied!';
+      const wasTruncated = formatData.copyTruncated;
+      btn.textContent = wasTruncated ? 'Copied (truncated)!' : 'Copied!';
       btn.classList.add('copied');
       setTimeout(() => {{ btn.textContent = 'Copy'; btn.classList.remove('copied'); }}, 2000);
     }}
@@ -393,6 +490,11 @@ document.querySelectorAll('#fixture-tabs .tab').forEach(tab => {{
     currentFixture = tab.dataset.fixture;
     updateContent();
   }});
+}});
+
+// Render initial panel
+document.addEventListener('DOMContentLoaded', () => {{
+  renderPanel(currentTokenizer, currentFixture);
 }});
 </script>"""
 

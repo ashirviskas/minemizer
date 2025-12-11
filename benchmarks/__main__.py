@@ -803,9 +803,7 @@ def cmd_full_report(args: argparse.Namespace) -> int:
 
     # Generate HTML report
     html_path = output_dir / "full_report.html"
-    html = _generate_full_report_html(
-        compression_results, compression_fixtures, compression_tokenizers, llm_results
-    )
+    html = _generate_full_report_html(compression_results, compression_fixtures, compression_tokenizers, llm_results)
     html_path.write_text(html)
     print(f"HTML report saved to: {html_path}")
 
@@ -822,11 +820,14 @@ def _generate_full_report_html(
     compression_results, compression_fixtures, compression_tokenizers, llm_results: list[tuple[str, dict]]
 ) -> str:
     """Generate combined HTML report with top-level tabs."""
+    import json
+
     from benchmarks.output.html import (
-        _summary_table,
-        _tokenizer_format_table,
+        _build_data_blob,
         _comparison_section,
         _html_script,
+        _summary_table,
+        _tokenizer_format_table,
     )
 
     has_compression = compression_results is not None
@@ -863,15 +864,19 @@ def _generate_full_report_html(
 
     # Compression section - reuse existing HTML generator
     if has_compression:
+        # Build data blob for JS rendering
+        data_blob = _build_data_blob(compression_results, compression_fixtures, compression_tokenizers, tokenizer_names)
+
         html.append("<div class='section-content active' id='section-compression' data-section='compression'>")
         html.append("<h2>Compression Benchmarks</h2>")
         html.append("<p>Compare token efficiency across formats and tokenizers.</p>")
         html.append(_summary_table(compression_results, tokenizer_names))
         html.append(_tokenizer_format_table(compression_results, tokenizer_names))
-        html.append(_comparison_section(
-            compression_results, compression_fixtures, compression_tokenizers, tokenizer_names
-        ))
+        html.append(_comparison_section(compression_results, tokenizer_names))
         html.append("</div>")
+
+        # Add data blob script
+        html.append(f"<script>const BENCHMARK_DATA = {json.dumps(data_blob, separators=(',', ':'))};</script>")
 
     # LLM Accuracy section
     if has_llm:
@@ -1179,7 +1184,7 @@ def _md_llm_summary(llm_results: list[tuple[str, dict]]) -> list[str]:
         avg_data.sort(key=lambda x: -x["eff"])
 
         for d in avg_data:
-            tok_display = f"{d['tokens']/1000:.1f}k" if d['tokens'] >= 1000 else f"{d['tokens']:.0f}"
+            tok_display = f"{d['tokens'] / 1000:.1f}k" if d["tokens"] >= 1000 else f"{d['tokens']:.0f}"
             lines.append(f"| {d['fmt']} | {d['eff']:.2f} | {d['acc']:.1%} | {tok_display} | {d['og_cpt']:.1f} |")
 
         lines.append("")
@@ -1241,7 +1246,7 @@ def _md_llm_section(llm_results: list[tuple[str, dict]]) -> list[str]:
             acc = res.get("accuracy", 0)
             tokens = res.get("tokens", 0)
             latency = res.get("avg_latency_ms", 0)
-            tok_display = f"{tokens/1000:.1f}k" if tokens >= 1000 else f"{tokens}"
+            tok_display = f"{tokens / 1000:.1f}k" if tokens >= 1000 else f"{tokens}"
             lines.append(f"| {fmt} | {acc:.1%} | {tok_display} | {latency:.0f}ms |")
 
         lines.append("")

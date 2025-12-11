@@ -36,6 +36,7 @@ FORMAT_LABELS = {
 # Display settings
 MAX_EXAMPLE_LINES = 25
 MAX_EXAMPLE_CHARS = 5000
+MAX_COPY_CHARS = 50000  # Limit for copyable data (50KB)
 
 # Fixture display order
 FIXTURE_ORDER = [

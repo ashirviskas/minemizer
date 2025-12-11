@@ -1,8 +1,9 @@
 # minemizer
-Minimize your data to decrease LLM token usage.
+Most efficient data minimizer for LLMs (up to 4x gains). Human readable too!
 
-See some pretty comparisons at [benchmarks](https://ashirviskas.github.io/)
+See the numbers and examples at [benchmarks](https://ashirviskas.github.io/)
 
+### Comparison
 <img width="1677" height="1115" alt="minemizer_first_bench" src="https://github.com/user-attachments/assets/57ff8c98-9438-46db-9a53-a6fdf6350f16" />
 
 ### Pros
