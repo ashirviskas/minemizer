@@ -17,8 +17,8 @@ See some pretty comparisons at [benchmarks](https://ashirviskas.github.io/)
 ### Cons
 - Not battle tested
 - Not a standard format 
-- Not finalized yet
-- Cannot convert the data back to the original format (no parser implemented yet)
+- Standard not finalized yet
+- Cannot convert the data back to the original format (no parser implementation)
 
 PRs are very welcome!
 
