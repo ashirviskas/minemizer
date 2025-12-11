@@ -765,5 +765,489 @@ document.querySelectorAll('.summary-table th').forEach(th => {{
 </script>"""
 
 
+def cmd_full_report(args: argparse.Namespace) -> int:
+    """Generate combined benchmark report (HTML + MD)."""
+    from benchmarks.core.fixtures import load_fixtures
+    from benchmarks.core.tokenizers import load_tokenizers
+    from benchmarks.runners.compression import CompressionBenchmark
+
+    output_dir = args.output_dir or RESULTS_DIR
+
+    # Load compression data (run benchmark if needed to get full results)
+    compression_results = None
+    compression_fixtures = None
+    compression_tokenizers = None
+    try:
+        tokenizers, _ = load_tokenizers()
+        fixtures = load_fixtures()
+        benchmark = CompressionBenchmark()
+        compression_results = benchmark.run(fixtures, tokenizers)
+        compression_fixtures = fixtures
+        compression_tokenizers = tokenizers
+        print("Loaded compression benchmark data")
+    except Exception as e:
+        print(f"Could not load compression data: {e}")
+
+    # Load LLM results
+    llm_dir = RESULTS_DIR / "llm_accuracy"
+    llm_results = []
+    if llm_dir.exists():
+        for path in sorted(llm_dir.glob("*.json")):
+            if path.name != "llm_accuracy_report.html":
+                data = json.loads(path.read_text())
+                llm_results.append((path.stem, data))
+
+    if not compression_results and not llm_results:
+        print("No benchmark results found. Run benchmarks first.")
+        return 1
+
+    # Generate HTML report
+    html_path = output_dir / "full_report.html"
+    html = _generate_full_report_html(
+        compression_results, compression_fixtures, compression_tokenizers, llm_results
+    )
+    html_path.write_text(html)
+    print(f"HTML report saved to: {html_path}")
+
+    # Generate MD report
+    md_path = output_dir / "full_report.md"
+    md = _generate_full_report_md(compression_results, llm_results)
+    md_path.write_text(md)
+    print(f"Markdown report saved to: {md_path}")
+
+    return 0
+
+
+def _generate_full_report_html(
+    compression_results, compression_fixtures, compression_tokenizers, llm_results: list[tuple[str, dict]]
+) -> str:
+    """Generate combined HTML report with top-level tabs."""
+    from benchmarks.output.html import (
+        _summary_table,
+        _tokenizer_format_table,
+        _comparison_section,
+        _html_script,
+    )
+
+    has_compression = compression_results is not None
+    has_llm = len(llm_results) > 0
+
+    tokenizer_names = list(compression_tokenizers.keys()) if compression_tokenizers else []
+
+    html = [
+        "<!DOCTYPE html>",
+        "<html><head>",
+        "<meta charset='utf-8'>",
+        "<title>Minemizer Benchmark Report</title>",
+        "<style>",
+        _full_report_css(),
+        "</style>",
+        "</head><body>",
+        "<h1>Minemizer Benchmark Report</h1>",
+        "<p>Compare <a href='https://github.com/ashirviskas/minemizer'>minemizer</a> "
+        "to other encoding formats for LLM token efficiency.</p>",
+    ]
+
+    # Leaderboard at top (from LLM results)
+    if has_llm:
+        html.append(_llm_summary_table(llm_results, []))
+
+    # Top-level section tabs
+    html.append("<div class='section-tabs' id='section-tabs'>")
+    if has_compression:
+        html.append("<div class='section-tab active' data-section='compression'>Compression</div>")
+    if has_llm:
+        active = "" if has_compression else " active"
+        html.append(f"<div class='section-tab{active}' data-section='llm'>LLM Accuracy</div>")
+    html.append("</div>")
+
+    # Compression section - reuse existing HTML generator
+    if has_compression:
+        html.append("<div class='section-content active' id='section-compression' data-section='compression'>")
+        html.append("<h2>Compression Benchmarks</h2>")
+        html.append("<p>Compare token efficiency across formats and tokenizers.</p>")
+        html.append(_summary_table(compression_results, tokenizer_names))
+        html.append(_tokenizer_format_table(compression_results, tokenizer_names))
+        html.append(_comparison_section(
+            compression_results, compression_fixtures, compression_tokenizers, tokenizer_names
+        ))
+        html.append("</div>")
+
+    # LLM Accuracy section
+    if has_llm:
+        active = "" if has_compression else " active"
+        html.append(f"<div class='section-content{active}' id='section-llm' data-section='llm'>")
+        html.append(_full_report_llm_section(llm_results))
+        html.append("</div>")
+
+    # Combined scripts
+    html.append(_full_report_script())
+    if has_compression:
+        first_fixture = compression_results.fixtures[0].fixture_name if compression_results.fixtures else ""
+        html.append(_html_script(tokenizer_names, first_fixture))
+
+    html.append("</body></html>")
+
+    return "\n".join(html)
+
+
+def _full_report_css() -> str:
+    """CSS for full report - includes compression HTML styles."""
+    return """
+body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; max-width: 1400px; }
+h1, h2, h3 { color: #333; }
+table { border-collapse: collapse; margin: 15px 0; }
+th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: right; }
+th { background: #f0f0f0; font-weight: 600; }
+td:first-child, th:first-child { text-align: left; }
+.best { font-weight: bold; color: #228855; }
+.partial-best { font-weight: bold; }
+.worst { color: #c62828; }
+.na { color: #999; font-style: italic; }
+
+/* Summary table */
+.summary-section { margin-bottom: 30px; }
+.summary-table { width: auto; min-width: 680px; }
+.summary-table th, .summary-table td { padding: 8px 12px; }
+.summary-table th { cursor: pointer; user-select: none; }
+.summary-table th:hover { background: #e0e0e0; }
+.summary-table th::after { content: ' ↕'; font-size: 10px; color: #999; }
+.summary-table th.sorted-asc::after { content: ' ▲'; color: #333; }
+.summary-table th.sorted-desc::after { content: ' ▼'; color: #333; }
+.summary-table .col-best { font-weight: bold; }
+.metric-explainer { font-size: 13px; color: #666; margin-top: 8px; }
+
+/* Section tabs */
+.section-tabs { display: flex; gap: 0; margin: 30px 0 0 0; border-bottom: 3px solid #4a9eff; }
+.section-tab { padding: 12px 24px; cursor: pointer; background: #e8e8e8; border: 1px solid #ddd;
+  border-bottom: none; border-radius: 8px 8px 0 0; margin-right: 4px; font-weight: 500;
+  transition: all 0.2s; user-select: none; }
+.section-tab:hover { background: #d8d8d8; }
+.section-tab.active { background: #4a9eff; color: white; border-color: #4a9eff; }
+.section-content { display: none; padding: 20px 0; }
+.section-content.active { display: block; }
+
+/* Inner layout */
+.page-layout { display: flex; gap: 20px; }
+.sidebar { position: sticky; top: 20px; align-self: flex-start; width: 140px; flex-shrink: 0; }
+.main-content { flex: 1; max-width: 1100px; }
+.sidebar-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 13px; }
+.sidebar-tabs { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-tab { padding: 10px 14px; cursor: pointer; border: 1px solid #ddd;
+  border-radius: 6px; background: #f5f5f5; transition: all 0.2s; user-select: none;
+  text-align: center; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-tab:hover { background: #e8e8e8; border-color: #ccc; }
+.sidebar-tab.active { background: #4a9eff; border-color: #4a9eff; color: white; font-weight: bold; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 2px solid #ddd; }
+.tab { padding: 10px 20px; cursor: pointer; border: 1px solid transparent; border-bottom: none;
+  border-radius: 8px 8px 0 0; background: #f5f5f5; margin-bottom: -2px; transition: all 0.2s; user-select: none; }
+.tab:hover { background: #e8e8e8; }
+.tab.active { background: white; border-color: #ddd; border-bottom-color: white; font-weight: bold; }
+.tab-content { display: none; padding: 20px 0; }
+.tab-content.active { display: block; }
+
+/* Meta and details */
+.meta-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px; }
+.fixture-info { color: #666; font-size: 14px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px; }
+.summary-box { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0; }
+.summary-box h3 { margin: 0 0 10px 0; color: #1565c0; font-size: 14px; }
+.summary-box p { margin: 5px 0; font-size: 13px; }
+.query-breakdown { margin-top: 20px; }
+.query-breakdown details { margin: 5px 0; }
+.query-breakdown summary { cursor: pointer; padding: 8px 12px; background: #f5f5f5; border-radius: 4px; font-size: 13px; }
+.query-breakdown summary:hover { background: #e8e8e8; }
+.query-list { font-size: 12px; max-height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px; margin-top: 5px; }
+.query-item { padding: 8px 12px; border-bottom: 1px solid #eee; }
+.query-item:last-child { border-bottom: none; }
+.query-item.correct { background: #f1f8e9; }
+.query-item.incorrect { background: #ffebee; }
+.query-q { font-weight: 500; margin-bottom: 4px; }
+.query-expected { color: #2e7d32; }
+.query-actual { color: #555; }
+.query-item.incorrect .query-actual { color: #c62828; }
+
+/* Compression token visualization */
+.format { margin: 20px 0; }
+.format-header { font-weight: bold; margin-bottom: 8px; color: #555; }
+.format-header-row { display: flex; align-items: center; gap: 10px; }
+.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: #f5f5f5;
+  padding: 15px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
+.token { display: inline; border: 1px solid #ccc; border-radius: 3px; padding: 1px 2px; margin: 1px; }
+.token-space { background: #ffe8e8 !important; border-color: #daa !important; }
+.token-newline { background: #f0e8ff !important; color: #999; border-color: #c8b8e8 !important; }
+.comparison-table { font-size: 13px; margin: 15px 0 25px 0; }
+.comparison-table th, .comparison-table td { padding: 6px 10px; }
+.stats { color: #666; font-size: 13px; display: block; margin-top: 4px; }
+.stat-item { display: inline-block; margin-right: 12px; padding: 3px 10px; border-radius: 4px; border: 1px solid; }
+.stat-chars { background: #e3f2fd; border-color: #90caf9; color: #1565c0; }
+.stat-tokens { background: #f3e5f5; border-color: #ce93d8; color: #7b1fa2; }
+.stat-og { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
+.stat-enc { background: #fff3e0; border-color: #ffcc80; color: #e65100; }
+.copy-btn { padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid #ccc;
+  border-radius: 4px; background: #fff; color: #555; transition: all 0.2s; }
+.copy-btn:hover { background: #f0f0f0; border-color: #999; }
+.copy-btn.copied { background: #d4edda; border-color: #28a745; color: #28a745; }
+"""
+
+
+def _full_report_llm_section(llm_results: list[tuple[str, dict]]) -> str:
+    """Generate LLM accuracy section content."""
+    # Group by model
+    by_model: dict[str, list[tuple[str, dict]]] = {}
+    datasets: set[str] = set()
+    for name, data in llm_results:
+        model = data["meta"]["model"]
+        dataset = data["meta"]["data_file"]
+        datasets.add(dataset)
+        if model not in by_model:
+            by_model[model] = []
+        by_model[model].append((dataset, data))
+
+    models = list(by_model.keys())
+    datasets_list = sorted(datasets)
+    first_model = models[0] if models else ""
+    first_dataset = datasets_list[0] if datasets_list else ""
+
+    lines = [
+        "<h2>LLM Accuracy Benchmarks</h2>",
+        "<p>Format comprehension across models and datasets.</p>",
+        "<div class='page-layout'>",
+        _llm_sidebar(models),
+        "<div class='main-content'>",
+        _llm_dataset_tabs(datasets_list),
+    ]
+
+    # Generate content for each model × dataset
+    for model in models:
+        model_data = {ds: d for ds, d in by_model[model]}
+        for dataset in datasets_list:
+            if dataset not in model_data:
+                continue
+            data = model_data[dataset]
+            active = " active" if model == first_model and dataset == first_dataset else ""
+            lines.append(_llm_content_panel(model, dataset, data, active))
+
+    lines.extend(["</div>", "</div>"])  # main-content, page-layout
+
+    # Add the LLM-specific JavaScript
+    lines.append(f"""<script>
+let currentModel = '{first_model}';
+let currentDataset = '{first_dataset}';
+
+function updateLLMContent() {{
+  document.querySelectorAll('#section-llm .tab-content').forEach(c => c.classList.remove('active'));
+  const id = 'content-' + currentModel.replace(/ /g, '_').replace(/\\./g, '_') + '-' + currentDataset;
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}}
+
+document.querySelectorAll('#model-tabs .sidebar-tab').forEach(tab => {{
+  tab.addEventListener('click', () => {{
+    document.querySelectorAll('#model-tabs .sidebar-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentModel = tab.dataset.model;
+    updateLLMContent();
+  }});
+}});
+
+document.querySelectorAll('#dataset-tabs .tab').forEach(tab => {{
+  tab.addEventListener('click', () => {{
+    document.querySelectorAll('#dataset-tabs .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentDataset = tab.dataset.dataset;
+    updateLLMContent();
+  }});
+}});
+</script>""")
+
+    return "\n".join(lines)
+
+
+def _full_report_script() -> str:
+    """JavaScript for full report section tabs and sorting."""
+    return """<script>
+// Section tab switching
+document.querySelectorAll('#section-tabs .section-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#section-tabs .section-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    const section = tab.dataset.section;
+    document.getElementById('section-' + section)?.classList.add('active');
+  });
+});
+
+// Table sorting
+document.querySelectorAll('.summary-table th').forEach(th => {
+  th.addEventListener('click', () => {
+    const table = th.closest('table');
+    const tbody = table.querySelector('tbody') || table;
+    const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => r.querySelector('td'));
+    const idx = Array.from(th.parentNode.children).indexOf(th);
+    const isAsc = th.classList.contains('sorted-asc');
+
+    table.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+    th.classList.add(isAsc ? 'sorted-desc' : 'sorted-asc');
+
+    rows.sort((a, b) => {
+      const aVal = a.children[idx]?.dataset.sort || a.children[idx]?.textContent || '';
+      const bVal = b.children[idx]?.dataset.sort || b.children[idx]?.textContent || '';
+      const aNum = parseFloat(aVal), bNum = parseFloat(bVal);
+      const cmp = (!isNaN(aNum) && !isNaN(bNum)) ? aNum - bNum : aVal.localeCompare(bVal);
+      return isAsc ? -cmp : cmp;
+    });
+
+    rows.forEach(r => tbody.appendChild(r));
+  });
+});
+</script>"""
+
+
+def _generate_full_report_md(compression_results, llm_results: list[tuple[str, dict]]) -> str:
+    """Generate combined Markdown report."""
+    lines = [
+        "# Minemizer Benchmark Report",
+        "",
+        "Compare [minemizer](https://github.com/ashirviskas/minemizer) to other encoding formats for LLM token efficiency.",
+        "",
+    ]
+
+    # LLM Summary
+    if llm_results:
+        lines.extend(_md_llm_summary(llm_results))
+
+    # Compression section
+    if compression_results:
+        lines.extend(_md_compression_section(compression_results))
+
+    # LLM Accuracy section
+    if llm_results:
+        lines.extend(_md_llm_section(llm_results))
+
+    return "\n".join(lines)
+
+
+def _md_llm_summary(llm_results: list[tuple[str, dict]]) -> list[str]:
+    """Generate markdown summary table."""
+    lines = ["## Summary", "", "*Efficiency = Accuracy × (JSON tokens ÷ Format tokens)*", ""]
+
+    # Group by dataset
+    by_dataset: dict[str, list[dict]] = {}
+    for _name, data in llm_results:
+        dataset = data["meta"]["data_file"]
+        if dataset not in by_dataset:
+            by_dataset[dataset] = []
+        by_dataset[dataset].append(data)
+
+    for dataset, dataset_results in by_dataset.items():
+        lines.append(f"### {dataset}")
+        lines.append("")
+        lines.append("| Format | Efficiency | Acc | Tokens | og_chars/tok |")
+        lines.append("|--------|------------|-----|--------|--------------|")
+
+        # Aggregate stats
+        format_stats: dict[str, dict] = {}
+        json_pretty_tokens_list = []
+        json_pretty_chars_list = []
+
+        for data in dataset_results:
+            jp = data["results"].get("json_pretty", {})
+            if jp.get("tokens"):
+                json_pretty_tokens_list.append(jp["tokens"])
+            if jp.get("chars"):
+                json_pretty_chars_list.append(jp["chars"])
+            for fmt, res in data["results"].items():
+                if res.get("total_queries", 0) == 0:
+                    continue
+                if fmt not in format_stats:
+                    format_stats[fmt] = {"acc": [], "tokens": []}
+                format_stats[fmt]["acc"].append(res.get("accuracy", 0))
+                format_stats[fmt]["tokens"].append(res.get("tokens", 0))
+
+        base_tokens = sum(json_pretty_tokens_list) / len(json_pretty_tokens_list) if json_pretty_tokens_list else 1
+        base_chars = sum(json_pretty_chars_list) / len(json_pretty_chars_list) if json_pretty_chars_list else 0
+
+        avg_data = []
+        for fmt, stats in format_stats.items():
+            avg_acc = sum(stats["acc"]) / len(stats["acc"]) if stats["acc"] else 0
+            avg_tokens = sum(stats["tokens"]) / len(stats["tokens"]) if stats["tokens"] else 0
+            compression_ratio = base_tokens / avg_tokens if avg_tokens else 0
+            efficiency = avg_acc * compression_ratio
+            og_cpt = base_chars / avg_tokens if avg_tokens else 0
+            avg_data.append({"fmt": fmt, "eff": efficiency, "acc": avg_acc, "tokens": avg_tokens, "og_cpt": og_cpt})
+
+        avg_data.sort(key=lambda x: -x["eff"])
+
+        for d in avg_data:
+            tok_display = f"{d['tokens']/1000:.1f}k" if d['tokens'] >= 1000 else f"{d['tokens']:.0f}"
+            lines.append(f"| {d['fmt']} | {d['eff']:.2f} | {d['acc']:.1%} | {tok_display} | {d['og_cpt']:.1f} |")
+
+        lines.append("")
+
+    return lines
+
+
+def _md_compression_section(compression_results) -> list[str]:
+    """Generate markdown compression section."""
+    lines = ["## Compression Benchmarks", ""]
+
+    for fixture in compression_results.fixtures:
+        lines.append(f"### {fixture.fixture_name}")
+        lines.append("")
+
+        # Get tokenizer names from first result
+        first_result = fixture.results[0] if fixture.results else None
+        tokenizers = list(first_result.tokens.keys()) if first_result else []
+
+        header = "| Format | Chars |"
+        sep = "|--------|-------|"
+        for tok in tokenizers:
+            header += f" {tok} |"
+            sep += "------|"
+        lines.append(header)
+        lines.append(sep)
+
+        for result in fixture.results:
+            chars = result.chars
+            row = f"| {result.format_name} | {chars:,} |" if chars else f"| {result.format_name} | N/A |"
+            for tok in tokenizers:
+                tok_count = result.tokens.get(tok)
+                row += f" {tok_count:,} |" if tok_count else " N/A |"
+            lines.append(row)
+
+        lines.append("")
+
+    return lines
+
+
+def _md_llm_section(llm_results: list[tuple[str, dict]]) -> list[str]:
+    """Generate markdown LLM accuracy section."""
+    lines = ["## LLM Accuracy Benchmarks", ""]
+
+    for _name, data in llm_results:
+        meta = data["meta"]
+        results = data["results"]
+
+        lines.append(f"### {meta['model']} on {meta['data_file']}")
+        lines.append("")
+        lines.append(f"*{meta['n_queries']} queries, {meta['date'][:10]}*")
+        lines.append("")
+        lines.append("| Format | Accuracy | Tokens | Latency |")
+        lines.append("|--------|----------|--------|---------|")
+
+        for fmt, res in sorted(results.items(), key=lambda x: -x[1].get("accuracy", 0)):
+            if res.get("total_queries", 0) == 0:
+                continue
+            acc = res.get("accuracy", 0)
+            tokens = res.get("tokens", 0)
+            latency = res.get("avg_latency_ms", 0)
+            tok_display = f"{tokens/1000:.1f}k" if tokens >= 1000 else f"{tokens}"
+            lines.append(f"| {fmt} | {acc:.1%} | {tok_display} | {latency:.0f}ms |")
+
+        lines.append("")
+
+    return lines
+
+
 if __name__ == "__main__":
     sys.exit(main())
