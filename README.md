@@ -55,8 +55,8 @@ print(minemize(data))
 ```
 ```
 id; name; address{ street; city}
-1; Yuki; { 12 Sakura Lane; Kyoto}
-2; Lin; { 88 Garden Road; Taipei}
+1; Yuki;{ 12 Sakura Lane; Kyoto}
+2; Lin;{ 88 Garden Road; Taipei}
 ```
 
 ### Nested non-uniform data with sparsity_threshold
@@ -76,10 +76,10 @@ print(minemize(data))
 ```
 ```
 id; name; location{ city; floor; desk}
-1; Lukas; { Vilnius; 3; }
-2; Emma; { Boston; 7; A12}
-3; Yuki; { Tokyo; 5; }
-4; Oliver; { London; 2; B04}
+1; Lukas;{ Vilnius; 3;}
+2; Emma;{ Boston; 7; A12}
+3; Yuki;{ Tokyo; 5;}
+4; Oliver;{ London; 2; B04}
 ```
 
 ```python
@@ -88,10 +88,10 @@ print(minemize(data, sparsity_threshold=1.0))
 ```
 ```
 id; name; location{ city; floor; ...}
-1; Lukas; { Vilnius; 3}
-2; Emma; { Boston; 7; desk:A12}
-3; Yuki; { Tokyo; 5}
-4; Oliver; { London; 2; desk:B04}
+1; Lukas;{ Vilnius; 3}
+2; Emma;{ Boston; 7; desk: A12}
+3; Yuki;{ Tokyo; 5}
+4; Oliver;{ London; 2; desk: B04}
 ```
 
 ### Some explanation of defaults
