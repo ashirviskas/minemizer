@@ -1,5 +1,7 @@
 # Minemizer Benchmark Report
 
+Compare [minemizer](https://github.com/ashirviskas/minemizer) to other encoding formats for LLM token efficiency.
+
 ## Summary
 
 *Efficiency = Accuracy × (JSON tokens ÷ Format tokens)*
@@ -17,13 +19,6 @@
 | json_min | 0.67 | 39.2% | 48.9k | 4.7 |
 | toon | 0.62 | 44.8% | 59.6k | 3.9 |
 | json_pretty | 0.42 | 42.5% | 82.9k | 2.8 |
-
-### nested_50
-
-| Format | Efficiency | Acc | Tokens | og_chars/tok |
-|--------|------------|-----|--------|--------------|
-| json_min | 0.62 | 38.0% | 2.7k | 4.3 |
-| json_pretty | 0.00 | 0.0% | 4.4k | 2.6 |
 
 ## Compression Benchmarks
 
@@ -198,15 +193,6 @@
 | toon | 18.0% | 56.6k | 4035ms |
 | yaml | 12.0% | 55.6k | 4110ms |
 | json_min | 4.0% | 45.8k | 3493ms |
-
-### Qwen3-0.6B-Q8_0 on nested_50
-
-*50 queries, 2025-12-02*
-
-| Format | Accuracy | Tokens | Latency |
-|--------|----------|--------|---------|
-| json_min | 38.0% | 2.7k | 283ms |
-| json_pretty | 0.0% | 4.4k | 270ms |
 
 ### Qwen3-VL-30B-A3B-Instruct-Q4_K_M.gguf on nested_1000
 
