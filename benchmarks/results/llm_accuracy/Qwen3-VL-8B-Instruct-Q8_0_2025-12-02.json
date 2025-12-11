@@ -1,0 +1,3710 @@
+{
+  "meta": {
+    "model": "Qwen3-VL-8B-Instruct-Q8_0",
+    "endpoint": "http://host.docker.internal:8080/v1",
+    "date": "2025-12-02T00:22:53.651511+00:00",
+    "data_file": "nested_1000",
+    "data_size": 1000,
+    "n_queries": 50,
+    "seed": 42
+  },
+  "results": {
+    "json_pretty": {
+      "accuracy": 0.4,
+      "avg_latency_ms": 10601.437420125585,
+      "total_queries": 50,
+      "tokens": 85896,
+      "chars": 230241,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 460511.3628410036
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 1i3vmz",
+          "correct": false,
+          "latency_ms": 1370.6112660001963
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Sardoria",
+          "correct": false,
+          "latency_ms": 1188.4032500092871
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Ashaton",
+          "correct": false,
+          "latency_ms": 1146.49187104078
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: aqlcau",
+          "correct": true,
+          "latency_ms": 1297.8559049661271
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1129.9221579683945
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Sarnia",
+          "correct": false,
+          "latency_ms": 1517.7130029769614
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Duskmore",
+          "correct": false,
+          "latency_ms": 1257.5307239894755
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: ZU693",
+          "correct": false,
+          "latency_ms": 1304.0265800082125
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Zarahaven",
+          "correct": false,
+          "latency_ms": 1250.7668279577047
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: 6u4pll",
+          "correct": false,
+          "latency_ms": 1310.6568630319089
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Crestmore",
+          "correct": false,
+          "latency_ms": 1196.7220730148256
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1350.377433001995
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: 6xvaj2",
+          "correct": false,
+          "latency_ms": 1560.835466021672
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: 37",
+          "correct": false,
+          "latency_ms": 1453.3271359978244
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1309.5308979973197
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 1375.7993140025064
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: 64dpja",
+          "correct": false,
+          "latency_ms": 1546.3904220378026
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: 3y4wpw",
+          "correct": false,
+          "latency_ms": 1614.07486803364
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1379.6147559769452
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: 72kxvf",
+          "correct": false,
+          "latency_ms": 1401.60071401624
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1156.1275229905732
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Ashahaven",
+          "correct": true,
+          "latency_ms": 1245.3502700082026
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 1379.410199006088
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1346.1660890025087
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 1433.373638021294
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 3i12vj",
+          "correct": false,
+          "latency_ms": 1351.81287600426
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1122.159302001819
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 1206.28260896774
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 4a8ywy",
+          "correct": false,
+          "latency_ms": 1341.2902529817075
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: x9q7m2",
+          "correct": false,
+          "latency_ms": 1366.3396560004912
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: 86wzs3",
+          "correct": false,
+          "latency_ms": 1387.4196549877524
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: tiqj7y",
+          "correct": false,
+          "latency_ms": 1530.9841760317795
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1146.9955330248922
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Lornia",
+          "correct": false,
+          "latency_ms": 1435.6360040255822
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1155.4941160138696
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1185.938596026972
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 2136.042882979382
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 2435.0345880375244
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Kelthaven",
+          "correct": false,
+          "latency_ms": 3681.6890459740534
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Keltmore",
+          "correct": false,
+          "latency_ms": 1284.8025630228221
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Zanheim",
+          "correct": false,
+          "latency_ms": 1516.1228720098734
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1129.7374300193042
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: 53aofc",
+          "correct": false,
+          "latency_ms": 1525.7527329958975
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1656.9261910044588
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1394.5964890299365
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 3i12vj",
+          "correct": false,
+          "latency_ms": 1383.1468090065755
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1133.60908604227
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 1244.7202950133942
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 9tmqli",
+          "correct": false,
+          "latency_ms": 1285.2951569948345
+        }
+      ]
+    },
+    "json_min": {
+      "accuracy": 0.44,
+      "avg_latency_ms": 4150.58934730012,
+      "total_queries": 50,
+      "tokens": 51896,
+      "chars": 148240,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 165402.7543750126
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 836.6253760177642
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Lornia",
+          "correct": false,
+          "latency_ms": 766.8615999864414
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Plexvale",
+          "correct": true,
+          "latency_ms": 742.2684810007922
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: zso6ax",
+          "correct": false,
+          "latency_ms": 1017.7173020201735
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 638.9524289988913
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Velstan",
+          "correct": true,
+          "latency_ms": 696.1881620227359
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Ashadale",
+          "correct": false,
+          "latency_ms": 725.218195002526
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: ZU693",
+          "correct": false,
+          "latency_ms": 796.8555080005899
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: PLEXVALE",
+          "correct": false,
+          "latency_ms": 768.8058200292289
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: 6fhrxj",
+          "correct": false,
+          "latency_ms": 856.6714650369249
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Ashavale",
+          "correct": false,
+          "latency_ms": 736.9939439813606
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 598.2194960233755
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: xawen vevin",
+          "correct": false,
+          "latency_ms": 802.0562179735862
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: 58",
+          "correct": false,
+          "latency_ms": 741.1470969673246
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 602.5727019878104
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Zanmark",
+          "correct": false,
+          "latency_ms": 731.204935000278
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: 65kxvf",
+          "correct": false,
+          "latency_ms": 1037.9880029940978
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: 7d89x3",
+          "correct": false,
+          "latency_ms": 889.3146709888242
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 833.1157230422832
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: m44gv3",
+          "correct": false,
+          "latency_ms": 800.2013570512645
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 609.038550988771
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Glenton",
+          "correct": false,
+          "latency_ms": 895.814495976083
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 1037.7166499965824
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 613.6576550197788
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 942.4161769566126
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 9tmqli",
+          "correct": false,
+          "latency_ms": 747.9298359830864
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 611.8393850047141
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Velland",
+          "correct": false,
+          "latency_ms": 933.6607570294291
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 857.8699249774218
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: gdlb3j",
+          "correct": false,
+          "latency_ms": 2200.2194660017267
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: j84rx6",
+          "correct": false,
+          "latency_ms": 2348.1977629708126
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: tiqj7y",
+          "correct": false,
+          "latency_ms": 2337.859254970681
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 907.2732680360787
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Vorgard",
+          "correct": false,
+          "latency_ms": 742.7058659959584
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 790.5079190386459
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 615.417757013347
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 606.0840069549158
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Myrstan",
+          "correct": false,
+          "latency_ms": 738.3116009877995
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Vornwick",
+          "correct": false,
+          "latency_ms": 727.8083839919418
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Mordford",
+          "correct": false,
+          "latency_ms": 739.6598919876851
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 755.2825500024483
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 601.2057060142979
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: 1i3vmz",
+          "correct": false,
+          "latency_ms": 872.8349140146747
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 609.2786719673313
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 643.6091320356354
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 9tmqli",
+          "correct": false,
+          "latency_ms": 781.2984309857711
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 623.4902939759195
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Myrmark",
+          "correct": false,
+          "latency_ms": 760.7183919753879
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 0vdp6o",
+          "correct": true,
+          "latency_ms": 856.0278050135821
+        }
+      ]
+    },
+    "yaml": {
+      "accuracy": 0.56,
+      "avg_latency_ms": 6599.741201426368,
+      "total_queries": 50,
+      "tokens": 61432,
+      "chars": 151241,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 275526.32394904504
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 910t2f",
+          "correct": false,
+          "latency_ms": 2833.701192983426
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Myrnia",
+          "correct": false,
+          "latency_ms": 1641.2707580020651
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Plexvale",
+          "correct": true,
+          "latency_ms": 891.8107129866257
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: dghbtm",
+          "correct": false,
+          "latency_ms": 1006.1801160336472
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 844.7717200033367
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Velstan",
+          "correct": true,
+          "latency_ms": 989.3537419848144
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Kelmark",
+          "correct": false,
+          "latency_ms": 884.2199420323595
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: MP364",
+          "correct": true,
+          "latency_ms": 1018.06246698834
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Ashahaven",
+          "correct": false,
+          "latency_ms": 1017.643126018811
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: 3kllzc",
+          "correct": false,
+          "latency_ms": 1030.5866199778393
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Miraton",
+          "correct": false,
+          "latency_ms": 989.0189400175586
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 870.3060009866022
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: zrp9dx",
+          "correct": false,
+          "latency_ms": 994.20277698664
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: WE266",
+          "correct": true,
+          "latency_ms": 1070.3762990306132
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 841.9397490215488
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Sarnia",
+          "correct": true,
+          "latency_ms": 925.4538990207948
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: 45gdej",
+          "correct": false,
+          "latency_ms": 1054.9155379994772
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 1118.2761780219153
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 949.6539729880169
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: 1qcwq8",
+          "correct": true,
+          "latency_ms": 1107.826590014156
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 904.7239139908925
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Ashahaven",
+          "correct": true,
+          "latency_ms": 937.3272940283641
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 1043.8251300365664
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "Yes",
+          "correct": true,
+          "latency_ms": 768.924659001641
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 918.026908999309
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: zrp9dx",
+          "correct": false,
+          "latency_ms": 1010.6097350362688
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 840.3787800343707
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 907.2516979649663
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: ypqpmq",
+          "correct": true,
+          "latency_ms": 969.9333799653687
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: 39iixh",
+          "correct": false,
+          "latency_ms": 1045.500415028073
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: 8vt43p",
+          "correct": true,
+          "latency_ms": 1066.1940609570593
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: 3i12vj",
+          "correct": false,
+          "latency_ms": 1035.4051129543222
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 840.8979109954089
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Myrheim",
+          "correct": false,
+          "latency_ms": 968.4464849997312
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 783.2395980367437
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "Yes",
+          "correct": true,
+          "latency_ms": 762.0829600491561
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 816.4865520084277
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 934.8299120320007
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Vornburg",
+          "correct": false,
+          "latency_ms": 940.5122100142762
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Tornhill",
+          "correct": false,
+          "latency_ms": 915.7008220208809
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelmark",
+          "correct": false,
+          "latency_ms": 958.9479389833286
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 882.3467490146868
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: 8d09jr",
+          "correct": false,
+          "latency_ms": 2675.9177389903925
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 3438.6112310457975
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "Yes",
+          "correct": true,
+          "latency_ms": 1750.745293975342
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: zrp9dx",
+          "correct": false,
+          "latency_ms": 1358.4881299757399
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 883.843916002661
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Axland",
+          "correct": false,
+          "latency_ms": 921.4373319991864
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 72wx7p",
+          "correct": false,
+          "latency_ms": 1100.5299130338244
+        }
+      ]
+    },
+    "csv": {
+      "accuracy": 0.0,
+      "avg_latency_ms": 0.0,
+      "total_queries": 0,
+      "tokens": 0,
+      "chars": 0,
+      "queries": []
+    },
+    "tsv": {
+      "accuracy": 0.0,
+      "avg_latency_ms": 0.0,
+      "total_queries": 0,
+      "tokens": 0,
+      "chars": 0,
+      "queries": []
+    },
+    "toon": {
+      "accuracy": 0.46,
+      "avg_latency_ms": 6254.969055157853,
+      "total_queries": 50,
+      "tokens": 62438,
+      "chars": 169250,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 265966.3172190194
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 2346.5012829983607
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Zanstan",
+          "correct": true,
+          "latency_ms": 2556.044584023766
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Plexvale",
+          "correct": true,
+          "latency_ms": 913.4353750268929
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: 7w8twt",
+          "correct": false,
+          "latency_ms": 980.7521150214598
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 932.1375390281901
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Velstan",
+          "correct": true,
+          "latency_ms": 831.8548430106603
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Ashavale",
+          "correct": false,
+          "latency_ms": 882.0196070009843
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: 699",
+          "correct": false,
+          "latency_ms": 906.5505699836649
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Ashahaven",
+          "correct": false,
+          "latency_ms": 854.4456760282628
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: 6kstcj",
+          "correct": false,
+          "latency_ms": 952.3404659703374
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Ashadale",
+          "correct": false,
+          "latency_ms": 889.0261219930835
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 723.9298530039378
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: w5506r",
+          "correct": false,
+          "latency_ms": 981.4524020184763
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: HA552",
+          "correct": false,
+          "latency_ms": 1143.076651962474
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 714.2111849971116
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 862.6036659698002
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: 493685",
+          "correct": false,
+          "latency_ms": 997.6580729708076
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: 4aegvf",
+          "correct": false,
+          "latency_ms": 986.9270279887132
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 760.1159820333123
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: 4h20ra",
+          "correct": false,
+          "latency_ms": 1219.9414719943888
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 718.4125759522431
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Keltburg",
+          "correct": false,
+          "latency_ms": 859.2477610218339
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 1009.3580479733646
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 754.9984179786406
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 854.87788496539
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: y9qzo7",
+          "correct": false,
+          "latency_ms": 956.1153389513493
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 945.3664390021004
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Kelland",
+          "correct": false,
+          "latency_ms": 890.1263189618476
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 4a8ywy",
+          "correct": false,
+          "latency_ms": 996.6106989886612
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: 6cj9k4",
+          "correct": false,
+          "latency_ms": 1041.8307159561664
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: j84rx6",
+          "correct": false,
+          "latency_ms": 1175.2629940165207
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: 3hloze",
+          "correct": false,
+          "latency_ms": 929.6376880374737
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 738.1169829750434
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 890.0569000397809
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 714.9377570021898
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 708.5259029990993
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 755.3933099843562
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Lorgard",
+          "correct": false,
+          "latency_ms": 902.8443020069972
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Keltburg",
+          "correct": false,
+          "latency_ms": 1069.0723300212994
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Mondford",
+          "correct": false,
+          "latency_ms": 835.9090110170655
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 858.2089470000938
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 689.8570759803988
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: aplgw1",
+          "correct": false,
+          "latency_ms": 878.6322330124676
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 725.2452169777825
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 911.3759259926155
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: y9qzo7",
+          "correct": false,
+          "latency_ms": 960.1018890389241
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "yes",
+          "correct": true,
+          "latency_ms": 743.4494000044651
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Velnia",
+          "correct": false,
+          "latency_ms": 860.1259179995395
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 0vdp6o",
+          "correct": true,
+          "latency_ms": 973.4130619908683
+        }
+      ]
+    },
+    "tson": {
+      "accuracy": 0.5,
+      "avg_latency_ms": 2883.0911570612807,
+      "total_queries": 50,
+      "tokens": 32117,
+      "chars": 69305,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 102299.6520610177
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 493685",
+          "correct": false,
+          "latency_ms": 877.0227580098435
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Zanstan",
+          "correct": true,
+          "latency_ms": 695.536440005526
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Duskport",
+          "correct": false,
+          "latency_ms": 706.9405250367709
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: a41zbl",
+          "correct": false,
+          "latency_ms": 800.2660640049726
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 2090.2717690332793
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Zannia",
+          "correct": false,
+          "latency_ms": 3395.951431011781
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Keltburg",
+          "correct": false,
+          "latency_ms": 2443.672578956466
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: SQ077",
+          "correct": false,
+          "latency_ms": 1364.5324900280684
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Zarahill",
+          "correct": false,
+          "latency_ms": 737.0760749909095
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: 6fhrxj",
+          "correct": false,
+          "latency_ms": 850.2207979909144
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Miraport",
+          "correct": true,
+          "latency_ms": 695.1682610088028
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 656.7701910389587
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: dpngwd",
+          "correct": true,
+          "latency_ms": 683.832608978264
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: ZT040",
+          "correct": false,
+          "latency_ms": 778.0150689650327
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 603.595155000221
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Thelheim",
+          "correct": false,
+          "latency_ms": 696.3849900057539
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: do5n1t",
+          "correct": true,
+          "latency_ms": 809.7164400387555
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: rf443d",
+          "correct": false,
+          "latency_ms": 873.5936800367199
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 610.8850599848665
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: 18k0ax",
+          "correct": false,
+          "latency_ms": 844.6700539789163
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 622.8794250055216
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Duskmore",
+          "correct": false,
+          "latency_ms": 864.101163984742
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 883.158489014022
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 638.9874480082653
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 723.6704880488105
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 9tmqli",
+          "correct": false,
+          "latency_ms": 754.9845789908431
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 614.2357520293444
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Drania",
+          "correct": false,
+          "latency_ms": 659.6607059473172
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 3geq10",
+          "correct": false,
+          "latency_ms": 849.5766730047762
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: r2ozz9",
+          "correct": true,
+          "latency_ms": 791.7436659918167
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: 8h7m3p",
+          "correct": false,
+          "latency_ms": 862.8233940107748
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: 53a5o4",
+          "correct": false,
+          "latency_ms": 873.8691639737226
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 587.2330510173924
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Thelmark",
+          "correct": false,
+          "latency_ms": 692.6088740001433
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 608.1534900004044
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 669.7893829550594
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 615.6754000112414
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 695.9379219915718
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Mondmore",
+          "correct": false,
+          "latency_ms": 652.4325220379978
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Keltport",
+          "correct": false,
+          "latency_ms": 688.3153629605658
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 699.0558879915625
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 629.3691549799405
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: j2patd",
+          "correct": false,
+          "latency_ms": 773.9993269788101
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 644.6435140096582
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 622.247923980467
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 9tmqli",
+          "correct": false,
+          "latency_ms": 757.2203419986181
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 603.6301710410044
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 718.0825669784099
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 0vdp6o",
+          "correct": true,
+          "latency_ms": 842.6975129987113
+        }
+      ]
+    },
+    "minemizer": {
+      "accuracy": 0.58,
+      "avg_latency_ms": 3174.815020802198,
+      "total_queries": 50,
+      "tokens": 36337,
+      "chars": 71848,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 121199.87329299329
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 3geq10",
+          "correct": false,
+          "latency_ms": 883.3238189690746
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Zanstan",
+          "correct": true,
+          "latency_ms": 748.9265809999779
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Plexvale",
+          "correct": true,
+          "latency_ms": 666.5539050009102
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: 1p8otx",
+          "correct": false,
+          "latency_ms": 879.9130350234918
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 637.299043009989
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Velstan",
+          "correct": true,
+          "latency_ms": 710.4351199814118
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Keltburg",
+          "correct": false,
+          "latency_ms": 728.5814029746689
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: UD334",
+          "correct": false,
+          "latency_ms": 785.05057701841
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Ashawick",
+          "correct": false,
+          "latency_ms": 736.6681229905225
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: 67i6yu",
+          "correct": false,
+          "latency_ms": 869.0445449901745
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Ashaport",
+          "correct": false,
+          "latency_ms": 736.6045819944702
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 634.4594410038553
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: dpngwd",
+          "correct": true,
+          "latency_ms": 728.2077600248158
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: ZT040",
+          "correct": false,
+          "latency_ms": 824.0245050401427
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 638.0958880181424
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Sarnia",
+          "correct": true,
+          "latency_ms": 735.9036830021068
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: do5n1t",
+          "correct": true,
+          "latency_ms": 854.4250910053961
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: r4sor8",
+          "correct": false,
+          "latency_ms": 822.2311349818483
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 654.2733869864605
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: 1xgpxa",
+          "correct": false,
+          "latency_ms": 859.6616390277632
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 634.7146020270884
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Monddale",
+          "correct": false,
+          "latency_ms": 722.3834299948066
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 865.8211629954167
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 676.6024029930122
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 748.8099340116605
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: yow8dt",
+          "correct": true,
+          "latency_ms": 774.0692649967968
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 648.9495949936099
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 720.0166539987549
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 903.9772260002792
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: 6cj9k4",
+          "correct": false,
+          "latency_ms": 890.9536130377091
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: u8ueih",
+          "correct": false,
+          "latency_ms": 764.1757809906267
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: tiqj7y",
+          "correct": false,
+          "latency_ms": 831.4221219625324
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 647.3324320395477
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 748.0980749824084
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 621.1872880230658
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 628.8006620015949
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 626.0181089746766
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Axvia",
+          "correct": false,
+          "latency_ms": 661.9096089852974
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Vornvale",
+          "correct": true,
+          "latency_ms": 746.4350649970584
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Zarahill",
+          "correct": false,
+          "latency_ms": 746.1896460154094
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 753.3559949952178
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 647.3095999681391
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: xet8sj",
+          "correct": false,
+          "latency_ms": 799.1293490049429
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 641.6622179676779
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 637.9122150246985
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: yow8dt",
+          "correct": true,
+          "latency_ms": 805.7973540271632
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 630.0193060305901
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Zanvia",
+          "correct": false,
+          "latency_ms": 730.4033990367316
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 0vdp6o",
+          "correct": true,
+          "latency_ms": 2153.7383749964647
+        }
+      ]
+    },
+    "minemizer_no_repeat": {
+      "accuracy": 0.54,
+      "avg_latency_ms": 3166.3566837180406,
+      "total_queries": 50,
+      "tokens": 36175,
+      "chars": 71299,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 118039.05757598113
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 10nusg",
+          "correct": false,
+          "latency_ms": 856.7228119936772
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Velheim",
+          "correct": false,
+          "latency_ms": 680.2059980109334
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Plexvale",
+          "correct": true,
+          "latency_ms": 691.0407480318099
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: 00crz1",
+          "correct": false,
+          "latency_ms": 862.4744009575807
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 652.198891970329
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Velstan",
+          "correct": true,
+          "latency_ms": 674.1628430318087
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Keltburg",
+          "correct": false,
+          "latency_ms": 732.6297459658235
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: IH851",
+          "correct": false,
+          "latency_ms": 785.0171730387956
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Glenford",
+          "correct": true,
+          "latency_ms": 708.20085296873
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: 6fhrxj",
+          "correct": false,
+          "latency_ms": 884.1280560009181
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Ashavale",
+          "correct": false,
+          "latency_ms": 731.9611519924365
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 639.9226840003394
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: dpngwd",
+          "correct": true,
+          "latency_ms": 722.4174229777418
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: 58",
+          "correct": false,
+          "latency_ms": 734.0820859535597
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 631.7323099938221
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Sarnia",
+          "correct": true,
+          "latency_ms": 720.9251730237156
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: x9q7m2",
+          "correct": false,
+          "latency_ms": 860.2075449889526
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: r4sor8",
+          "correct": false,
+          "latency_ms": 800.7008350105025
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 670.1778349815868
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: m42wsc",
+          "correct": false,
+          "latency_ms": 824.3586390162818
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 640.2569419587962
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Kelthaven",
+          "correct": false,
+          "latency_ms": 732.1433210163377
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 887.416134995874
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 646.5504459920339
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 715.2736100251786
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: yow8dt",
+          "correct": true,
+          "latency_ms": 821.3638580054976
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 642.5663090194575
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 753.8527729921043
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 871.8047240399756
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: 6cj9k4",
+          "correct": false,
+          "latency_ms": 840.9730650018901
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: 8j7m3p",
+          "correct": false,
+          "latency_ms": 929.4764699880034
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: tiqj7y",
+          "correct": false,
+          "latency_ms": 838.5324269765988
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 665.2905989903957
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 722.0087290043011
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 646.9858930213377
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 626.2143870117143
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 630.0199329853058
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Axreich",
+          "correct": false,
+          "latency_ms": 680.9025819529779
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Vornvale",
+          "correct": true,
+          "latency_ms": 741.5114779723808
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Zanstan",
+          "correct": false,
+          "latency_ms": 732.2013740194961
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 2327.9980390216224
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1925.7513309712522
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: x87czr",
+          "correct": false,
+          "latency_ms": 1766.3755370303988
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 714.7780209779739
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 641.032176965382
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: yow8dt",
+          "correct": true,
+          "latency_ms": 779.4028620119207
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 644.4499540375546
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 923.7324020359665
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 0x717h",
+          "correct": false,
+          "latency_ms": 926.6440279898234
+        }
+      ]
+    },
+    "minemizer_compact": {
+      "accuracy": 0.56,
+      "avg_latency_ms": 3202.384498678148,
+      "total_queries": 50,
+      "tokens": 35064,
+      "chars": 65768,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 120432.17669904698
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 18k0ax",
+          "correct": false,
+          "latency_ms": 871.5508269960992
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Zanstan",
+          "correct": true,
+          "latency_ms": 733.6544459685683
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Plexvale",
+          "correct": true,
+          "latency_ms": 669.7664429666474
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: 1dlucl",
+          "correct": false,
+          "latency_ms": 798.7186819664203
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 684.9264230113477
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Velstan",
+          "correct": true,
+          "latency_ms": 724.4699709699489
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Keltburg",
+          "correct": false,
+          "latency_ms": 726.5376650029793
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: BG344",
+          "correct": false,
+          "latency_ms": 761.8847269914113
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Glenford",
+          "correct": true,
+          "latency_ms": 678.8087649620138
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: ft6yri",
+          "correct": false,
+          "latency_ms": 770.6343620084226
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Miraport",
+          "correct": true,
+          "latency_ms": 742.4197070067748
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 627.9840660281479
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: dpv9j8",
+          "correct": false,
+          "latency_ms": 809.3825730029494
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: 427",
+          "correct": false,
+          "latency_ms": 1888.3412959985435
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 1657.425013021566
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Vornia",
+          "correct": false,
+          "latency_ms": 1599.658079969231
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: do5n1t",
+          "correct": true,
+          "latency_ms": 1319.7041599778458
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: 4ur2yu",
+          "correct": false,
+          "latency_ms": 841.6876789997332
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 655.7573169702664
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: 6m81rj",
+          "correct": false,
+          "latency_ms": 925.7946879952215
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 647.3234050208703
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Glenton",
+          "correct": false,
+          "latency_ms": 686.3807499757968
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 920.9979609586298
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 653.9618609822355
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 765.6222489895299
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: tee13n",
+          "correct": false,
+          "latency_ms": 775.3738890169188
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 635.4864850291051
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Vordoria",
+          "correct": false,
+          "latency_ms": 715.8157330122776
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 859.8930489970371
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: 6cj9k4",
+          "correct": false,
+          "latency_ms": 890.127163962461
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: 8vfu9p",
+          "correct": false,
+          "latency_ms": 850.5557200405747
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: tiqj7y",
+          "correct": false,
+          "latency_ms": 807.4888379778713
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 641.8063940363936
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Theldoria",
+          "correct": true,
+          "latency_ms": 753.3995929989032
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 650.402314029634
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 682.8411089954898
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 634.6481320215389
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Sarmark",
+          "correct": false,
+          "latency_ms": 725.7807739661075
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Vornvale",
+          "correct": true,
+          "latency_ms": 710.2509090327658
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Lorstan",
+          "correct": false,
+          "latency_ms": 703.0536709935404
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 762.3728460166603
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 619.5537029998377
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: 1g4eai",
+          "correct": false,
+          "latency_ms": 852.4446520023048
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 639.7268599830568
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 620.0538679840975
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: tee13n",
+          "correct": false,
+          "latency_ms": 788.2056020316668
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 613.5124099673703
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Velnia",
+          "correct": false,
+          "latency_ms": 732.9085340024903
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 0vdp6o",
+          "correct": true,
+          "latency_ms": 857.9528700211085
+        }
+      ]
+    },
+    "minemizer_compact_no_repeat": {
+      "accuracy": 0.5,
+      "avg_latency_ms": 3080.286412939895,
+      "total_queries": 50,
+      "tokens": 34911,
+      "chars": 65291,
+      "queries": [
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 113523.50260701496
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 74 Cedar Way?",
+          "expected": "w3ggo9",
+          "actual": "A: 1p778r",
+          "correct": false,
+          "latency_ms": 910.5275929905474
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id hgnzei?",
+          "expected": "Zanstan",
+          "actual": "A: Velheim",
+          "correct": false,
+          "latency_ms": 707.3417530045845
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id p0j43d?",
+          "expected": "Plexvale",
+          "actual": "A: Plexvale",
+          "correct": true,
+          "latency_ms": 685.0289829890244
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 594 Silver Place?",
+          "expected": "aqlcau",
+          "actual": "A: a2qyru",
+          "correct": false,
+          "latency_ms": 824.7586380457506
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 668.107700010296
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id r7ko64?",
+          "expected": "Velstan",
+          "actual": "A: Velstan",
+          "correct": true,
+          "latency_ms": 700.8504460100085
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id x8j1cc?",
+          "expected": "Crestburg",
+          "actual": "A: Keltburg",
+          "correct": false,
+          "latency_ms": 706.4808949944563
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id bzgfli?",
+          "expected": "MP364",
+          "actual": "A: ZU693",
+          "correct": false,
+          "latency_ms": 804.070144018624
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id xho87f?",
+          "expected": "Glenford",
+          "actual": "A: Glenford",
+          "correct": true,
+          "latency_ms": 673.9730649860576
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 292 Ember Avenue?",
+          "expected": "0gub5k",
+          "actual": "A: ft6yri",
+          "correct": false,
+          "latency_ms": 791.9451729976572
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id q57te8?",
+          "expected": "Miraport",
+          "actual": "A: Ashavale",
+          "correct": false,
+          "latency_ms": 717.7414550096728
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Cresthaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 613.699106965214
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Shadow Court?",
+          "expected": "dpngwd",
+          "actual": "A: pofkjw",
+          "correct": false,
+          "latency_ms": 768.390323035419
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the zip for person with id of0onj?",
+          "expected": "WE266",
+          "actual": "A: ZT040",
+          "correct": false,
+          "latency_ms": 794.8999989894219
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 632.754098973237
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id ssrura?",
+          "expected": "Sarnia",
+          "actual": "A: Sarnia",
+          "correct": true,
+          "latency_ms": 738.6098629795015
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 584 Shadow Lane?",
+          "expected": "do5n1t",
+          "actual": "A: do5n1t",
+          "correct": true,
+          "latency_ms": 803.8477020454593
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 486 Stone Street?",
+          "expected": "rfi44t",
+          "actual": "A: r4sor8",
+          "correct": false,
+          "latency_ms": 804.6569160069339
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 616.6125739691779
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 432 Cedar Place?",
+          "expected": "1qcwq8",
+          "actual": "A: 1i3661",
+          "correct": false,
+          "latency_ms": 896.6580409905873
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondhaven? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 676.4120009611361
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ypqpmq?",
+          "expected": "Ashahaven",
+          "actual": "A: Zarahill",
+          "correct": false,
+          "latency_ms": 746.9967569923028
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 941 Ember Drive?",
+          "expected": "65kxvf",
+          "actual": "A: 65kxvf",
+          "correct": true,
+          "latency_ms": 1527.7717770077288
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaton? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 2307.468402024824
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 609 Iron Avenue?",
+          "expected": "batqxc",
+          "actual": "A: batqxc",
+          "correct": true,
+          "latency_ms": 1878.760869964026
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 9tmqli",
+          "correct": false,
+          "latency_ms": 1486.3820270402357
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Plexport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 861.3819789607078
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 9eoxxc?",
+          "expected": "Thelheim",
+          "actual": "A: Drania",
+          "correct": false,
+          "latency_ms": 688.6386160040274
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 313 Crystal Way?",
+          "expected": "ypqpmq",
+          "actual": "A: 3h03zb",
+          "correct": false,
+          "latency_ms": 861.503942986019
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 970 Silver Drive?",
+          "expected": "r2ozz9",
+          "actual": "A: zso6ax",
+          "correct": false,
+          "latency_ms": 794.4215189781971
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 488 Golden Lane?",
+          "expected": "8vt43p",
+          "actual": "A: 8vfu9p",
+          "correct": false,
+          "latency_ms": 870.3445820137858
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 30 Ember Drive?",
+          "expected": "5dfrlw",
+          "actual": "A: tiqj7y",
+          "correct": false,
+          "latency_ms": 863.6177959851921
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornhill? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 639.2851450364105
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 0ljc6w?",
+          "expected": "Theldoria",
+          "actual": "A: Thelmark",
+          "correct": false,
+          "latency_ms": 731.3779400428757
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondford? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 636.224546993617
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Mondwick? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 633.0007179640234
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Keltdale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 644.5613729883917
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 19mo1r?",
+          "expected": "Lordoria",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 771.7546280473471
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id jq7w7j?",
+          "expected": "Vornvale",
+          "actual": "A: Ashavale",
+          "correct": false,
+          "latency_ms": 692.8227070020512
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the city for person with id ka51e0?",
+          "expected": "Tornvale",
+          "actual": "A: Lornia",
+          "correct": false,
+          "latency_ms": 742.8266739589162
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id 4q0b8i?",
+          "expected": "Thelheim",
+          "actual": "A: Thelheim",
+          "correct": true,
+          "latency_ms": 758.7265039910562
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Torndale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 654.4654369936325
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 957 Shadow Court?",
+          "expected": "x3gguk",
+          "actual": "A: x8j1cc",
+          "correct": false,
+          "latency_ms": 838.1954570068046
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Tornport? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 659.4110510195605
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Ashaburg? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 643.6961269937456
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 664 Silver Road?",
+          "expected": "yow8dt",
+          "actual": "A: 9tmqli",
+          "correct": false,
+          "latency_ms": 785.1179169956595
+        },
+        {
+          "type": "exists",
+          "question": "Is there anyone living in Miravale? Answer yes or no.",
+          "expected": "yes",
+          "actual": "A: yes",
+          "correct": true,
+          "latency_ms": 641.0421699983999
+        },
+        {
+          "type": "find_by_id",
+          "question": "What is the country for person with id j839ag?",
+          "expected": "Kelgard",
+          "actual": "A: Myrland",
+          "correct": false,
+          "latency_ms": 740.9407329978421
+        },
+        {
+          "type": "find_by_field",
+          "question": "What is the id of the person who lives on 841 Ember Road?",
+          "expected": "0vdp6o",
+          "actual": "A: 0vdp6o",
+          "correct": true,
+          "latency_ms": 852.7141740196384
+        }
+      ]
+    }
+  }
+}

@@ -90,6 +90,7 @@ class LLMAccuracyBenchmark:
         formats: list[str] | None = None,
         save_interval: int = 10,
         verbose: bool = True,
+        no_think: bool = False,
     ):
         """Initialize benchmark runner.
 
@@ -101,10 +102,12 @@ class LLMAccuracyBenchmark:
             formats: Formats to test. Defaults to subset suitable for LLM.
             save_interval: Save results every N queries.
             verbose: Print progress.
+            no_think: Prepend /no_think to disable reasoning (Qwen3 models).
         """
         self.model = model
         self.endpoint = endpoint
         self.concurrency = concurrency
+        self.no_think = no_think
         self.formats = formats or [
             "json_pretty",
             "json_min",
@@ -269,7 +272,8 @@ class LLMAccuracyBenchmark:
     def _build_prompt(self, formatted_data: str, question: str) -> str:
         """Build full prompt with one-shot example."""
         example_q, example_a = get_oneshot_example()
-        return f"""{formatted_data}
+        prefix = "/no_think " if self.no_think else ""
+        return f"""{prefix}{formatted_data}
 ---
 Answer the questions. Response must start with A: ANSWER END_RESPONSE
 Q: {example_q}
@@ -322,6 +326,7 @@ async def run_benchmark(
     seed: int = DEFAULT_SEED,
     formats: list[str] | None = None,
     verbose: bool = True,
+    no_think: bool = False,
 ) -> LLMBenchmarkResults:
     """Convenience function to run benchmark.
 
@@ -335,6 +340,7 @@ async def run_benchmark(
         seed: Random seed.
         formats: Formats to test.
         verbose: Print progress.
+        no_think: Prepend /no_think to disable reasoning (Qwen3 models).
 
     Returns:
         Benchmark results.
@@ -354,6 +360,7 @@ async def run_benchmark(
         concurrency=concurrency,
         formats=formats,
         verbose=verbose,
+        no_think=no_think,
     )
 
     return await benchmark.run(data, n_queries, seed, data_file)
