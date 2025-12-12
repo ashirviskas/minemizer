@@ -48,8 +48,7 @@ id; name; address{ street; city}
 ```
 
 ### Sparse Data
-Control how sparse fields are handled using `sparsity_threshold`. Fields appearing in fewer records than the threshold are shown inline in rows rather than in the header. Even more json-ish.
-
+Control how sparse fields are handled using `sparsity_threshold` (default=0.5).
 
 ```python
 data = [
@@ -67,7 +66,7 @@ print(minemize(data, sparsity_threshold=1.0))
 #### Default sparsity threshold outputs:
 
 ```
-default sparsity threshold:
+default (0.5) sparsity_threshold:
 
 id; name; location{ city; floor; desk}
 1; Lukas;{ Vilnius; 3;}
@@ -76,7 +75,7 @@ id; name; location{ city; floor; desk}
 4; Oliver;{ London; 2; B04}
 
 ----------
-Strict (1.0): only fields in ALL records go in schema, "desk" becomes sparse
+strict (1.0) sparsity_threshold: only fields in ALL records go in schema, "desk" becomes sparse
 
 id; name; location{ city; floor; ...}
 1; Lukas;{ Vilnius; 3}
