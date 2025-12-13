@@ -227,3 +227,267 @@ def get_oneshot_example() -> tuple[str, str]:
     question = "What is the id of the person who lives on 12 Jumberbobr Street?"
     answer = "x9q7m2"
     return question, answer
+
+
+# --- Flat data generator ---
+
+_DEPARTMENTS = ["Engineering", "Sales", "Marketing", "Finance", "HR", "Operations", "Legal", "Support"]
+_STATUSES = ["active", "inactive", "pending", "suspended"]
+_LEVELS = ["junior", "mid", "senior", "lead", "principal"]
+
+
+def generate_flat_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+) -> list[dict]:
+    """Generate flat dataset with 7+ columns, no nesting.
+
+    Args:
+        size: Number of records to generate.
+        seed: Random seed for reproducibility.
+
+    Returns:
+        List of flat records.
+    """
+    rng = random.Random(seed)
+    records = []
+
+    for _ in range(size):
+        record = {
+            "id": _random_id(rng),
+            "name": _random_name(rng),
+            "email": _random_email(rng),
+            "department": rng.choice(_DEPARTMENTS),
+            "level": rng.choice(_LEVELS),
+            "salary": rng.randint(30000, 200000),
+            "status": rng.choice(_STATUSES),
+            "years_employed": rng.randint(0, 25),
+        }
+        records.append(record)
+
+    return records
+
+
+def _random_email(rng: random.Random) -> str:
+    """Generate fictional email."""
+    user = _random_id(rng)
+    domains = ["acme.co", "globex.io", "initech.net", "umbrella.org", "stark.dev"]
+    return f"{user}@{rng.choice(domains)}"
+
+
+def save_flat_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+    output_dir: Path | None = None,
+) -> Path:
+    """Generate and save flat dataset."""
+    output_dir = output_dir or FIXTURES_DIR / "llm_accuracy"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    data = generate_flat_dataset(size, seed)
+    path = output_dir / f"flat_{size}.json"
+    path.write_text(json.dumps(data, indent=2))
+
+    return path
+
+
+def generate_flat_queries(
+    data: list[dict],
+    n_queries: int,
+    seed: int = DEFAULT_SEED,
+) -> list[Query]:
+    """Generate queries for flat dataset."""
+    rng = random.Random(seed)
+    queries: list[Query] = []
+
+    query_types = ["find_by_id", "find_by_field", "exists"]
+    per_type = n_queries // len(query_types)
+    remainder = n_queries % len(query_types)
+
+    for i, qtype in enumerate(query_types):
+        count = per_type + (1 if i < remainder else 0)
+        for _ in range(count):
+            record = rng.choice(data)
+            query = _make_flat_query(record, qtype, data, rng)
+            queries.append(query)
+
+    rng.shuffle(queries)
+    return queries
+
+
+def _make_flat_query(
+    record: dict,
+    qtype: str,
+    all_data: list[dict],
+    rng: random.Random,
+) -> Query:
+    """Create a single query for flat record."""
+    if qtype == "find_by_id":
+        field = rng.choice(["department", "level", "status", "salary"])
+        answer = record[field]
+        question = f"What is the {field} for person with id {record['id']}?"
+        return Query(type=qtype, question=question, answer=str(answer))
+
+    elif qtype == "find_by_field":
+        email = record["email"]
+        question = f"What is the id of the person with email {email}?"
+        return Query(type=qtype, question=question, answer=record["id"])
+
+    else:  # exists
+        dept = record["department"]
+        question = f"Is there anyone in the {dept} department? Answer yes or no."
+        return Query(type=qtype, question=question, answer="yes")
+
+
+# --- Sparse nested data generator ---
+
+_SKILLS = ["Python", "JavaScript", "Go", "Rust", "Java", "C++", "TypeScript", "Ruby", "Kotlin", "Swift"]
+_CERTIFICATIONS = ["AWS", "GCP", "Azure", "K8s", "Docker", "Terraform", "PMP", "Scrum", "CISSP", "CKA"]
+_HOBBIES = ["photography", "hiking", "gaming", "reading", "cooking", "music", "travel", "sports", "art", "writing"]
+_LANGUAGES = [
+    "English",
+    "Spanish",
+    "Mandarin",
+    "French",
+    "German",
+    "Japanese",
+    "Portuguese",
+    "Korean",
+    "Arabic",
+    "Hindi",
+]
+
+
+def generate_sparse_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+) -> list[dict]:
+    """Generate sparse nested dataset.
+
+    Most optional fields have ~0.7 sparsity (30% present),
+    some have ~0.3 sparsity (70% present).
+
+    Args:
+        size: Number of records to generate.
+        seed: Random seed for reproducibility.
+
+    Returns:
+        List of sparse nested records.
+    """
+    rng = random.Random(seed)
+    records = []
+
+    for _ in range(size):
+        record = {
+            "id": _random_id(rng),
+            "name": _random_name(rng),
+            "contact": {
+                "email": _random_email(rng),  # always present
+            },
+            "employment": {
+                "department": rng.choice(_DEPARTMENTS),  # always present
+                "level": rng.choice(_LEVELS),  # always present
+            },
+        }
+
+        # ~0.3 sparsity (70% present) - more common fields
+        if rng.random() > 0.3:
+            record["contact"]["phone"] = _random_phone(rng)
+        if rng.random() > 0.3:
+            record["employment"]["salary"] = rng.randint(30000, 200000)
+        if rng.random() > 0.3:
+            record["employment"]["years"] = rng.randint(0, 25)
+
+        # ~0.7 sparsity (30% present) - rare fields
+        if rng.random() > 0.7:
+            record["contact"]["address"] = {
+                "city": _random_city(rng),
+                "country": _random_country(rng),
+            }
+        if rng.random() > 0.7:
+            record["skills"] = rng.sample(_SKILLS, k=rng.randint(1, 4))
+        if rng.random() > 0.7:
+            record["certifications"] = rng.sample(_CERTIFICATIONS, k=rng.randint(1, 3))
+        if rng.random() > 0.7:
+            record["languages"] = rng.sample(_LANGUAGES, k=rng.randint(1, 3))
+        if rng.random() > 0.7:
+            record["hobbies"] = rng.sample(_HOBBIES, k=rng.randint(1, 3))
+        if rng.random() > 0.7:
+            record["metadata"] = {
+                "created": f"2024-{rng.randint(1, 12):02d}-{rng.randint(1, 28):02d}",
+                "source": rng.choice(["manual", "import", "api", "migration"]),
+            }
+
+        records.append(record)
+
+    return records
+
+
+def _random_phone(rng: random.Random) -> str:
+    """Generate fictional phone number."""
+    return f"+1-{rng.randint(200, 999)}-{rng.randint(100, 999)}-{rng.randint(1000, 9999)}"
+
+
+def save_sparse_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+    output_dir: Path | None = None,
+) -> Path:
+    """Generate and save sparse dataset."""
+    output_dir = output_dir or FIXTURES_DIR / "llm_accuracy"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    data = generate_sparse_dataset(size, seed)
+    path = output_dir / f"sparse_{size}.json"
+    path.write_text(json.dumps(data, indent=2))
+
+    return path
+
+
+def generate_sparse_queries(
+    data: list[dict],
+    n_queries: int,
+    seed: int = DEFAULT_SEED,
+) -> list[Query]:
+    """Generate queries for sparse dataset."""
+    rng = random.Random(seed)
+    queries: list[Query] = []
+
+    query_types = ["find_by_id", "find_by_field", "exists"]
+    per_type = n_queries // len(query_types)
+    remainder = n_queries % len(query_types)
+
+    for i, qtype in enumerate(query_types):
+        count = per_type + (1 if i < remainder else 0)
+        for _ in range(count):
+            record = rng.choice(data)
+            query = _make_sparse_query(record, qtype, data, rng)
+            queries.append(query)
+
+    rng.shuffle(queries)
+    return queries
+
+
+def _make_sparse_query(
+    record: dict,
+    qtype: str,
+    all_data: list[dict],
+    rng: random.Random,
+) -> Query:
+    """Create a single query for sparse record."""
+    if qtype == "find_by_id":
+        # Query fields that are always present
+        field = rng.choice(["department", "level"])
+        answer = record["employment"][field]
+        question = f"What is the {field} for person with id {record['id']}?"
+        return Query(type=qtype, question=question, answer=str(answer))
+
+    elif qtype == "find_by_field":
+        email = record["contact"]["email"]
+        question = f"What is the id of the person with email {email}?"
+        return Query(type=qtype, question=question, answer=record["id"])
+
+    else:  # exists
+        dept = record["employment"]["department"]
+        question = f"Is there anyone in the {dept} department? Answer yes or no."
+        return Query(type=qtype, question=question, answer="yes")

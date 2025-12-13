@@ -6,7 +6,8 @@
     "data_file": "nested_1000",
     "data_size": 1000,
     "n_queries": 50,
-    "seed": 42
+    "seed": 42,
+    "run_name": "Qwen3-VL-8B-Instruct-Q8_0"
   },
   "results": {
     "json_pretty": {

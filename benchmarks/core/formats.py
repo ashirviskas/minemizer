@@ -36,6 +36,9 @@ def convert_to_format(data: list[dict], format_name: str) -> str | None:
         "minemizer_no_repeat": lambda d: minemize(d, header_repeat_interval=None),
         "minemizer_compact": lambda d: minemize(d, preset=presets.compact),
         "minemizer_compact_no_repeat": lambda d: minemize(d, preset=presets.compact, header_repeat_interval=None),
+        # Repeat keys every 10 rows (for flat data)
+        "minemizer_repeat10": lambda d: minemize(d, header_repeat_interval=10),
+        "minemizer_compact_repeat10": lambda d: minemize(d, preset=presets.compact, header_repeat_interval=10),
     }
 
     converter = converters.get(format_name)

@@ -44,6 +44,7 @@ def main() -> int:
     # LLM command
     llm_parser = subparsers.add_parser("llm", help="Run LLM accuracy benchmarks")
     llm_parser.add_argument("--model", required=True, help="Model name (e.g., qwen2.5:7b)")
+    llm_parser.add_argument("--name", help="Run name for output file (defaults to sanitized model name)")
     llm_parser.add_argument(
         "--endpoint", default=DEFAULT_LLM_ENDPOINT, help=f"API endpoint (default: {DEFAULT_LLM_ENDPOINT})"
     )
@@ -189,10 +190,14 @@ async def cmd_llm(args: argparse.Namespace) -> int:
         # Run all available datasets
         data_files = sorted([f.stem for f in llm_fixtures.glob("*.json")])
 
+    run_name = args.name  # Will be None if not provided, benchmark will use sanitized model name
+
     print("=" * 60)
     print("LLM Accuracy Benchmarks")
     print("=" * 60)
     print(f"Model: {args.model}")
+    if run_name:
+        print(f"Run name: {run_name}")
     print(f"Endpoint: {args.endpoint}")
     print(f"Datasets: {', '.join(data_files)}")
     print(f"Queries: {args.queries}")
@@ -212,6 +217,7 @@ async def cmd_llm(args: argparse.Namespace) -> int:
                 data_file=data_file,
                 model=args.model,
                 n_queries=args.queries,
+                run_name=run_name,
                 endpoint=args.endpoint,
                 api_key=args.api_key,
                 concurrency=args.concurrency,
@@ -299,7 +305,7 @@ def _generate_llm_report_html(all_results: list[tuple[str, dict]]) -> str:
     # Group results by model and dataset
     by_model: dict[str, list[tuple[str, dict]]] = {}
     datasets: set[str] = set()
-    for name, data in all_results:
+    for _name, data in all_results:
         model = data["meta"]["model"]
         dataset = data["meta"]["data_file"]
         datasets.add(dataset)
@@ -332,7 +338,7 @@ def _generate_llm_report_html(all_results: list[tuple[str, dict]]) -> str:
 
     # Generate content for each model × dataset combination
     for model in models:
-        model_data = {ds: d for ds, d in by_model[model]}
+        model_data = dict(by_model[model])
         for dataset in datasets_list:
             if dataset not in model_data:
                 continue
@@ -538,6 +544,176 @@ def _llm_summary_table(all_results: list[tuple[str, dict]], models: list[str]) -
     return "\n".join(lines)
 
 
+def _get_data_type(dataset_name: str) -> str:
+    """Determine data type from dataset name."""
+    if dataset_name.startswith("flat_"):
+        return "flat"
+    elif dataset_name.startswith("sparse_"):
+        return "sparse"
+    return "nested"
+
+
+def _llm_combined_summary(all_results: list[tuple[str, dict]]) -> str:
+    """Generate combined summary tables, grouped by data type for fair comparison."""
+    n_models = len({data["meta"]["model"] for _name, data in all_results})
+
+    # Group results by data type
+    by_type: dict[str, list[tuple[str, dict]]] = {"nested": [], "flat": [], "sparse": []}
+    for name, data in all_results:
+        dataset_name = data["meta"]["data_file"]
+        dtype = _get_data_type(dataset_name)
+        by_type[dtype].append((name, data))
+
+    lines = ["<div class='summary-section'>", "<h2>LLM Accuracy Summary</h2>"]
+
+    # Generate summary for each data type that has results
+    for dtype in ["nested", "flat", "sparse"]:
+        type_results = by_type[dtype]
+        if not type_results:
+            continue
+
+        table_html = _build_type_summary_table(type_results, dtype, n_models)
+        if table_html:
+            lines.append(table_html)
+
+    lines.extend(
+        [
+            "<p class='metric-explainer'><strong>Efficiency</strong> = Accuracy × (JSON tokens ÷ Format tokens). "
+            "Higher is better — balances accuracy with token savings.</p>",
+            "</div>",
+        ]
+    )
+
+    return "\n".join(lines)
+
+
+def _build_type_summary_table(results: list[tuple[str, dict]], dtype: str, n_models: int) -> str:
+    """Build summary table for a specific data type."""
+    # Aggregate stats for this data type
+    format_stats: dict[str, dict] = {}
+    base_chars_list: list[int] = []
+    base_tokens_list: list[int] = []
+
+    for _name, data in results:
+        jp = data["results"].get("json_pretty", {})
+        if jp.get("chars"):
+            base_chars_list.append(jp["chars"])
+        if jp.get("tokens"):
+            base_tokens_list.append(jp["tokens"])
+
+        for fmt, res in data["results"].items():
+            if res.get("total_queries", 0) == 0:
+                continue
+            if fmt not in format_stats:
+                format_stats[fmt] = {"acc": [], "tokens": [], "latency": []}
+            format_stats[fmt]["acc"].append(res.get("accuracy", 0))
+            format_stats[fmt]["tokens"].append(res.get("tokens", 0))
+            format_stats[fmt]["latency"].append(res.get("avg_latency_ms", 0))
+
+    if not format_stats:
+        return ""
+
+    base_chars = sum(base_chars_list) / len(base_chars_list) if base_chars_list else 0
+    base_tokens = sum(base_tokens_list) / len(base_tokens_list) if base_tokens_list else 1
+    n_datasets = len(results)
+
+    # Compute averages
+    avg_data = []
+    for fmt, stats in format_stats.items():
+        avg_acc = sum(stats["acc"]) / len(stats["acc"]) if stats["acc"] else 0
+        avg_tokens = sum(stats["tokens"]) / len(stats["tokens"]) if stats["tokens"] else 0
+        avg_latency = sum(stats["latency"]) / len(stats["latency"]) if stats["latency"] else 0
+        og_cpt = base_chars / avg_tokens if avg_tokens else 0
+        compression_ratio = base_tokens / avg_tokens if avg_tokens else 0
+        efficiency = avg_acc * compression_ratio
+
+        avg_data.append(
+            {
+                "fmt": fmt,
+                "acc": avg_acc,
+                "tokens": avg_tokens,
+                "og_cpt": og_cpt,
+                "latency": avg_latency,
+                "efficiency": efficiency,
+            }
+        )
+
+    avg_data.sort(key=lambda x: -x["efficiency"])
+
+    # Build HTML
+    type_label = dtype.capitalize()
+    lines = [
+        f"<h3>{type_label} Data</h3>",
+        f"<p><em>{n_datasets} dataset(s), {n_models} model(s). Sorted by efficiency.</em></p>",
+    ]
+    lines.append(_build_summary_table(avg_data, show_coverage=False))
+
+    return "\n".join(lines)
+
+
+def _build_summary_table(data: list[dict], show_coverage: bool = False) -> str:
+    """Build an HTML summary table for format data."""
+    if not data:
+        return ""
+
+    # Find min/max for gradients
+    eff_vals = [d["efficiency"] for d in data if d["efficiency"] > 0]
+    acc_vals = [d["acc"] for d in data]
+    tok_vals = [d["tokens"] for d in data if d["tokens"] > 0]
+    og_cpt_vals = [d["og_cpt"] for d in data if d["og_cpt"] > 0]
+    lat_vals = [d["latency"] for d in data if d["latency"] > 0]
+
+    eff_range = (min(eff_vals), max(eff_vals)) if eff_vals else (0, 1)
+    acc_range = (min(acc_vals), max(acc_vals)) if acc_vals else (0, 1)
+    tok_range = (min(tok_vals), max(tok_vals)) if tok_vals else (0, 1)
+    og_cpt_range = (min(og_cpt_vals), max(og_cpt_vals)) if og_cpt_vals else (0, 1)
+    lat_range = (min(lat_vals), max(lat_vals)) if lat_vals else (0, 1)
+
+    best_eff = max(eff_vals) if eff_vals else 0
+    best_acc = max(acc_vals) if acc_vals else 0
+    best_tok = min(tok_vals) if tok_vals else 0
+    best_og_cpt = max(og_cpt_vals) if og_cpt_vals else 0
+    best_lat = min(lat_vals) if lat_vals else 0
+
+    header = (
+        "<tr><th>Format</th><th>Efficiency</th><th>Accuracy</th><th>Tokens</th><th>og_chars/tok</th><th>Latency</th>"
+    )
+    if show_coverage:
+        header += "<th>Coverage</th>"
+    header += "</tr>"
+
+    lines = ["<table class='summary-table'>", header]
+
+    for d in data:
+        eff_style = _gradient_style_with_best(
+            d["efficiency"], eff_range[0], eff_range[1], True, d["efficiency"] == best_eff
+        )
+        acc_style = _gradient_style_with_best(d["acc"], acc_range[0], acc_range[1], True, d["acc"] == best_acc)
+        tok_style = _gradient_style_with_best(d["tokens"], tok_range[0], tok_range[1], False, d["tokens"] == best_tok)
+        og_cpt_style = _gradient_style_with_best(
+            d["og_cpt"], og_cpt_range[0], og_cpt_range[1], True, d["og_cpt"] == best_og_cpt
+        )
+        lat_style = _gradient_style_with_best(d["latency"], lat_range[0], lat_range[1], False, d["latency"] == best_lat)
+
+        tok_display = f"{d['tokens'] / 1000:.1f}k" if d["tokens"] >= 1000 else f"{d['tokens']:.0f}"
+
+        row = (
+            f"<tr><td>{d['fmt']}</td>"
+            f"<td{eff_style}>{d['efficiency']:.2f}</td>"
+            f"<td{acc_style}>{d['acc']:.1%}</td>"
+            f"<td{tok_style}>{tok_display}</td>"
+            f"<td{og_cpt_style}>{d['og_cpt']:.1f}</td>"
+            f"<td{lat_style}>{d['latency']:.0f}ms</td>"
+        )
+        if show_coverage:
+            row += f"<td>{d['coverage']}</td>"
+        row += "</tr>"
+        lines.append(row)
+
+    lines.append("</table>")
+    return "\n".join(lines)
+
+
 def _gradient_colors(ratio: float) -> tuple[str, str]:
     """Generate light and dark mode gradient colors for a ratio (0=bad, 1=good)."""
     # Light mode: pastel pink-to-green
@@ -591,6 +767,137 @@ def _llm_dataset_tabs(datasets: list[str]) -> str:
     return "\n".join(lines)
 
 
+def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> str:
+    """Generate overview panel for a model showing aggregated stats across all runs."""
+    content_id = f"content-{model}-Overview".replace(" ", "_").replace(".", "_")
+
+    lines = [
+        f"<div class='tab-content{active}' id='{content_id}' data-model='{model}' data-dataset='Overview'>",
+        f"<div class='meta-info'><strong>{model}</strong> — {len(datasets)} dataset(s)</div>",
+        "<h3>Aggregated Results</h3>",
+    ]
+
+    # Aggregate stats across all datasets
+    format_stats: dict[str, dict] = {}
+    base_chars_list: list[int] = []
+    base_tokens_list: list[int] = []
+
+    for _dataset, data in datasets.items():
+        jp = data["results"].get("json_pretty", {})
+        if jp.get("chars"):
+            base_chars_list.append(jp["chars"])
+        if jp.get("tokens"):
+            base_tokens_list.append(jp["tokens"])
+
+        for fmt, res in data["results"].items():
+            if res.get("total_queries", 0) == 0:
+                continue
+            if fmt not in format_stats:
+                format_stats[fmt] = {"acc": [], "tokens": [], "latency": []}
+            format_stats[fmt]["acc"].append(res.get("accuracy", 0))
+            format_stats[fmt]["tokens"].append(res.get("tokens", 0))
+            format_stats[fmt]["latency"].append(res.get("avg_latency_ms", 0))
+
+    if not format_stats:
+        lines.append("<p>No results available.</p>")
+        lines.append("</div>")
+        return "\n".join(lines)
+
+    base_chars = sum(base_chars_list) / len(base_chars_list) if base_chars_list else 0
+    base_tokens = sum(base_tokens_list) / len(base_tokens_list) if base_tokens_list else 1
+
+    # Compute averages
+    avg_data = []
+    for fmt, stats in format_stats.items():
+        avg_acc = sum(stats["acc"]) / len(stats["acc"]) if stats["acc"] else 0
+        avg_tokens = sum(stats["tokens"]) / len(stats["tokens"]) if stats["tokens"] else 0
+        avg_latency = sum(stats["latency"]) / len(stats["latency"]) if stats["latency"] else 0
+        og_cpt = base_chars / avg_tokens if avg_tokens else 0
+        compression_ratio = base_tokens / avg_tokens if avg_tokens else 0
+        efficiency = avg_acc * compression_ratio
+        n_runs = len(stats["acc"])
+        avg_data.append(
+            {
+                "fmt": fmt,
+                "acc": avg_acc,
+                "tokens": avg_tokens,
+                "og_cpt": og_cpt,
+                "latency": avg_latency,
+                "efficiency": efficiency,
+                "n_runs": n_runs,
+            }
+        )
+
+    avg_data.sort(key=lambda x: -x["efficiency"])
+
+    # Find min/max for gradients
+    eff_vals = [d["efficiency"] for d in avg_data if d["efficiency"] > 0]
+    acc_vals = [d["acc"] for d in avg_data]
+    tok_vals = [d["tokens"] for d in avg_data if d["tokens"] > 0]
+    og_cpt_vals = [d["og_cpt"] for d in avg_data if d["og_cpt"] > 0]
+    lat_vals = [d["latency"] for d in avg_data if d["latency"] > 0]
+
+    eff_range = (min(eff_vals), max(eff_vals)) if eff_vals else (0, 1)
+    acc_range = (min(acc_vals), max(acc_vals)) if acc_vals else (0, 1)
+    tok_range = (min(tok_vals), max(tok_vals)) if tok_vals else (0, 1)
+    og_cpt_range = (min(og_cpt_vals), max(og_cpt_vals)) if og_cpt_vals else (0, 1)
+    lat_range = (min(lat_vals), max(lat_vals)) if lat_vals else (0, 1)
+
+    # Aggregated table
+    lines.append("<table>")
+    lines.append(
+        "<tr><th>Format</th><th>Efficiency</th><th>Accuracy</th><th>Tokens</th><th>og_chars/tok</th><th>Latency</th><th>Runs</th></tr>"
+    )
+
+    for d in avg_data:
+        eff_style = _gradient_cell_style(d["efficiency"], eff_range[0], eff_range[1], True)
+        acc_style = _gradient_cell_style(d["acc"], acc_range[0], acc_range[1], True)
+        tok_style = _gradient_cell_style(d["tokens"], tok_range[0], tok_range[1], False)
+        og_cpt_style = _gradient_cell_style(d["og_cpt"], og_cpt_range[0], og_cpt_range[1], True)
+        lat_style = _gradient_cell_style(d["latency"], lat_range[0], lat_range[1], False)
+
+        tok_display = f"{d['tokens']:,.0f}" if d["tokens"] < 10000 else f"{d['tokens'] / 1000:.1f}k"
+
+        lines.append(
+            f"<tr><td>{d['fmt']}</td><td{eff_style}>{d['efficiency']:.2f}</td>"
+            f"<td{acc_style}>{d['acc']:.1%}</td><td{tok_style}>{tok_display}</td>"
+            f"<td{og_cpt_style}>{d['og_cpt']:.1f}</td><td{lat_style}>{d['latency']:.0f}ms</td>"
+            f"<td>{d['n_runs']}/{len(datasets)}</td></tr>"
+        )
+
+    lines.append("</table>")
+
+    # Individual runs overview
+    lines.append("<h3>Individual Runs</h3>")
+    lines.append("<table>")
+    lines.append(
+        "<tr><th>Dataset</th><th>Records</th><th>Queries</th><th>Date</th><th>Best Format</th><th>Best Acc</th></tr>"
+    )
+
+    for dataset in sorted(datasets.keys()):
+        data = datasets[dataset]
+        meta = data["meta"]
+        results = data["results"]
+
+        # Find best format by accuracy (excluding failed ones)
+        valid = {k: v for k, v in results.items() if v.get("total_queries", 0) > 0}
+        if valid:
+            best_fmt, best_res = max(valid.items(), key=lambda x: x[1].get("accuracy", 0))
+            best_acc = best_res.get("accuracy", 0)
+        else:
+            best_fmt, best_acc = "-", 0
+
+        lines.append(
+            f"<tr><td>{dataset}</td><td>{meta['data_size']:,}</td><td>{meta['n_queries']}</td>"
+            f"<td>{meta['date'][:10]}</td><td>{best_fmt}</td><td>{best_acc:.1%}</td></tr>"
+        )
+
+    lines.append("</table>")
+    lines.append("</div>")
+
+    return "\n".join(lines)
+
+
 def _llm_content_panel(model: str, dataset: str, data: dict, active: str) -> str:
     """Generate content panel for a model × dataset combination."""
     meta = data["meta"]
@@ -603,37 +910,59 @@ def _llm_content_panel(model: str, dataset: str, data: dict, active: str) -> str
         f"({meta['data_size']:,} records) — {meta['n_queries']} queries — {meta['date'][:10]}</div>",
     ]
 
-    # Find best/worst for highlighting
+    # Get json_pretty as baseline for og_chars/tok and efficiency
+    json_pretty = results.get("json_pretty", {})
+    base_chars = json_pretty.get("chars", 0)
+    base_tokens = json_pretty.get("tokens", 1)
+
+    # Find min/max for highlighting across all metrics
     valid = {k: v for k, v in results.items() if v.get("total_queries", 0) > 0}
     if valid:
-        best_acc = max(r["accuracy"] for r in valid.values())
-        worst_acc = min(r["accuracy"] for r in valid.values())
-        tokens_list = [r.get("tokens") for r in valid.values() if r.get("tokens")]
-        min_tokens = min(tokens_list) if tokens_list else 0
+        acc_vals = [r["accuracy"] for r in valid.values()]
+        tokens_vals = [r.get("tokens") for r in valid.values() if r.get("tokens")]
+        latency_vals = [r.get("avg_latency_ms") for r in valid.values() if r.get("avg_latency_ms")]
+        og_cpt_vals = [base_chars / r.get("tokens", 1) for r in valid.values() if r.get("tokens")]
+        eff_vals = [r["accuracy"] * (base_tokens / r.get("tokens", 1)) for r in valid.values() if r.get("tokens")]
+
+        min_acc, max_acc = min(acc_vals), max(acc_vals)
+        min_tok, max_tok = (min(tokens_vals), max(tokens_vals)) if tokens_vals else (0, 0)
+        min_lat, max_lat = (min(latency_vals), max(latency_vals)) if latency_vals else (0, 0)
+        min_og_cpt, max_og_cpt = (min(og_cpt_vals), max(og_cpt_vals)) if og_cpt_vals else (0, 0)
+        min_eff, max_eff = (min(eff_vals), max(eff_vals)) if eff_vals else (0, 0)
     else:
-        best_acc = worst_acc = min_tokens = 0
+        min_acc = max_acc = min_tok = max_tok = min_lat = max_lat = 0
+        min_og_cpt = max_og_cpt = min_eff = max_eff = 0
 
     # Results table
     lines.append("<table>")
     lines.append(
-        "<tr><th>Format</th><th>Accuracy</th><th>Tokens</th><th>Chars</th><th>Chars/Tok</th><th>Latency</th></tr>"
+        "<tr><th>Format</th><th>Efficiency</th><th>Accuracy</th><th>Tokens</th><th>og_chars/tok</th><th>Latency</th></tr>"
     )
 
-    for fmt, res in sorted(results.items(), key=lambda x: -x[1].get("accuracy", 0)):
+    for fmt, res in sorted(
+        results.items(),
+        key=lambda x: -(x[1].get("accuracy", 0) * (base_tokens / x[1].get("tokens", 1)) if x[1].get("tokens") else 0),
+    ):
         acc = res.get("accuracy", 0)
         tokens = res.get("tokens", 0)
-        chars = res.get("chars", 0)
         latency = res.get("avg_latency_ms", 0)
         total = res.get("total_queries", 0)
-        cpt = chars / tokens if tokens else 0
+        og_cpt = base_chars / tokens if tokens else 0
+        efficiency = acc * (base_tokens / tokens) if tokens else 0
 
-        acc_style = _accuracy_cell_style(acc, best_acc, worst_acc, total > 0)
-        tok_style = " class='best'" if tokens == min_tokens and tokens > 0 else ""
+        if total == 0:
+            lines.append(f"<tr><td>{fmt}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>")
+            continue
+
+        eff_style = _gradient_cell_style(efficiency, min_eff, max_eff, True)
+        acc_style = _gradient_cell_style(acc, min_acc, max_acc, True)
+        tok_style = _gradient_cell_style(tokens, min_tok, max_tok, False)
+        og_cpt_style = _gradient_cell_style(og_cpt, min_og_cpt, max_og_cpt, True)
+        lat_style = _gradient_cell_style(latency, min_lat, max_lat, False)
 
         lines.append(
-            f"<tr><td>{fmt}</td><td{acc_style}>{acc:.1%}</td>"
-            f"<td{tok_style}>{tokens:,}</td><td>{chars:,}</td>"
-            f"<td>{cpt:.1f}</td><td>{latency:.0f}ms</td></tr>"
+            f"<tr><td>{fmt}</td><td{eff_style}>{efficiency:.2f}</td><td{acc_style}>{acc:.1%}</td>"
+            f"<td{tok_style}>{tokens:,}</td><td{og_cpt_style}>{og_cpt:.1f}</td><td{lat_style}>{latency:.0f}ms</td></tr>"
         )
 
     lines.append("</table>")
@@ -687,19 +1016,30 @@ def _llm_content_panel(model: str, dataset: str, data: dict, active: str) -> str
     return "\n".join(lines)
 
 
-def _accuracy_cell_style(acc: float, best: float, worst: float, valid: bool) -> str:
-    """Generate cell style based on accuracy value."""
-    if not valid:
-        return ""
-    if acc == best:
-        return " class='best'"
-    if acc == worst and best != worst:
-        return " class='worst'"
-    # Gradient between worst and best
-    if best > worst:
-        ratio = (acc - worst) / (best - worst)
-        return _gradient_cell_attrs(ratio)
-    return ""
+def _gradient_cell_style(val: float, min_val: float, max_val: float, higher_better: bool) -> str:
+    """Generate gradient cell style for any metric.
+
+    Args:
+        val: The value to style.
+        min_val: The minimum value in the range.
+        max_val: The maximum value in the range.
+        higher_better: True if higher values are better (accuracy), False if lower is better (tokens, latency).
+
+    Returns:
+        HTML attributes string with gradient styling.
+    """
+    if max_val == min_val:
+        ratio = 0.5
+    else:
+        # Normalize to 0-1 range
+        ratio = (val - min_val) / (max_val - min_val)
+        # If lower is better, invert so low values get high ratio (green)
+        if not higher_better:
+            ratio = 1 - ratio
+
+    # Determine if this is the best value
+    is_best = (val == max_val) if higher_better else (val == min_val)
+    return _gradient_cell_attrs(ratio, "col-best" if is_best else "")
 
 
 def _llm_report_script(first_model: str, first_dataset: str) -> str:
@@ -814,7 +1154,14 @@ def cmd_full_report(args: argparse.Namespace) -> int:
 def _generate_full_report_html(
     compression_results, compression_fixtures, compression_tokenizers, llm_results: list[tuple[str, dict]]
 ) -> str:
-    """Generate combined HTML report with top-level tabs."""
+    """Generate combined HTML report with restructured layout.
+
+    Structure:
+    1. Token Efficiency summary (top level)
+    2. Tokenizer x Format table (top level)
+    3. Combined LLM Accuracy summary (averaged across all datasets)
+    4. Tabs for: Compression details, LLM Accuracy details
+    """
     import json
 
     from benchmarks.output.html import (
@@ -845,36 +1192,39 @@ def _generate_full_report_html(
         "to other encoding formats for LLM token efficiency.</p>",
     ]
 
-    # Leaderboard at top (from LLM results)
-    if has_llm:
-        html.append(_llm_summary_table(llm_results, []))
+    # Token Efficiency summary at top level (from compression)
+    if has_compression:
+        html.append("<h2>Token Efficiency</h2>")
+        html.append("<p>Normalized comparison across formats and tokenizers (JSON pretty = 1.0x).</p>")
+        html.append(_summary_table(compression_results, tokenizer_names))
+        html.append(_tokenizer_format_table(compression_results, tokenizer_names))
 
-    # Top-level section tabs
+    # Combined LLM Accuracy summary (averaged across all datasets)
+    if has_llm:
+        html.append(_llm_combined_summary(llm_results))
+
+    # Top-level section tabs for details
     html.append("<div class='section-tabs' id='section-tabs'>")
     if has_compression:
-        html.append("<div class='section-tab active' data-section='compression'>Compression</div>")
+        html.append("<div class='section-tab active' data-section='compression'>Compression Details</div>")
     if has_llm:
         active = "" if has_compression else " active"
-        html.append(f"<div class='section-tab{active}' data-section='llm'>LLM Accuracy</div>")
+        html.append(f"<div class='section-tab{active}' data-section='llm'>LLM Accuracy Details</div>")
     html.append("</div>")
 
-    # Compression section - reuse existing HTML generator
+    # Compression section - detailed fixture comparisons
     if has_compression:
-        # Build data blob for JS rendering
         data_blob = _build_data_blob(compression_results, compression_fixtures, compression_tokenizers, tokenizer_names)
 
         html.append("<div class='section-content active' id='section-compression' data-section='compression'>")
-        html.append("<h2>Compression Benchmarks</h2>")
-        html.append("<p>Compare token efficiency across formats and tokenizers.</p>")
-        html.append(_summary_table(compression_results, tokenizer_names))
-        html.append(_tokenizer_format_table(compression_results, tokenizer_names))
+        html.append("<h2>Compression Details</h2>")
+        html.append("<p>Detailed token visualization per fixture.</p>")
         html.append(_comparison_section(compression_results, tokenizer_names))
         html.append("</div>")
 
-        # Add data blob script
         html.append(f"<script>const BENCHMARK_DATA = {json.dumps(data_blob, separators=(',', ':'))};</script>")
 
-    # LLM Accuracy section
+    # LLM Accuracy section - detailed model/dataset breakdown
     if has_llm:
         active = "" if has_compression else " active"
         html.append(f"<div class='section-content{active}' id='section-llm' data-section='llm'>")
@@ -1038,21 +1388,27 @@ td:first-child, th:first-child { text-align: left; }
 
 def _full_report_llm_section(llm_results: list[tuple[str, dict]]) -> str:
     """Generate LLM accuracy section content."""
-    # Group by model
-    by_model: dict[str, list[tuple[str, dict]]] = {}
-    datasets: set[str] = set()
-    for name, data in llm_results:
+    import json as json_module
+
+    # Group by model, tracking datasets per model
+    by_model: dict[str, dict[str, dict]] = {}
+    for _name, data in llm_results:
         model = data["meta"]["model"]
         dataset = data["meta"]["data_file"]
-        datasets.add(dataset)
         if model not in by_model:
-            by_model[model] = []
-        by_model[model].append((dataset, data))
+            by_model[model] = {}
+        by_model[model][dataset] = data
 
     models = list(by_model.keys())
-    datasets_list = sorted(datasets)
-    first_model = models[0] if models else ""
-    first_dataset = datasets_list[0] if datasets_list else ""
+    if not models:
+        return "<p>No LLM benchmark results found.</p>"
+
+    first_model = models[0]
+    # "Overview" is always first tab
+    first_dataset = "Overview"
+
+    # Build model -> datasets mapping for JS (Overview + actual datasets)
+    model_datasets = {m: ["Overview"] + sorted(by_model[m].keys()) for m in models}
 
     lines = [
         "<h2>LLM Accuracy Benchmarks</h2>",
@@ -1060,25 +1416,51 @@ def _full_report_llm_section(llm_results: list[tuple[str, dict]]) -> str:
         "<div class='page-layout'>",
         _llm_sidebar(models),
         "<div class='main-content'>",
-        _llm_dataset_tabs(datasets_list),
+        "<div class='tabs' id='dataset-tabs'></div>",  # Dynamically populated by JS
     ]
 
-    # Generate content for each model × dataset
+    # Generate Overview panel for each model
     for model in models:
-        model_data = {ds: d for ds, d in by_model[model]}
-        for dataset in datasets_list:
-            if dataset not in model_data:
-                continue
-            data = model_data[dataset]
-            active = " active" if model == first_model and dataset == first_dataset else ""
-            lines.append(_llm_content_panel(model, dataset, data, active))
+        active = " active" if model == first_model else ""
+        lines.append(_llm_overview_panel(model, by_model[model], active))
+
+    # Generate content for each model × dataset (only for datasets that exist)
+    for model in models:
+        for dataset, data in by_model[model].items():
+            lines.append(_llm_content_panel(model, dataset, data, ""))
 
     lines.extend(["</div>", "</div>"])  # main-content, page-layout
 
-    # Add the LLM-specific JavaScript
+    # Add the LLM-specific JavaScript with dynamic tabs
+    model_datasets_json = json_module.dumps(model_datasets)
     lines.append(f"""<script>
+const MODEL_DATASETS = {model_datasets_json};
 let currentModel = '{first_model}';
 let currentDataset = '{first_dataset}';
+
+function updateDatasetTabs() {{
+  const datasets = MODEL_DATASETS[currentModel] || [];
+  const container = document.getElementById('dataset-tabs');
+  container.innerHTML = datasets.map((ds, i) =>
+    `<div class="tab${{ds === currentDataset ? ' active' : ''}}" data-dataset="${{ds}}">${{ds}}</div>`
+  ).join('');
+
+  // Re-attach event listeners
+  container.querySelectorAll('.tab').forEach(tab => {{
+    tab.addEventListener('click', () => {{
+      container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentDataset = tab.dataset.dataset;
+      updateLLMContent();
+    }});
+  }});
+
+  // If current dataset not in new model, switch to first
+  if (!datasets.includes(currentDataset) && datasets.length > 0) {{
+    currentDataset = datasets[0];
+    container.querySelector('.tab')?.classList.add('active');
+  }}
+}}
 
 function updateLLMContent() {{
   document.querySelectorAll('#section-llm .tab-content').forEach(c => c.classList.remove('active'));
@@ -1092,18 +1474,13 @@ document.querySelectorAll('#model-tabs .sidebar-tab').forEach(tab => {{
     document.querySelectorAll('#model-tabs .sidebar-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     currentModel = tab.dataset.model;
+    updateDatasetTabs();
     updateLLMContent();
   }});
 }});
 
-document.querySelectorAll('#dataset-tabs .tab').forEach(tab => {{
-  tab.addEventListener('click', () => {{
-    document.querySelectorAll('#dataset-tabs .tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    currentDataset = tab.dataset.dataset;
-    updateLLMContent();
-  }});
-}});
+// Initialize tabs on load
+updateDatasetTabs();
 </script>""")
 
     return "\n".join(lines)

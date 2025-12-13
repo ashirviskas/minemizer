@@ -6,6 +6,7 @@ TOKENIZERS: dict[str, str] = {
     "llama": "NousResearch/Llama-2-7b-hf",
     "qwen2.5": "Qwen/Qwen2.5-0.5B",
     "deepseek": "deepseek-ai/DeepSeek-V3",
+    "devstral": "maxence-bouvier/Devstral-Small-2-24B-Instruct-SINQ-4bit",
 }
 
 # Output formats to benchmark

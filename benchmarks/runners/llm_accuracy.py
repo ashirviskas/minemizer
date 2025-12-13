@@ -11,7 +11,13 @@ from typing import Any
 from benchmarks import FIXTURES_DIR, RESULTS_DIR
 from benchmarks.config import DEFAULT_CONCURRENCY, DEFAULT_LLM_ENDPOINT, DEFAULT_SEED
 from benchmarks.core.formats import convert_to_format
-from benchmarks.generators.synthetic import Query, generate_queries, get_oneshot_example
+from benchmarks.generators.synthetic import (
+    Query,
+    generate_flat_queries,
+    generate_queries,
+    generate_sparse_queries,
+    get_oneshot_example,
+)
 from benchmarks.llm.client import LLMClient
 
 
@@ -44,6 +50,7 @@ class FormatResults:
 class BenchmarkMeta:
     """Metadata for a benchmark run."""
 
+    run_name: str
     model: str
     endpoint: str
     date: str
@@ -84,6 +91,7 @@ class LLMAccuracyBenchmark:
     def __init__(
         self,
         model: str,
+        run_name: str | None = None,
         endpoint: str = DEFAULT_LLM_ENDPOINT,
         api_key: str | None = None,
         concurrency: int = DEFAULT_CONCURRENCY,
@@ -96,6 +104,7 @@ class LLMAccuracyBenchmark:
 
         Args:
             model: Model name for metadata.
+            run_name: Name for this run (used in filename). Defaults to sanitized model name.
             endpoint: LLM endpoint URL.
             api_key: Optional API key.
             concurrency: Max concurrent requests.
@@ -105,6 +114,7 @@ class LLMAccuracyBenchmark:
             no_think: Prepend /no_think to disable reasoning (Qwen3 models).
         """
         self.model = model
+        self.run_name = run_name or self._sanitize_name(model)
         self.endpoint = endpoint
         self.concurrency = concurrency
         self.no_think = no_think
@@ -120,6 +130,8 @@ class LLMAccuracyBenchmark:
             "minemizer_no_repeat",
             "minemizer_compact",
             "minemizer_compact_no_repeat",
+            "minemizer_repeat10",
+            "minemizer_compact_repeat10",
         ]
         self.save_interval = save_interval
         self.verbose = verbose
@@ -137,6 +149,7 @@ class LLMAccuracyBenchmark:
         seed: int = DEFAULT_SEED,
         data_file: str = "unknown",
         output_path: Path | None = None,
+        data_type: str = "nested",
     ) -> LLMBenchmarkResults:
         """Run benchmark on data.
 
@@ -146,16 +159,23 @@ class LLMAccuracyBenchmark:
             seed: Random seed for query generation.
             data_file: Name of data file for metadata.
             output_path: Path to save results. Auto-generated if None.
+            data_type: Type of data ("nested", "flat", or "sparse").
 
         Returns:
             Complete benchmark results.
         """
-        # Generate queries (same for all formats)
-        queries = generate_queries(data, n_queries, seed)
+        # Generate queries based on data type
+        if data_type == "flat":
+            queries = generate_flat_queries(data, n_queries, seed)
+        elif data_type == "sparse":
+            queries = generate_sparse_queries(data, n_queries, seed)
+        else:
+            queries = generate_queries(data, n_queries, seed)
 
         # Initialize results
         results = LLMBenchmarkResults(
             meta=BenchmarkMeta(
+                run_name=self.run_name,
                 model=self.model,
                 endpoint=self.endpoint,
                 date=datetime.now(UTC).isoformat(),
@@ -254,7 +274,7 @@ class LLMAccuracyBenchmark:
 
         # Final results for format
         accuracy = sum(1 for q in query_results if q.correct) / len(query_results) if query_results else 0
-        avg_latency = sum(q.latency_ms for q in query_results) / len(query_results) if query_results else 0
+        avg_latency = self._trimmed_mean_latency(query_results) if query_results else 0
 
         if self.verbose:
             print(f"  Final: {accuracy:.1%} accuracy, {avg_latency:.0f}ms avg latency")
@@ -281,34 +301,66 @@ A: {example_a} END_RESPONSE
 Q: {question}
 """
 
+    def _trimmed_mean_latency(self, query_results: list[QueryResult], trim_pct: float = 0.1) -> float:
+        """Calculate trimmed mean latency, discarding slowest results.
+
+        Args:
+            query_results: List of query results.
+            trim_pct: Percentage of slowest results to discard (default 10%).
+
+        Returns:
+            Trimmed mean latency in ms.
+        """
+        if not query_results:
+            return 0.0
+
+        latencies = sorted(q.latency_ms for q in query_results)
+        n_trim = int(len(latencies) * trim_pct)
+
+        # Keep all but the slowest n_trim results
+        if n_trim > 0:
+            latencies = latencies[:-n_trim]
+
+        return sum(latencies) / len(latencies) if latencies else 0.0
+
     def _normalize_answer(self, text: str) -> str:
         """Normalize answer for comparison.
 
-        Extracts answer from "A: ANSWER" format.
+        Extracts answer from "A: ANSWER" format, searching anywhere in text.
         """
-        import re
-
         text = text.strip()
 
-        # Look for "A: answer" pattern
-        match = re.search(r"^A:\s*(.+?)(?:\s*END_RESPONSE)?$", text, re.IGNORECASE | re.DOTALL)
-        if match:
-            text = match.group(1).strip()
+        # Find the last "A:" in the text (model may include reasoning first)
+        lower_text = text.lower()
+        last_a_pos = lower_text.rfind("a:")
+        if last_a_pos != -1:
+            text = text[last_a_pos + 2 :].strip()
+
+        # Remove END_RESPONSE marker if present
+        end_marker = text.lower().find("end_response")
+        if end_marker != -1:
+            text = text[:end_marker].strip()
 
         # Clean up common artifacts
         text = text.strip("`\"'").strip()
+        # Remove trailing punctuation
+        while text and text[-1] in ".,;:!? \t\n":
+            text = text[:-1]
 
-        return text.lower().rstrip(".")
+        return text.lower()
+
+    def _sanitize_name(self, name: str) -> str:
+        """Sanitize a name for use in filenames."""
+        return name.replace("/", "_").replace(":", "_").replace(" ", "_")
 
     def _default_output_path(self) -> Path:
         """Generate default output path."""
         output_dir = RESULTS_DIR / "llm_accuracy"
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Sanitize model name for filename
-        safe_model = self.model.replace("/", "_").replace(":", "_")
-        date_str = datetime.now().strftime("%Y-%m-%d")
-        return output_dir / f"{safe_model}_{date_str}.json"
+        # Use run_name and full datetime
+        datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        return output_dir / f"{self.run_name}_{datetime_str}.json"
 
     def _save_results(self, results: LLMBenchmarkResults, path: Path) -> None:
         """Save results to JSON."""
@@ -320,6 +372,7 @@ async def run_benchmark(
     data_file: str,
     model: str,
     n_queries: int,
+    run_name: str | None = None,
     endpoint: str = DEFAULT_LLM_ENDPOINT,
     api_key: str | None = None,
     concurrency: int = DEFAULT_CONCURRENCY,
@@ -334,6 +387,7 @@ async def run_benchmark(
         data_file: Name of data file (without path/extension).
         model: Model name.
         n_queries: Number of queries per format.
+        run_name: Name for this run (used in filename). Defaults to sanitized model name.
         endpoint: LLM endpoint URL.
         api_key: Optional API key.
         concurrency: Max concurrent requests.
@@ -352,9 +406,18 @@ async def run_benchmark(
 
     data = json.loads(data_path.read_text())
 
+    # Detect data type from filename
+    if data_file.startswith("flat_"):
+        data_type = "flat"
+    elif data_file.startswith("sparse_"):
+        data_type = "sparse"
+    else:
+        data_type = "nested"
+
     # Run benchmark
     benchmark = LLMAccuracyBenchmark(
         model=model,
+        run_name=run_name,
         endpoint=endpoint,
         api_key=api_key,
         concurrency=concurrency,
@@ -363,4 +426,4 @@ async def run_benchmark(
         no_think=no_think,
     )
 
-    return await benchmark.run(data, n_queries, seed, data_file)
+    return await benchmark.run(data, n_queries, seed, data_file, data_type=data_type)
