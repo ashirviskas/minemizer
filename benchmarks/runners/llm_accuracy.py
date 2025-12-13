@@ -43,6 +43,7 @@ class FormatResults:
     total_queries: int
     tokens: int = 0  # Token count for formatted data
     chars: int = 0  # Char count for formatted data
+    data_preview: str = ""  # First 500 chars of formatted data
     queries: list[QueryResult] = field(default_factory=list)
 
 
@@ -78,6 +79,7 @@ class LLMBenchmarkResults:
                     "total_queries": r.total_queries,
                     "tokens": r.tokens,
                     "chars": r.chars,
+                    "data_preview": r.data_preview,
                     "queries": [asdict(q) for q in r.queries],
                 }
                 for fmt, r in self.results.items()
@@ -186,7 +188,7 @@ class LLMAccuracyBenchmark:
             )
         )
 
-        output_path = output_path or self._default_output_path()
+        output_path = output_path or self._default_output_path(data_file)
 
         # Run each format sequentially (KV cache optimization)
         for fmt in self.formats:
@@ -286,6 +288,7 @@ class LLMAccuracyBenchmark:
             total_queries=len(query_results),
             tokens=tokens,
             chars=chars,
+            data_preview=formatted_data[:500],
             queries=query_results,
         )
 
@@ -353,14 +356,14 @@ Q: {question}
         """Sanitize a name for use in filenames."""
         return name.replace("/", "_").replace(":", "_").replace(" ", "_")
 
-    def _default_output_path(self) -> Path:
+    def _default_output_path(self, data_file: str) -> Path:
         """Generate default output path."""
         output_dir = RESULTS_DIR / "llm_accuracy"
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Use run_name and full datetime
+        # Use run_name, data_file, and full datetime
         datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-        return output_dir / f"{self.run_name}_{datetime_str}.json"
+        return output_dir / f"{self.run_name}_{data_file}_{datetime_str}.json"
 
     def _save_results(self, results: LLMBenchmarkResults, path: Path) -> None:
         """Save results to JSON."""

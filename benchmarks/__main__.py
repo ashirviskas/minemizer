@@ -49,7 +49,7 @@ def main() -> int:
         "--endpoint", default=DEFAULT_LLM_ENDPOINT, help=f"API endpoint (default: {DEFAULT_LLM_ENDPOINT})"
     )
     llm_parser.add_argument("--api-key", help="API key (optional)")
-    llm_parser.add_argument("--data", help="Data file name (e.g., nested_1000) or 'all' for all datasets")
+    llm_parser.add_argument("--data", help="Data file name(s), comma-separated (e.g., 'nested_500,flat_500') or 'all'")
     llm_parser.add_argument("--queries", type=int, default=50, help="Number of queries (default: 50)")
     llm_parser.add_argument(
         "--concurrency",
@@ -185,7 +185,8 @@ async def cmd_llm(args: argparse.Namespace) -> int:
         return 1
 
     if args.data and args.data.lower() != "all":
-        data_files = [args.data]
+        # Support comma-separated data files
+        data_files = [d.strip() for d in args.data.split(",")]
     else:
         # Run all available datasets
         data_files = sorted([f.stem for f in llm_fixtures.glob("*.json")])
@@ -413,6 +414,11 @@ td:first-child, th:first-child { text-align: left; }
 .query-expected { color: #2e7d32; }
 .query-actual { color: #555; }
 .query-item.incorrect .query-actual { color: #c62828; }
+.data-previews { margin-top: 20px; }
+.data-previews details { margin: 5px 0; }
+.data-previews summary { cursor: pointer; padding: 8px 12px; background: #f5f5f5; border-radius: 4px; font-size: 13px; }
+.data-previews summary:hover { background: #e8e8e8; }
+.data-preview { font-size: 11px; max-height: 300px; overflow: auto; background: #fafafa; border: 1px solid #eee; border-radius: 4px; padding: 10px; margin-top: 5px; white-space: pre-wrap; word-break: break-all; }
 """
 
 
@@ -1000,6 +1006,18 @@ def _llm_content_panel(model: str, dataset: str, data: dict, active: str) -> str
         lines.append(f"<p><strong>Accuracy diff:</strong> {acc_diff:+.1f}%</p>")
         lines.append("</div>")
 
+    # Data previews (collapsible)
+    previews = [(fmt, res.get("data_preview", "")) for fmt, res in results.items() if res.get("data_preview")]
+    if previews:
+        lines.append("<div class='data-previews'>")
+        lines.append("<h3>Data Previews (first 500 chars)</h3>")
+        for fmt, preview in sorted(previews, key=lambda x: x[0]):
+            escaped = preview.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            lines.append(f"<details><summary>{fmt}</summary>")
+            lines.append(f"<pre class='data-preview'>{escaped}</pre>")
+            lines.append("</details>")
+        lines.append("</div>")
+
     # Query details (collapsible)
     lines.append("<div class='query-breakdown'>")
     lines.append("<h3>Query Details</h3>")
@@ -1088,8 +1106,9 @@ document.querySelectorAll('#dataset-tabs .tab').forEach(tab => {{
   }});
 }});
 
-// Table sorting
-document.querySelectorAll('.summary-table th').forEach(th => {{
+// Table sorting - all tables
+document.querySelectorAll('table th').forEach(th => {{
+  th.style.cursor = 'pointer';
   th.addEventListener('click', () => {{
     const table = th.closest('table');
     const tbody = table.querySelector('tbody') || table;
@@ -1097,7 +1116,6 @@ document.querySelectorAll('.summary-table th').forEach(th => {{
     const idx = Array.from(th.parentNode.children).indexOf(th);
     const isAsc = th.classList.contains('sorted-asc');
 
-    // Clear other sort indicators
     table.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
     th.classList.add(isAsc ? 'sorted-desc' : 'sorted-asc');
 
@@ -1369,6 +1387,11 @@ td:first-child, th:first-child { text-align: left; }
 .query-expected { color: var(--best); }
 .query-actual { color: var(--text-secondary); }
 .query-item.incorrect .query-actual { color: var(--worst); }
+.data-previews { margin-top: 20px; }
+.data-previews details { margin: 5px 0; }
+.data-previews summary { cursor: pointer; padding: 8px 12px; background: var(--bg-secondary); border-radius: 4px; font-size: 13px; color: var(--text); }
+.data-previews summary:hover { background: var(--bg-tertiary); }
+.data-preview { font-size: 11px; max-height: 300px; overflow: auto; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; padding: 10px; margin-top: 5px; white-space: pre-wrap; word-break: break-all; color: var(--text); }
 
 /* Compression token visualization */
 .format { margin: 20px 0; }
@@ -1550,8 +1573,9 @@ document.querySelectorAll('#section-tabs .section-tab').forEach(tab => {
   });
 });
 
-// Table sorting
-document.querySelectorAll('.summary-table th').forEach(th => {
+// Table sorting - all tables
+document.querySelectorAll('table th').forEach(th => {
+  th.style.cursor = 'pointer';
   th.addEventListener('click', () => {
     const table = th.closest('table');
     const tbody = table.querySelector('tbody') || table;

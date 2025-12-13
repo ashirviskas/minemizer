@@ -98,6 +98,22 @@ Compare [minemizer](https://github.com/ashirviskas/minemizer) to other encoding 
 | toon | 0.59 | 42.6% | 60.2k | 3.8 |
 | json_pretty | 0.41 | 41.2% | 83.5k | 2.8 |
 
+### nested_500
+
+| Format | Efficiency | Acc | Tokens | og_chars/tok |
+|--------|------------|-----|--------|--------------|
+| minemizer_no_repeat | 1.57 | 60.0% | 15.3k | 7.5 |
+| minemizer_compact_no_repeat | 1.46 | 53.0% | 14.6k | 7.9 |
+| minemizer | 1.30 | 50.0% | 15.4k | 7.5 |
+| minemizer_compact | 1.23 | 45.0% | 14.6k | 7.9 |
+| minemizer_compact_repeat10 | 1.12 | 43.0% | 15.4k | 7.5 |
+| minemizer_repeat10 | 1.09 | 44.0% | 16.2k | 7.1 |
+| json_min | 1.03 | 59.0% | 23.1k | 5.0 |
+| yaml | 0.82 | 57.0% | 27.9k | 4.1 |
+| tson | 0.73 | 25.0% | 13.8k | 8.3 |
+| toon | 0.68 | 48.0% | 28.4k | 4.0 |
+| json_pretty | 0.61 | 61.0% | 40.1k | 2.9 |
+
 ## Compression Benchmarks
 
 ### simple_flat
@@ -392,7 +408,7 @@ Compare [minemizer](https://github.com/ashirviskas/minemizer) to other encoding 
 | json_min | 44.0% | 51.9k | 4151ms |
 | json_pretty | 40.0% | 85.9k | 10601ms |
 
-### gpt-oss-20b-Q8_0-low on nested_1000
+### gpt-oss-20b-Q8_0 on nested_1000
 
 *50 queries, 2025-12-02*
 
@@ -408,7 +424,25 @@ Compare [minemizer](https://github.com/ashirviskas/minemizer) to other encoding 
 | minemizer_compact | 18.0% | 29.1k | 2918ms |
 | tson | 8.0% | 27.4k | 2804ms |
 
-### mistralai_Devstral-Small-2-24B-Instruct-2512-Q6_K on nested_1000
+### gpt-oss-20b on nested_500
+
+*100 queries, 2025-12-13*
+
+| Format | Accuracy | Tokens | Latency |
+|--------|----------|--------|---------|
+| json_pretty | 61.0% | 40.1k | 983ms |
+| minemizer_no_repeat | 60.0% | 15.3k | 1198ms |
+| json_min | 59.0% | 23.1k | 1065ms |
+| yaml | 57.0% | 27.9k | 1271ms |
+| minemizer_compact_no_repeat | 53.0% | 14.6k | 1205ms |
+| minemizer | 50.0% | 15.4k | 1246ms |
+| toon | 48.0% | 28.4k | 1233ms |
+| minemizer_compact | 45.0% | 14.6k | 1323ms |
+| minemizer_repeat10 | 44.0% | 16.2k | 1304ms |
+| minemizer_compact_repeat10 | 43.0% | 15.4k | 1300ms |
+| tson | 25.0% | 13.8k | 1315ms |
+
+### Devstral-Small-24B-Q6_K on nested_1000
 
 *50 queries, 2025-12-12*
 

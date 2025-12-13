@@ -70,14 +70,14 @@ def _build_data_blob(
     tokenizer_names: list[str],
 ) -> dict:
     """Build the data blob for JS rendering."""
-    # Format outputs: fixture -> format -> {output, truncated, copyOutput}
-    format_outputs: dict[str, dict[str, dict]] = {}
+    # Format outputs: fixture -> format -> {output, truncated, copyOutput} or None
+    format_outputs: dict[str, dict[str, dict | None]] = {}
 
-    # Token data: tokenizer -> fixture -> format -> [token strings]
-    token_data: dict[str, dict[str, dict[str, list[str]]]] = {t: {} for t in tokenizer_names}
+    # Token data: tokenizer -> fixture -> format -> [token strings] or None
+    token_data: dict[str, dict[str, dict[str, list[str] | None]]] = {t: {} for t in tokenizer_names}
 
-    # Stats: fixture -> format -> {chars, tokens: {tokenizer: count}}
-    stats: dict[str, dict[str, dict]] = {}
+    # Stats: fixture -> format -> {chars, tokens: {tokenizer: count}} or None
+    stats: dict[str, dict[str, dict | None]] = {}
 
     # Base chars for each fixture (JSON pretty chars)
     base_chars: dict[str, int] = {}
@@ -132,7 +132,7 @@ def _build_data_blob(
             for tok_name in tokenizer_names:
                 tokenizer = tokenizers[tok_name]
                 token_ids = tokenizer.encode(display_output)
-                tokens = [tokenizer.decode([tid]) for tid in token_ids]
+                tokens = [_decode_token(tokenizer, tid) for tid in token_ids]
                 token_data[tok_name][fixture_name][fmt] = tokens
 
     return {
@@ -154,6 +154,25 @@ def _truncate_output(output: str) -> tuple[str, bool]:
     if len(output) > MAX_EXAMPLE_CHARS:
         return output[:MAX_EXAMPLE_CHARS], True
     return output, False
+
+
+def _decode_token(tokenizer, token_id: int) -> str:
+    """Decode a single token, handling GPT-2 style byte-level BPE encoding.
+
+    Some tokenizers (GPT-2, Mistral, etc.) use byte-level BPE where bytes are
+    mapped to unicode characters to avoid control characters in the vocab.
+    Common mappings: Ġ = space, Ċ = newline, ĉ = tab.
+    """
+    decoded = tokenizer.decode([token_id])
+
+    # GPT-2 style byte-level BPE character mappings
+    # These unicode chars represent the actual bytes
+    decoded = decoded.replace("Ġ", " ")  # U+0120 -> space
+    decoded = decoded.replace("Ċ", "\n")  # U+010A -> newline
+    decoded = decoded.replace("ĉ", "\t")  # U+0109 -> tab
+    decoded = decoded.replace("č", "\r")  # U+010D -> carriage return
+
+    return decoded
 
 
 def _html_head() -> str:
@@ -286,14 +305,14 @@ def _summary_table(results: BenchmarkResults, tokenizer_names: list[str]) -> str
     # Compute min/max per fixture column for gradients
     col_extremes: dict[str, tuple[float, float]] = {}
     for f in fixture_names:
-        vals = [ratios[fmt].get(f) for fmt in FORMATS if ratios[fmt].get(f) is not None]
+        vals: list[float] = [v for fmt in FORMATS if (v := ratios[fmt].get(f)) is not None]
         if vals:
             col_extremes[f] = (min(vals), max(vals))
 
     # Compute min/max for avg column
-    avgs = []
+    avgs: list[float] = []
     for fmt in FORMATS:
-        vals = [ratios[fmt].get(f) for f in fixture_names if ratios[fmt].get(f) is not None]
+        vals = [v for f in fixture_names if (v := ratios[fmt].get(f)) is not None]
         if vals:
             avgs.append(sum(vals) / len(vals))
     if avgs:
@@ -347,18 +366,147 @@ def _comparison_section(
         _fixture_tabs(results.fixtures),
     ]
 
-    # Generate placeholder containers for each tokenizer × fixture combination
+    # Generate Overview panel for each tokenizer
     for i, tok_name in enumerate(tokenizer_names):
-        for j, fixture in enumerate(results.fixtures):
-            active = " active" if i == 0 and j == 0 else ""
+        active = " active" if i == 0 else ""
+        content_id = f"content-{tok_name}-Overview"
+        lines.append(
+            f"<div class='tab-content{active}' id='{content_id}' data-tokenizer='{tok_name}' data-fixture='Overview'>"
+        )
+        lines.append(_compression_overview_panel(results, tok_name, tokenizer_names))
+        lines.append("</div>")
+
+    # Generate placeholder containers for each tokenizer × fixture combination
+    for tok_name in tokenizer_names:
+        for fixture in results.fixtures:
             content_id = f"content-{tok_name}-{fixture.fixture_name}"
             lines.append(
-                f"<div class='tab-content{active}' id='{content_id}' "
+                f"<div class='tab-content' id='{content_id}' "
                 f"data-tokenizer='{tok_name}' data-fixture='{fixture.fixture_name}'>"
                 f"</div>"
             )
 
     lines.extend(["</div>", "</div>"])
+    return "\n".join(lines)
+
+
+def _compression_overview_panel(results: BenchmarkResults, tok_name: str, tokenizer_names: list[str]) -> str:
+    """Generate overview panel for a tokenizer showing aggregated stats."""
+    from benchmarks.config import FORMAT_LABELS
+
+    lines = [
+        f"<div class='fixture-info'><strong>Overview</strong> — Aggregated stats for {tok_name}</div>",
+        "<h3>Format Efficiency (averaged across fixtures)</h3>",
+        "<table>",
+        "<tr><th>Format</th><th>Avg Efficiency</th><th>Avg Tokens</th><th>Avg chars_og/tok</th><th>Fixtures</th></tr>",
+    ]
+
+    # Compute averages for this tokenizer
+    format_stats: dict[str, dict] = {}
+    for fmt in FORMATS:
+        efficiencies = []
+        tokens_list = []
+        og_per_tok_list = []
+
+        for fixture in results.fixtures:
+            jp = next(r for r in fixture.results if r.format_name == "json_pretty")
+            base_chars = jp.chars or 0
+            jp_tok = jp.tokens.get(tok_name) or 0
+            if not jp_tok:
+                continue
+            baseline = base_chars / jp_tok
+
+            result = next(r for r in fixture.results if r.format_name == fmt)
+            tok_count = result.tokens.get(tok_name) or 0
+            if result.chars and tok_count:
+                norm = (base_chars / tok_count) / baseline
+                efficiencies.append(norm)
+                tokens_list.append(tok_count)
+                og_per_tok_list.append(base_chars / tok_count)
+
+        if efficiencies:
+            format_stats[fmt] = {
+                "efficiency": sum(efficiencies) / len(efficiencies),
+                "tokens": sum(tokens_list) / len(tokens_list),
+                "og_per_tok": sum(og_per_tok_list) / len(og_per_tok_list),
+                "count": len(efficiencies),
+                "total": len(results.fixtures),
+            }
+
+    # Find min/max for gradient coloring
+    if format_stats:
+        eff_vals = [s["efficiency"] for s in format_stats.values()]
+        tok_vals = [s["tokens"] for s in format_stats.values()]
+        og_vals = [s["og_per_tok"] for s in format_stats.values()]
+        min_eff, max_eff = min(eff_vals), max(eff_vals)
+        min_tok, max_tok = min(tok_vals), max(tok_vals)
+        min_og, max_og = min(og_vals), max(og_vals)
+    else:
+        min_eff = max_eff = min_tok = max_tok = min_og = max_og = 0
+
+    # Sort by efficiency descending
+    for fmt in sorted(format_stats.keys(), key=lambda f: -format_stats[f]["efficiency"]):
+        s = format_stats[fmt]
+        label = FORMAT_LABELS.get(fmt, fmt)
+
+        # Efficiency gradient (higher is better)
+        eff_ratio = 0.5 if max_eff == min_eff else (s["efficiency"] - min_eff) / (max_eff - min_eff)
+        eff_cell = _gradient_cell(eff_ratio, f"{s['efficiency']:.2f}x")
+
+        # Tokens gradient (lower is better)
+        tok_ratio = 0.5 if max_tok == min_tok else 1 - (s["tokens"] - min_tok) / (max_tok - min_tok)
+        tok_cell = _gradient_cell(tok_ratio, f"{s['tokens']:,.0f}")
+
+        # og_per_tok gradient (higher is better)
+        og_ratio = 0.5 if max_og == min_og else (s["og_per_tok"] - min_og) / (max_og - min_og)
+        og_cell = _gradient_cell(og_ratio, f"{s['og_per_tok']:.1f}")
+
+        partial = "" if s["count"] == s["total"] else f" ({s['count']}/{s['total']})"
+        lines.append(f"<tr><td>{label}</td>{eff_cell}{tok_cell}{og_cell}<td>{s['count']}{partial}</td></tr>")
+
+    # Add formats with no data
+    for fmt in FORMATS:
+        if fmt not in format_stats:
+            label = FORMAT_LABELS.get(fmt, fmt)
+            lines.append(
+                f"<tr><td>{label}</td><td class='na'>N/A</td><td class='na'>-</td><td class='na'>-</td><td>0</td></tr>"
+            )
+
+    lines.append("</table>")
+
+    # Per-fixture breakdown
+    lines.append("<h3>Per-Fixture Results</h3>")
+    lines.append("<table>")
+    header = ["Fixture", "Records", "Base Chars", "Best Format", "Tokens Saved"]
+    lines.append("<tr>" + "".join(f"<th>{h}</th>" for h in header) + "</tr>")
+
+    for fixture in results.fixtures:
+        jp = next(r for r in fixture.results if r.format_name == "json_pretty")
+        base_chars: int = jp.chars or 0
+        jp_tok: int = jp.tokens.get(tok_name) or 0
+
+        # Find best format for this fixture
+        best_fmt: str | None = None
+        best_tokens: int = jp_tok
+        for result in fixture.results:
+            tok_count: int = result.tokens.get(tok_name) or 0
+            if tok_count and tok_count < best_tokens:
+                best_tokens = tok_count
+                best_fmt = result.format_name
+
+        savings: float = ((jp_tok - best_tokens) / jp_tok * 100) if jp_tok else 0
+        best_label = FORMAT_LABELS.get(best_fmt, best_fmt) if best_fmt else "json_pretty"
+        name = SHORT_NAMES.get(fixture.fixture_name, fixture.fixture_name)
+
+        # Records count (from fixture metadata if available)
+        records = "—"
+
+        lines.append(
+            f"<tr><td>{name}</td><td>{records}</td><td>{base_chars:,}</td>"
+            f"<td>{best_label}</td><td>{savings:.1f}%</td></tr>"
+        )
+
+    lines.append("</table>")
     return "\n".join(lines)
 
 
@@ -377,10 +525,11 @@ def _sidebar(tokenizer_names: list[str]) -> str:
 
 def _fixture_tabs(fixtures: list) -> str:
     lines = ["<div class='tab-group'>", "<div class='tabs' id='fixture-tabs'>"]
-    for i, fixture in enumerate(fixtures):
-        active = " active" if i == 0 else ""
+    # Overview tab first
+    lines.append("<div class='tab active' data-fixture='Overview'>Overview</div>")
+    for fixture in fixtures:
         name = SHORT_NAMES.get(fixture.fixture_name, fixture.fixture_name)
-        lines.append(f"<div class='tab{active}' data-fixture='{fixture.fixture_name}'>{name}</div>")
+        lines.append(f"<div class='tab' data-fixture='{fixture.fixture_name}'>{name}</div>")
     lines.extend(["</div>", "</div>"])
     return "\n".join(lines)
 
@@ -388,7 +537,7 @@ def _fixture_tabs(fixtures: list) -> str:
 def _html_script(tokenizer_names: list[str], first_fixture: str) -> str:
     return f"""<script>
 let currentTokenizer = '{tokenizer_names[0]}';
-let currentFixture = '{first_fixture}';
+let currentFixture = 'Overview';
 const renderedPanels = new Set();
 
 // Switch gradient cells between light and dark colors
@@ -513,24 +662,73 @@ function renderFormatBlock(fmt, tokName, fixtureName) {{
 </div>`;
 }}
 
+function gradientColors(ratio) {{
+  // Same formula as Python _gradient_colors - returns [light, dark]
+  const lr = Math.round(255 - ratio * 80), lg = Math.round(200 + ratio * 55), lb = Math.round(200 - ratio * 50);
+  const dr = Math.round(180 - ratio * 140), dg = Math.round(60 + ratio * 120), db = Math.round(60 - ratio * 20);
+  return [`rgb(${{lr}},${{lg}},${{lb}})`, `rgb(${{dr}},${{dg}},${{db}})`];
+}}
+
+function gradientCell(ratio, content, sortVal) {{
+  // Generate cell with same structure as Python _gradient_cell
+  const [light, dark] = gradientColors(ratio);
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const bg = isDark ? dark : light;
+  return `<td class='gradient-cell' style='background-color:${{bg}}' data-light='${{light}}' data-dark='${{dark}}' data-sort='${{sortVal}}'>${{content}}</td>`;
+}}
+
 function renderComparisonTable(fixtureName, tokName) {{
   const data = BENCHMARK_DATA;
   const baseChars = data.baseChars[fixtureName];
 
+  // First pass: collect all values to compute min/max
+  const rows = [];
+  let minChars = Infinity, maxChars = 0;
+  let minToks = Infinity, maxToks = 0;
+  let minOg = Infinity, maxOg = 0;
+  let minEnc = Infinity, maxEnc = 0;
+
+  for (const fmt of data.formats) {{
+    const stats = data.stats[fixtureName]?.[fmt];
+    if (!stats) {{
+      rows.push({{ fmt, label: data.formatLabels[fmt], valid: false }});
+    }} else {{
+      const tokCount = stats.tokens[tokName] || 0;
+      const ogPer = tokCount ? baseChars / tokCount : 0;
+      const encPer = tokCount ? stats.chars / tokCount : 0;
+
+      if (stats.chars) {{ minChars = Math.min(minChars, stats.chars); maxChars = Math.max(maxChars, stats.chars); }}
+      if (tokCount) {{ minToks = Math.min(minToks, tokCount); maxToks = Math.max(maxToks, tokCount); }}
+      if (ogPer) {{ minOg = Math.min(minOg, ogPer); maxOg = Math.max(maxOg, ogPer); }}
+      if (encPer) {{ minEnc = Math.min(minEnc, encPer); maxEnc = Math.max(maxEnc, encPer); }}
+
+      rows.push({{ fmt, label: data.formatLabels[fmt], valid: true, chars: stats.chars, tokens: tokCount, ogPer, encPer }});
+    }}
+  }}
+
+  // Second pass: render with gradient cells (same structure as static tables)
   let html = `<table class='comparison-table'>
 <tr><th>Format</th><th>Chars</th><th>Tokens</th><th>chars_og/tok</th><th>enc_chars/tok</th></tr>`;
 
-  for (const fmt of data.formats) {{
-    const label = data.formatLabels[fmt];
-    const stats = data.stats[fixtureName]?.[fmt];
-
-    if (!stats) {{
-      html += `<tr><td>${{label}}</td><td colspan='4' class='na'>N/A</td></tr>`;
+  for (const row of rows) {{
+    if (!row.valid) {{
+      html += `<tr><td>${{row.label}}</td><td colspan='4' class='na'>N/A</td></tr>`;
     }} else {{
-      const tokCount = stats.tokens[tokName] || 0;
-      const ogPer = tokCount ? (baseChars / tokCount).toFixed(1) : '0.0';
-      const encPer = tokCount ? (stats.chars / tokCount).toFixed(1) : '0.0';
-      html += `<tr><td>${{label}}</td><td>${{stats.chars.toLocaleString()}}</td><td>${{tokCount.toLocaleString()}}</td><td>${{ogPer}}</td><td>${{encPer}}</td></tr>`;
+      // Chars: lower is better
+      const charsRatio = maxChars === minChars ? 0.5 : 1 - (row.chars - minChars) / (maxChars - minChars);
+      // Tokens: lower is better
+      const toksRatio = maxToks === minToks ? 0.5 : 1 - (row.tokens - minToks) / (maxToks - minToks);
+      // og_per_tok: higher is better
+      const ogRatio = maxOg === minOg ? 0.5 : (row.ogPer - minOg) / (maxOg - minOg);
+      // enc_per_tok: higher is better
+      const encRatio = maxEnc === minEnc ? 0.5 : (row.encPer - minEnc) / (maxEnc - minEnc);
+
+      html += `<tr><td>${{row.label}}</td>`;
+      html += gradientCell(charsRatio, row.chars.toLocaleString(), row.chars);
+      html += gradientCell(toksRatio, row.tokens.toLocaleString(), row.tokens);
+      html += gradientCell(ogRatio, row.ogPer.toFixed(1), row.ogPer.toFixed(1));
+      html += gradientCell(encRatio, row.encPer.toFixed(1), row.encPer.toFixed(1));
+      html += `</tr>`;
     }}
   }}
 
@@ -538,7 +736,45 @@ function renderComparisonTable(fixtureName, tokName) {{
   return html;
 }}
 
+function attachTableSorting(container) {{
+  // Attach sorting to all tables in container (same logic as full report)
+  container.querySelectorAll('table th').forEach(th => {{
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {{
+      const table = th.closest('table');
+      const tbody = table.querySelector('tbody') || table;
+      const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => r.querySelector('td'));
+      const idx = Array.from(th.parentNode.children).indexOf(th);
+      const isAsc = th.classList.contains('sorted-asc');
+
+      table.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+      th.classList.add(isAsc ? 'sorted-desc' : 'sorted-asc');
+
+      rows.sort((a, b) => {{
+        const aVal = a.children[idx]?.dataset.sort || a.children[idx]?.textContent || '';
+        const bVal = b.children[idx]?.dataset.sort || b.children[idx]?.textContent || '';
+        const aNum = parseFloat(aVal), bNum = parseFloat(bVal);
+        const cmp = (!isNaN(aNum) && !isNaN(bNum)) ? aNum - bNum : aVal.localeCompare(bVal);
+        return isAsc ? -cmp : cmp;
+      }});
+
+      rows.forEach(r => tbody.appendChild(r));
+    }});
+  }});
+}}
+
 function renderPanel(tokName, fixtureName) {{
+  // Overview panels are pre-rendered server-side, just attach sorting
+  if (fixtureName === 'Overview') {{
+    const panelId = 'content-' + tokName + '-Overview';
+    const panel = document.getElementById(panelId);
+    if (panel && !renderedPanels.has(panelId)) {{
+      attachTableSorting(panel);
+      renderedPanels.add(panelId);
+    }}
+    return;
+  }}
+
   const panelId = 'content-' + tokName + '-' + fixtureName;
   const panel = document.getElementById(panelId);
   if (!panel || renderedPanels.has(panelId)) return;
@@ -555,6 +791,7 @@ function renderPanel(tokName, fixtureName) {{
   }}
 
   panel.innerHTML = html;
+  attachTableSorting(panel);
   renderedPanels.add(panelId);
 }}
 
