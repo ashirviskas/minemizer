@@ -767,22 +767,13 @@ def _llm_dataset_tabs(datasets: list[str]) -> str:
     return "\n".join(lines)
 
 
-def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> str:
-    """Generate overview panel for a model showing aggregated stats across all runs."""
-    content_id = f"content-{model}-Overview".replace(" ", "_").replace(".", "_")
-
-    lines = [
-        f"<div class='tab-content{active}' id='{content_id}' data-model='{model}' data-dataset='Overview'>",
-        f"<div class='meta-info'><strong>{model}</strong> — {len(datasets)} dataset(s)</div>",
-        "<h3>Aggregated Results</h3>",
-    ]
-
-    # Aggregate stats across all datasets
+def _build_overview_type_table(datasets: dict[str, dict], dtype: str) -> str:
+    """Build aggregated table for a specific data type in overview panel."""
     format_stats: dict[str, dict] = {}
     base_chars_list: list[int] = []
     base_tokens_list: list[int] = []
 
-    for _dataset, data in datasets.items():
+    for _ds_name, data in datasets.items():
         jp = data["results"].get("json_pretty", {})
         if jp.get("chars"):
             base_chars_list.append(jp["chars"])
@@ -799,14 +790,11 @@ def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> s
             format_stats[fmt]["latency"].append(res.get("avg_latency_ms", 0))
 
     if not format_stats:
-        lines.append("<p>No results available.</p>")
-        lines.append("</div>")
-        return "\n".join(lines)
+        return ""
 
     base_chars = sum(base_chars_list) / len(base_chars_list) if base_chars_list else 0
     base_tokens = sum(base_tokens_list) / len(base_tokens_list) if base_tokens_list else 1
 
-    # Compute averages
     avg_data = []
     for fmt, stats in format_stats.items():
         avg_acc = sum(stats["acc"]) / len(stats["acc"]) if stats["acc"] else 0
@@ -815,7 +803,6 @@ def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> s
         og_cpt = base_chars / avg_tokens if avg_tokens else 0
         compression_ratio = base_tokens / avg_tokens if avg_tokens else 0
         efficiency = avg_acc * compression_ratio
-        n_runs = len(stats["acc"])
         avg_data.append(
             {
                 "fmt": fmt,
@@ -824,7 +811,6 @@ def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> s
                 "og_cpt": og_cpt,
                 "latency": avg_latency,
                 "efficiency": efficiency,
-                "n_runs": n_runs,
             }
         )
 
@@ -843,11 +829,11 @@ def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> s
     og_cpt_range = (min(og_cpt_vals), max(og_cpt_vals)) if og_cpt_vals else (0, 1)
     lat_range = (min(lat_vals), max(lat_vals)) if lat_vals else (0, 1)
 
-    # Aggregated table
-    lines.append("<table>")
-    lines.append(
-        "<tr><th>Format</th><th>Efficiency</th><th>Accuracy</th><th>Tokens</th><th>og_chars/tok</th><th>Latency</th><th>Runs</th></tr>"
-    )
+    lines = [
+        f"<h3>{dtype.capitalize()} Data ({len(datasets)} dataset(s))</h3>",
+        "<table>",
+        "<tr><th>Format</th><th>Efficiency</th><th>Accuracy</th><th>Tokens</th><th>og_chars/tok</th><th>Latency</th></tr>",
+    ]
 
     for d in avg_data:
         eff_style = _gradient_cell_style(d["efficiency"], eff_range[0], eff_range[1], True)
@@ -861,11 +847,40 @@ def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> s
         lines.append(
             f"<tr><td>{d['fmt']}</td><td{eff_style}>{d['efficiency']:.2f}</td>"
             f"<td{acc_style}>{d['acc']:.1%}</td><td{tok_style}>{tok_display}</td>"
-            f"<td{og_cpt_style}>{d['og_cpt']:.1f}</td><td{lat_style}>{d['latency']:.0f}ms</td>"
-            f"<td>{d['n_runs']}/{len(datasets)}</td></tr>"
+            f"<td{og_cpt_style}>{d['og_cpt']:.1f}</td><td{lat_style}>{d['latency']:.0f}ms</td></tr>"
         )
 
     lines.append("</table>")
+    return "\n".join(lines)
+
+
+def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> str:
+    """Generate overview panel for a model showing aggregated stats by data type."""
+    content_id = f"content-{model}-Overview".replace(" ", "_").replace(".", "_")
+
+    lines = [
+        f"<div class='tab-content{active}' id='{content_id}' data-model='{model}' data-dataset='Overview'>",
+        f"<div class='meta-info'><strong>{model}</strong> — {len(datasets)} dataset(s)</div>",
+    ]
+
+    # Group datasets by type
+    by_type: dict[str, dict[str, dict]] = {"nested": {}, "flat": {}, "sparse": {}}
+    for ds_name, data in datasets.items():
+        dtype = _get_data_type(ds_name)
+        by_type[dtype][ds_name] = data
+
+    # Generate table for each data type
+    for dtype in ["nested", "flat", "sparse"]:
+        type_datasets = by_type[dtype]
+        if not type_datasets:
+            continue
+
+        table_html = _build_overview_type_table(type_datasets, dtype)
+        if table_html:
+            lines.append(table_html)
+
+    if not any(by_type.values()):
+        lines.append("<p>No results available.</p>")
 
     # Individual runs overview
     lines.append("<h3>Individual Runs</h3>")
