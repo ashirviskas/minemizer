@@ -20,6 +20,7 @@ FORMATS = [
     "tson",
     "minemizer",
     "minemizer_compact",
+    "minemizer_prefixed",
 ]
 
 FORMAT_LABELS = {
@@ -32,6 +33,7 @@ FORMAT_LABELS = {
     "tson": "TSON",
     "minemizer": "minemizer",
     "minemizer_compact": "minemizer (compact)",
+    "minemizer_prefixed": "minemizer (prefixed)",
 }
 
 # Display settings

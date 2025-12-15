@@ -491,3 +491,158 @@ def _make_sparse_query(
         dept = record["employment"]["department"]
         question = f"Is there anyone in the {dept} department? Answer yes or no."
         return Query(type=qtype, question=question, answer="yes")
+
+
+# --- Sparse Dense (70% presence) and Sparse Sparse (25% presence) generators ---
+
+
+def generate_sparse_dense_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+) -> list[dict]:
+    """Generate sparse dataset where optional fields have ~70% presence.
+
+    Args:
+        size: Number of records to generate.
+        seed: Random seed for reproducibility.
+
+    Returns:
+        List of sparse nested records with high field presence.
+    """
+    rng = random.Random(seed)
+    records = []
+
+    for _ in range(size):
+        record = {
+            "id": _random_id(rng),
+            "name": _random_name(rng),
+            "contact": {
+                "email": _random_email(rng),  # always present
+            },
+            "employment": {
+                "department": rng.choice(_DEPARTMENTS),  # always present
+                "level": rng.choice(_LEVELS),  # always present
+            },
+        }
+
+        # All optional fields have ~70% presence (0.3 sparsity)
+        if rng.random() < 0.7:
+            record["contact"]["phone"] = _random_phone(rng)
+        if rng.random() < 0.7:
+            record["employment"]["salary"] = rng.randint(30000, 200000)
+        if rng.random() < 0.7:
+            record["employment"]["years"] = rng.randint(0, 25)
+        if rng.random() < 0.7:
+            record["contact"]["address"] = {
+                "city": _random_city(rng),
+                "country": _random_country(rng),
+            }
+        if rng.random() < 0.7:
+            record["skills"] = rng.sample(_SKILLS, k=rng.randint(1, 4))
+        if rng.random() < 0.7:
+            record["certifications"] = rng.sample(_CERTIFICATIONS, k=rng.randint(1, 3))
+        if rng.random() < 0.7:
+            record["languages"] = rng.sample(_LANGUAGES, k=rng.randint(1, 3))
+        if rng.random() < 0.7:
+            record["hobbies"] = rng.sample(_HOBBIES, k=rng.randint(1, 3))
+        if rng.random() < 0.7:
+            record["metadata"] = {
+                "created": f"2024-{rng.randint(1, 12):02d}-{rng.randint(1, 28):02d}",
+                "source": rng.choice(["manual", "import", "api", "migration"]),
+            }
+
+        records.append(record)
+
+    return records
+
+
+def save_sparse_dense_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+    output_dir: Path | None = None,
+) -> Path:
+    """Generate and save sparse_dense dataset."""
+    output_dir = output_dir or FIXTURES_DIR / "llm_accuracy"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    data = generate_sparse_dense_dataset(size, seed)
+    path = output_dir / f"sparse_dense_{size}.json"
+    path.write_text(json.dumps(data, indent=2))
+
+    return path
+
+
+def generate_sparse_sparse_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+) -> list[dict]:
+    """Generate sparse dataset where optional fields have ~25% presence.
+
+    Args:
+        size: Number of records to generate.
+        seed: Random seed for reproducibility.
+
+    Returns:
+        List of sparse nested records with low field presence.
+    """
+    rng = random.Random(seed)
+    records = []
+
+    for _ in range(size):
+        record = {
+            "id": _random_id(rng),
+            "name": _random_name(rng),
+            "contact": {
+                "email": _random_email(rng),  # always present
+            },
+            "employment": {
+                "department": rng.choice(_DEPARTMENTS),  # always present
+                "level": rng.choice(_LEVELS),  # always present
+            },
+        }
+
+        # All optional fields have ~25% presence (0.75 sparsity)
+        if rng.random() < 0.25:
+            record["contact"]["phone"] = _random_phone(rng)
+        if rng.random() < 0.25:
+            record["employment"]["salary"] = rng.randint(30000, 200000)
+        if rng.random() < 0.25:
+            record["employment"]["years"] = rng.randint(0, 25)
+        if rng.random() < 0.25:
+            record["contact"]["address"] = {
+                "city": _random_city(rng),
+                "country": _random_country(rng),
+            }
+        if rng.random() < 0.25:
+            record["skills"] = rng.sample(_SKILLS, k=rng.randint(1, 4))
+        if rng.random() < 0.25:
+            record["certifications"] = rng.sample(_CERTIFICATIONS, k=rng.randint(1, 3))
+        if rng.random() < 0.25:
+            record["languages"] = rng.sample(_LANGUAGES, k=rng.randint(1, 3))
+        if rng.random() < 0.25:
+            record["hobbies"] = rng.sample(_HOBBIES, k=rng.randint(1, 3))
+        if rng.random() < 0.25:
+            record["metadata"] = {
+                "created": f"2024-{rng.randint(1, 12):02d}-{rng.randint(1, 28):02d}",
+                "source": rng.choice(["manual", "import", "api", "migration"]),
+            }
+
+        records.append(record)
+
+    return records
+
+
+def save_sparse_sparse_dataset(
+    size: int,
+    seed: int = DEFAULT_SEED,
+    output_dir: Path | None = None,
+) -> Path:
+    """Generate and save sparse_sparse dataset."""
+    output_dir = output_dir or FIXTURES_DIR / "llm_accuracy"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    data = generate_sparse_sparse_dataset(size, seed)
+    path = output_dir / f"sparse_sparse_{size}.json"
+    path.write_text(json.dumps(data, indent=2))
+
+    return path

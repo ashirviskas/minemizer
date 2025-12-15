@@ -32,6 +32,8 @@ class Config:
     common_optimizations: bool = True  # Use :true/:false/:null (single tokens in most tokenizers)
     header_repeat_interval: int | None = 100  # Repeat header every N data rows (None = no repeat)
     strip_trailing_delimiter: bool = True  # Strip trailing delimiter before newlines (disable for markdown)
+    row_prefix: str | None = None  # Prefix before each data row (e.g., "- ")
+    schema_prefix: str | None = None  # Prefix before header/schema lines (e.g., "> ")
 
     @property
     def spaced_delimiter(self) -> str:

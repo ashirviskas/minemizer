@@ -74,6 +74,11 @@ def main() -> int:
     full_parser = subparsers.add_parser("full-report", help="Generate combined benchmark report (HTML + MD)")
     full_parser.add_argument("--output-dir", type=Path, help="Output directory (default: benchmarks/results/)")
 
+    # Experiment command
+    exp_parser = subparsers.add_parser("experiment", help="Run named experiments")
+    exp_parser.add_argument("name", help="Experiment name (e.g., 'separators_a')")
+    exp_parser.add_argument("--output", type=Path, help="Output HTML path (default: ./tmp/experiment_<name>.html)")
+
     args = parser.parse_args()
 
     if args.command == "generate":
@@ -86,6 +91,8 @@ def main() -> int:
         return cmd_report(args)
     elif args.command == "full-report":
         return cmd_full_report(args)
+    elif args.command == "experiment":
+        return cmd_experiment(args)
 
     return 1
 
@@ -317,7 +324,11 @@ def _generate_llm_report_html(all_results: list[tuple[str, dict]]) -> str:
     models = list(by_model.keys())
     datasets_list = sorted(datasets)
     first_model = models[0] if models else ""
-    first_dataset = datasets_list[0] if datasets_list else ""
+    # "Overview" is first tab if model has multiple datasets
+    first_dataset = "Overview" if len(datasets_list) > 1 else (datasets_list[0] if datasets_list else "")
+
+    # Build tabs list - Overview first if multiple datasets
+    tabs_list = (["Overview"] + datasets_list) if len(datasets_list) > 1 else datasets_list
 
     html = [
         "<!DOCTYPE html>",
@@ -334,18 +345,25 @@ def _generate_llm_report_html(all_results: list[tuple[str, dict]]) -> str:
         "<div class='page-layout'>",
         _llm_sidebar(models),
         "<div class='main-content'>",
-        _llm_dataset_tabs(datasets_list),
+        _llm_dataset_tabs(tabs_list),
     ]
 
-    # Generate content for each model × dataset combination
+    # Generate Overview and content panels for each model
     for model in models:
         model_data = dict(by_model[model])
+
+        # Overview panel (if multiple datasets)
+        if len(datasets_list) > 1:
+            active = " active" if model == first_model else ""
+            html.append(_llm_overview_panel(model, model_data, active))
+
+        # Content panels for each dataset
         for dataset in datasets_list:
             if dataset not in model_data:
                 continue
             data = model_data[dataset]
             active = " active" if model == first_model and dataset == first_dataset else ""
-            html.append(_llm_content_panel(model, dataset, data, active))
+            html.append(_llm_content_panel(model, dataset, data, active, model_data))
 
     html.extend(
         [
@@ -860,6 +878,80 @@ def _build_overview_type_table(datasets: dict[str, dict], dtype: str) -> str:
     return "\n".join(lines)
 
 
+def _build_format_by_type_table(datasets: dict[str, dict]) -> str:
+    """Build a Format × Query Type cross-reference table showing accuracy per format per query type."""
+    # Collect all formats and query types, compute accuracy per format per query type
+    all_formats: set[str] = set()
+    all_query_types: set[str] = set()
+
+    # First pass: collect all formats and query types
+    for data in datasets.values():
+        results = data.get("results", {})
+        for fmt, fmt_data in results.items():
+            if fmt_data.get("total_queries", 0) > 0:
+                all_formats.add(fmt)
+                for query in fmt_data.get("queries", []):
+                    qtype = query.get("type")
+                    if qtype:
+                        all_query_types.add(qtype)
+
+    if not all_formats or not all_query_types:
+        return ""
+
+    # Sort query types for consistent display
+    sorted_query_types = sorted(all_query_types)
+
+    # Compute accuracy per format per query type (averaged across all datasets)
+    format_qtype_acc: dict[str, dict[str, float | None]] = {}
+    for fmt in all_formats:
+        format_qtype_acc[fmt] = {}
+        for qtype in sorted_query_types:
+            correct_total = 0
+            query_total = 0
+            for data in datasets.values():
+                fmt_data = data.get("results", {}).get(fmt, {})
+                for query in fmt_data.get("queries", []):
+                    if query.get("type") == qtype:
+                        query_total += 1
+                        if query.get("correct"):
+                            correct_total += 1
+            format_qtype_acc[fmt][qtype] = correct_total / query_total if query_total > 0 else None
+
+    # Find min/max per column for gradient
+    col_extremes: dict[str, tuple[float, float]] = {}
+    for qtype in sorted_query_types:
+        vals: list[float] = [v for fmt in all_formats if (v := format_qtype_acc[fmt][qtype]) is not None]
+        if vals:
+            col_extremes[qtype] = (min(vals), max(vals))
+
+    # Build table
+    lines = [
+        "<h3>Format × Query Type</h3>",
+        "<table>",
+        "<tr><th>Format</th>" + "".join(f"<th>{qt}</th>" for qt in sorted_query_types) + "</tr>",
+    ]
+
+    # Sort formats by average accuracy descending
+    def avg_acc(fmt: str) -> float:
+        vals = [v for v in format_qtype_acc[fmt].values() if v is not None]
+        return sum(vals) / len(vals) if vals else 0
+
+    for fmt in sorted(all_formats, key=avg_acc, reverse=True):
+        row = [f"<td>{fmt}</td>"]
+        for qtype in sorted_query_types:
+            acc = format_qtype_acc[fmt][qtype]
+            if acc is None:
+                row.append("<td class='na'>—</td>")
+            else:
+                mn, mx = col_extremes.get(qtype, (acc, acc))
+                style = _gradient_cell_style(acc, mn, mx, True)
+                row.append(f"<td{style}>{acc:.1%}</td>")
+        lines.append("<tr>" + "".join(row) + "</tr>")
+
+    lines.append("</table>")
+    return "\n".join(lines)
+
+
 def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> str:
     """Generate overview panel for a model showing aggregated stats by data type."""
     content_id = f"content-{model}-Overview".replace(" ", "_").replace(".", "_")
@@ -887,6 +979,11 @@ def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> s
 
     if not any(by_type.values()):
         lines.append("<p>No results available.</p>")
+
+    # Format × Data Type cross-reference table
+    format_type_table = _build_format_by_type_table(datasets)
+    if format_type_table:
+        lines.append(format_type_table)
 
     # Individual runs overview
     lines.append("<h3>Individual Runs</h3>")
@@ -919,7 +1016,9 @@ def _llm_overview_panel(model: str, datasets: dict[str, dict], active: str) -> s
     return "\n".join(lines)
 
 
-def _llm_content_panel(model: str, dataset: str, data: dict, active: str) -> str:
+def _llm_content_panel(
+    model: str, dataset: str, data: dict, active: str, all_model_datasets: dict[str, dict] | None = None
+) -> str:
     """Generate content panel for a model × dataset combination."""
     meta = data["meta"]
     results = data["results"]
@@ -1005,6 +1104,11 @@ def _llm_content_panel(model: str, dataset: str, data: dict, active: str) -> str
         lines.append(f"<p><strong>Token savings:</strong> {token_savings:.1f}%</p>")
         lines.append(f"<p><strong>Accuracy diff:</strong> {acc_diff:+.1f}%</p>")
         lines.append("</div>")
+
+    # Format × Query Type table for this specific dataset
+    format_type_table = _build_format_by_type_table({dataset: data})
+    if format_type_table:
+        lines.append(format_type_table)
 
     # Data previews (collapsible)
     previews = [(fmt, res.get("data_preview", "")) for fmt, res in results.items() if res.get("data_preview")]
@@ -1182,6 +1286,389 @@ def cmd_full_report(args: argparse.Namespace) -> int:
     print(f"Markdown report saved to: {md_path}")
 
     return 0
+
+
+def cmd_experiment(args: argparse.Namespace) -> int:
+    """Run named experiments."""
+    from benchmarks.core.tokenizers import load_tokenizers
+
+    # Get experiment definition
+    experiment = EXPERIMENTS.get(args.name)
+    if not experiment:
+        print(f"Unknown experiment: {args.name}")
+        print(f"Available experiments: {', '.join(EXPERIMENTS.keys())}")
+        return 1
+
+    print(f"Running experiment: {args.name}")
+    print(f"Description: {experiment['description']}")
+
+    # Load tokenizers
+    print("Loading tokenizers...")
+    tokenizers, _ = load_tokenizers()
+
+    # Run the experiment
+    data = experiment["data"]
+    configs = experiment["configs"]
+
+    print(f"Testing {len(configs)} configurations...")
+    results: dict[str, dict] = {}
+
+    for config_name, transform_fn in configs:
+        modified = transform_fn(data)
+        results[config_name] = {
+            "display": config_name,
+            "data": modified,
+            "chars": len(modified),
+            "tokens": {},
+        }
+
+        # Tokenize with each tokenizer
+        for tok_name, tokenizer in tokenizers.items():
+            tokens = tokenizer.encode(modified)
+            results[config_name]["tokens"][tok_name] = {
+                "count": len(tokens),
+                "ids": tokens,
+            }
+
+    # Generate HTML
+    html = _generate_experiment_html(results, tokenizers, data, args.name, experiment["description"])
+
+    # Output
+    output_path = args.output or (RESULTS_DIR / f"experiment_{args.name}.html")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(html)
+    print(f"Experiment report saved to: {output_path}")
+
+    return 0
+
+
+# Experiment definitions
+EXPERIMENTS: dict[str, dict] = {}
+
+
+def _register_experiment(name: str, description: str, data: str, configs: list[tuple[str, callable]]):
+    """Register an experiment."""
+    EXPERIMENTS[name] = {
+        "description": description,
+        "data": data,
+        "configs": configs,
+    }
+
+
+# ============================================================================
+# Experiment: separators_a - Testing record separators after }\n
+# ============================================================================
+_SEPARATORS_A_DATA = """xaji0y;{ Brizel Miron; 72};{ 33 Ember Lane; Zarawick; NA165; Myrgard}
+v3a3zm;{ Lodor Tiven; 31};{ 95 Stone Lane; Plexhaven; PU759; Draland}
+t3w5uz;{ Kalix Zutos; 55};{ 82 Silver Lane; Ashaford; LV136; Kelstan}
+tiqj7y;{ Zulix Thawen; 25};{ 235 Ember Drive; Ashaford; BX572; Velnia}
+5xff0t;{ Saron Ryron; 69};{ 371 Silver Road; Miradale; CB167; Draland}
+nvqjt7;{ Numar Milix; 52};{ 788 Iron Lane; Vornmore; EA779; Zanreich}"""
+
+_SEPARATORS_A_CONFIGS = [
+    # Base - no separator
+    ("none", lambda d: d),
+    # Single space variants
+    ("space", lambda d: d.replace("}\n", "}\n ")),
+    ("double_space", lambda d: d.replace("}\n", "}\n  ")),
+    # Single symbols
+    ("dash", lambda d: d.replace("}\n", "}\n-")),
+    ("endash", lambda d: d.replace("}\n", "}\n–")),
+    ("gt", lambda d: d.replace("}\n", "}\n>")),
+    ("lt", lambda d: d.replace("}\n", "}\n<")),
+    ("paren", lambda d: d.replace("}\n", "}\n)")),
+    ("star", lambda d: d.replace("}\n", "}\n*")),
+    ("dollar", lambda d: d.replace("}\n", "}\n$")),
+    ("pipe", lambda d: d.replace("}\n", "}\n|")),
+    ("slash", lambda d: d.replace("}\n", "}\n/")),
+    ("hash", lambda d: d.replace("}\n", "}\n#")),
+    ("at", lambda d: d.replace("}\n", "}\n@")),
+    ("caret", lambda d: d.replace("}\n", "}\n^")),
+    ("tilde", lambda d: d.replace("}\n", "}\n~")),
+    ("colon", lambda d: d.replace("}\n", "}\n:")),
+    ("semicolon", lambda d: d.replace("}\n", "}\n;")),
+    ("dot", lambda d: d.replace("}\n", "}\n.")),
+    ("comma", lambda d: d.replace("}\n", "}\n,")),
+    ("underscore", lambda d: d.replace("}\n", "}\n_")),
+    ("equals", lambda d: d.replace("}\n", "}\n=")),
+    ("plus", lambda d: d.replace("}\n", "}\n+")),
+    ("amp", lambda d: d.replace("}\n", "}\n&")),
+    ("percent", lambda d: d.replace("}\n", "}\n%")),
+    ("backtick", lambda d: d.replace("}\n", "}\n`")),
+    ("backslash", lambda d: d.replace("}\n", "}\n\\")),
+    # Space + symbol combinations (space BEFORE symbol)
+    ("space_dash", lambda d: d.replace("}\n", "}\n -")),
+    ("space_endash", lambda d: d.replace("}\n", "}\n –")),
+    ("space_gt", lambda d: d.replace("}\n", "}\n >")),
+    ("space_lt", lambda d: d.replace("}\n", "}\n <")),
+    ("space_paren", lambda d: d.replace("}\n", "}\n )")),
+    ("space_star", lambda d: d.replace("}\n", "}\n *")),
+    ("space_dollar", lambda d: d.replace("}\n", "}\n $")),
+    ("space_pipe", lambda d: d.replace("}\n", "}\n |")),
+    ("space_hash", lambda d: d.replace("}\n", "}\n #")),
+    ("space_dot", lambda d: d.replace("}\n", "}\n .")),
+    # Symbol + space combinations (space AFTER symbol)
+    ("dash_space", lambda d: d.replace("}\n", "}\n- ")),
+    ("endash_space", lambda d: d.replace("}\n", "}\n– ")),
+    ("gt_space", lambda d: d.replace("}\n", "}\n> ")),
+    ("lt_space", lambda d: d.replace("}\n", "}\n< ")),
+    ("paren_space", lambda d: d.replace("}\n", "}\n) ")),
+    ("star_space", lambda d: d.replace("}\n", "}\n* ")),
+    ("dollar_space", lambda d: d.replace("}\n", "}\n$ ")),
+    ("pipe_space", lambda d: d.replace("}\n", "}\n| ")),
+    ("hash_space", lambda d: d.replace("}\n", "}\n# ")),
+    ("dot_space", lambda d: d.replace("}\n", "}\n. ")),
+    ("colon_space", lambda d: d.replace("}\n", "}\n: ")),
+    ("semicolon_space", lambda d: d.replace("}\n", "}\n; ")),
+]
+
+_register_experiment(
+    "separators_a",
+    "Testing record separators after }\\n",
+    _SEPARATORS_A_DATA,
+    _SEPARATORS_A_CONFIGS,
+)
+
+
+def _generate_experiment_html(
+    results: dict[str, dict],
+    tokenizers: dict,
+    original_data: str,
+    experiment_name: str,
+    description: str,
+) -> str:
+    """Generate HTML report for experiment."""
+    from benchmarks.output.html import _decode_token
+
+    tok_names = list(tokenizers.keys())
+
+    # Find min/max tokens per tokenizer for gradient coloring
+    tok_ranges: dict[str, tuple[int, int]] = {}
+    for tok_name in tok_names:
+        counts = [r["tokens"][tok_name]["count"] for r in results.values()]
+        tok_ranges[tok_name] = (min(counts), max(counts))
+
+    # Build token data for JS rendering
+    token_data: dict[str, dict[str, list[str]]] = {t: {} for t in tok_names}
+    for config_name, r in results.items():
+        for tok_name in tok_names:
+            token_ids = r["tokens"][tok_name]["ids"]
+            tokenizer = tokenizers[tok_name]
+            tokens = [_decode_token(tokenizer, tid) for tid in token_ids]
+            token_data[tok_name][config_name] = tokens
+
+    lines = [
+        "<!DOCTYPE html>",
+        "<html lang='en' data-theme='dark'>",
+        "<head>",
+        "<meta charset='UTF-8'>",
+        f"<title>Experiment: {experiment_name}</title>",
+        "<style>",
+        _experiment_css(),
+        "</style>",
+        "</head>",
+        "<body>",
+        f"<h1>Experiment: {experiment_name}</h1>",
+        f"<p>{description}</p>",
+        f"<p>Testing {len(results)} configurations. Original data: {len(original_data)} chars, {original_data.count(chr(10)) + 1} records</p>",
+        "",
+        "<h2>Token Counts by Configuration</h2>",
+        "<table class='results-table'>",
+        "<thead>",
+        "<tr>",
+        "<th>Config</th>",
+        "<th>Chars</th>",
+    ]
+
+    for tok_name in tok_names:
+        lines.append(f"<th>{tok_name}</th>")
+    lines.append("</tr>")
+    lines.append("</thead>")
+    lines.append("<tbody>")
+
+    # Sort by average token count
+    def avg_tokens(name: str) -> float:
+        return sum(results[name]["tokens"][t]["count"] for t in tok_names) / len(tok_names)
+
+    for config_name in sorted(results.keys(), key=avg_tokens):
+        r = results[config_name]
+
+        lines.append("<tr>")
+        lines.append(f"<td><code>{config_name}</code></td>")
+        lines.append(f"<td>{r['chars']}</td>")
+
+        for tok_name in tok_names:
+            count = r["tokens"][tok_name]["count"]
+            mn, mx = tok_ranges[tok_name]
+            # Lower is better - invert ratio
+            ratio = 1 - (count - mn) / (mx - mn) if mx > mn else 0.5
+            is_best = count == mn
+            style = _experiment_gradient_style(ratio, is_best)
+            lines.append(f"<td{style}>{count}</td>")
+
+        lines.append("</tr>")
+
+    lines.append("</tbody>")
+    lines.append("</table>")
+
+    # Token previews section - placeholders for JS rendering
+    lines.append("<h2>Token Previews</h2>")
+    lines.append("<div class='tokenizer-tabs'>")
+    for i, tok_name in enumerate(tok_names):
+        active = " active" if i == 0 else ""
+        lines.append(f"<div class='tok-tab{active}' data-tokenizer='{tok_name}'>{tok_name}</div>")
+    lines.append("</div>")
+    lines.append("<div class='previews' id='previews-container'></div>")
+
+    # Raw data section - show top 5 best configs
+    sorted_configs = sorted(results.keys(), key=avg_tokens)
+    lines.append("<h2>Raw Data Samples</h2>")
+    lines.append("<div class='raw-data'>")
+
+    for config_name in sorted_configs[:5]:
+        r = results[config_name]
+        escaped = r["data"][:500].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+        lines.append("<details>")
+        lines.append(f"<summary>{config_name} ({r['chars']} chars)</summary>")
+        lines.append(f"<pre>{escaped}</pre>")
+        lines.append("</details>")
+
+    lines.append("</div>")
+
+    # Add JSON data and JS - show ALL configs
+    lines.append(f"<script>const TOKEN_DATA = {json.dumps(token_data)};</script>")
+    lines.append(f"<script>const SORTED_CONFIGS = {json.dumps(sorted_configs)};</script>")
+    lines.append(_experiment_js())
+
+    lines.append("</body>")
+    lines.append("</html>")
+
+    return "\n".join(lines)
+
+
+def _experiment_css() -> str:
+    """CSS for experiment report."""
+    return """
+:root { --bg: #1a1a2e; --bg-secondary: #2a2a4e; --text: #eee; --border: #333; --token-border: #4a4a6a; }
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 1400px; margin: 0 auto; padding: 20px; background: var(--bg); color: var(--text); }
+h1, h2, h3 { color: #fff; }
+code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 3px; font-family: 'SF Mono', Monaco, monospace; }
+table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+th, td { padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
+th { background: var(--bg-secondary); position: sticky; top: 0; }
+.gradient-cell { color: #111; }
+.col-best { font-weight: bold; box-shadow: inset 0 0 0 2px #4ade80; }
+.tokenizer-tabs { display: flex; gap: 5px; margin-bottom: 15px; }
+.tok-tab { padding: 8px 16px; background: var(--bg-secondary); border-radius: 4px; cursor: pointer; }
+.tok-tab.active { background: #4a4a8a; }
+.tok-tab:hover { background: #3a3a6a; }
+.previews { display: flex; flex-direction: column; gap: 20px; }
+.preview-section { background: var(--bg-secondary); padding: 15px; border-radius: 8px; }
+.preview-section h3 { margin-top: 0; font-size: 16px; }
+.tokens { font-family: monospace; font-size: 14px; line-height: 1.8; background: var(--bg); padding: 15px; border-radius: 4px; margin-top: 10px; }
+.token { display: inline; border: 1px solid var(--token-border); border-radius: 3px; padding: 1px 2px; margin: 1px; }
+.token-space { background: #4a2a2a !important; border-color: #6a4a4a !important; }
+.token-newline { background: #3a2a4a !important; color: #999; border-color: #5a4a6a !important; }
+details { margin: 10px 0; }
+summary { cursor: pointer; padding: 8px; background: var(--bg-secondary); border-radius: 4px; }
+pre { background: #111; padding: 15px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+"""
+
+
+def _experiment_js() -> str:
+    """JavaScript for experiment report."""
+    return """<script>
+let currentTokenizer = document.querySelector('.tok-tab.active')?.dataset.tokenizer || Object.keys(TOKEN_DATA)[0];
+
+// Hash string to number
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+}
+
+// Color from hash - same token always gets same color
+function hashColor(token) {
+  const hash = hashString(token);
+  const hue = (hash % 360) / 360;
+  const sat = 0.6, light = 0.45;
+  const q = light < 0.5 ? light * (1 + sat) : light + sat - light * sat;
+  const p = 2 * light - q;
+  function h2rgb(t) {
+    t = ((t % 1.0) + 1.0) % 1.0;
+    if (t < 1/6) return Math.round((p + (q - p) * 6 * t) * 255);
+    if (t < 1/2) return Math.round(q * 255);
+    if (t < 2/3) return Math.round((p + (q - p) * (2/3 - t) * 6) * 255);
+    return Math.round(p * 255);
+  }
+  const r = h2rgb(hue + 1/3), g = h2rgb(hue), b = h2rgb(hue - 1/3);
+  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderTokens(tokens) {
+  let html = '';
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+    const escaped = escapeHtml(token);
+    if (token.includes('\\n')) {
+      const visible = escaped.replace(/\\n/g, '↵');
+      html += "<span class='token token-newline'>" + visible + "</span><br>";
+    } else if (token.trim() === '' && token.length > 0) {
+      const visible = escaped.replace(/ /g, '·').replace(/\\t/g, '→');
+      html += "<span class='token token-space'>" + visible + "</span>";
+    } else {
+      html += "<span class='token' style='background:" + hashColor(token) + ";color:#fff'>" + escaped + "</span>";
+    }
+  }
+  return html;
+}
+
+function renderPreviews() {
+  const container = document.getElementById('previews-container');
+  let html = '';
+  for (const config of SORTED_CONFIGS) {
+    const tokens = TOKEN_DATA[currentTokenizer][config] || [];
+    html += "<div class='preview-section'>";
+    html += "<h3>" + config + " (" + tokens.length + " tokens)</h3>";
+    html += "<div class='tokens'>" + renderTokens(tokens) + "</div>";
+    html += "</div>";
+  }
+  container.innerHTML = html;
+}
+
+// Tab switching
+document.querySelectorAll('.tok-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tok-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTokenizer = tab.dataset.tokenizer;
+    renderPreviews();
+  });
+});
+
+// Initial render
+renderPreviews();
+</script>"""
+
+
+def _experiment_gradient_style(ratio: float, is_best: bool) -> str:
+    """Generate gradient cell style for experiment table."""
+    # Green (good) to red (bad)
+    r = int(255 * (1 - ratio) + 175 * ratio)
+    g = int(255 * ratio + 200 * (1 - ratio))
+    b = int(150 * (1 - ratio) + 150 * ratio)
+    bg = f"rgb({r}, {g}, {b})"
+    cls = "gradient-cell col-best" if is_best else "gradient-cell"
+    return f" class='{cls}' style='background-color: {bg};'"
 
 
 def _generate_full_report_html(
@@ -1464,8 +1951,9 @@ def _full_report_llm_section(llm_results: list[tuple[str, dict]]) -> str:
 
     # Generate content for each model × dataset (only for datasets that exist)
     for model in models:
-        for dataset, data in by_model[model].items():
-            lines.append(_llm_content_panel(model, dataset, data, ""))
+        datasets_for_model = by_model[model]
+        for dataset, data in datasets_for_model.items():
+            lines.append(_llm_content_panel(model, dataset, data, "", datasets_for_model))
 
     lines.extend(["</div>", "</div>"])  # main-content, page-layout
 
@@ -1717,31 +2205,109 @@ def _md_compression_section(compression_results) -> list[str]:
     return lines
 
 
+def _md_format_by_type_table(datasets: dict[str, dict]) -> list[str]:
+    """Build markdown Format × Query Type table."""
+    # Collect all formats and query types
+    all_formats: set[str] = set()
+    all_query_types: set[str] = set()
+
+    for data in datasets.values():
+        results = data.get("results", {})
+        for fmt, fmt_data in results.items():
+            if fmt_data.get("total_queries", 0) > 0:
+                all_formats.add(fmt)
+                for query in fmt_data.get("queries", []):
+                    qtype = query.get("type")
+                    if qtype:
+                        all_query_types.add(qtype)
+
+    if not all_formats or not all_query_types:
+        return []
+
+    sorted_query_types = sorted(all_query_types)
+
+    # Compute accuracy per format per query type
+    format_qtype_acc: dict[str, dict[str, float | None]] = {}
+    for fmt in all_formats:
+        format_qtype_acc[fmt] = {}
+        for qtype in sorted_query_types:
+            correct_total = 0
+            query_total = 0
+            for data in datasets.values():
+                fmt_data = data.get("results", {}).get(fmt, {})
+                for query in fmt_data.get("queries", []):
+                    if query.get("type") == qtype:
+                        query_total += 1
+                        if query.get("correct"):
+                            correct_total += 1
+            format_qtype_acc[fmt][qtype] = correct_total / query_total if query_total > 0 else None
+
+    def avg_acc(fmt: str) -> float:
+        vals = [v for v in format_qtype_acc[fmt].values() if v is not None]
+        return sum(vals) / len(vals) if vals else 0
+
+    lines = [
+        "#### Format × Query Type",
+        "",
+        "| Format | " + " | ".join(sorted_query_types) + " |",
+        "|--------" + "|--------" * len(sorted_query_types) + "|",
+    ]
+
+    for fmt in sorted(all_formats, key=avg_acc, reverse=True):
+        row = [fmt]
+        for qtype in sorted_query_types:
+            acc = format_qtype_acc[fmt][qtype]
+            row.append(f"{acc:.1%}" if acc is not None else "—")
+        lines.append("| " + " | ".join(row) + " |")
+
+    lines.append("")
+    return lines
+
+
 def _md_llm_section(llm_results: list[tuple[str, dict]]) -> list[str]:
     """Generate markdown LLM accuracy section."""
     lines = ["## LLM Accuracy Benchmarks", ""]
 
+    # Group by model
+    by_model: dict[str, dict[str, dict]] = {}
     for _name, data in llm_results:
-        meta = data["meta"]
-        results = data["results"]
+        model = data["meta"]["model"]
+        dataset = data["meta"]["data_file"]
+        if model not in by_model:
+            by_model[model] = {}
+        by_model[model][dataset] = data
 
-        lines.append(f"### {meta['model']} on {meta['data_file']}")
+    for model, datasets in by_model.items():
+        lines.append(f"### {model}")
         lines.append("")
-        lines.append(f"*{meta['n_queries']} queries, {meta['date'][:10]}*")
-        lines.append("")
-        lines.append("| Format | Accuracy | Tokens | Latency |")
-        lines.append("|--------|----------|--------|---------|")
 
-        for fmt, res in sorted(results.items(), key=lambda x: -x[1].get("accuracy", 0)):
-            if res.get("total_queries", 0) == 0:
-                continue
-            acc = res.get("accuracy", 0)
-            tokens = res.get("tokens", 0)
-            latency = res.get("avg_latency_ms", 0)
-            tok_display = f"{tokens / 1000:.1f}k" if tokens >= 1000 else f"{tokens}"
-            lines.append(f"| {fmt} | {acc:.1%} | {tok_display} | {latency:.0f}ms |")
+        # Add Format × Data Type table if multiple types
+        format_type_lines = _md_format_by_type_table(datasets)
+        if format_type_lines:
+            lines.extend(format_type_lines)
 
-        lines.append("")
+        # Per-dataset details
+        for dataset, data in sorted(datasets.items()):
+            meta = data["meta"]
+            results = data["results"]
+
+            lines.append(f"#### {dataset}")
+            lines.append("")
+            lines.append(f"*{meta['n_queries']} queries, {meta['date'][:10]}*")
+            lines.append("")
+            lines.append("| Format | Accuracy | Tokens | Latency |")
+            lines.append("|--------|----------|--------|---------|")
+
+            for fmt, res in sorted(results.items(), key=lambda x: -x[1].get("accuracy", 0)):
+                if res.get("total_queries", 0) == 0:
+                    continue
+                acc = res.get("accuracy", 0)
+                tokens = res.get("tokens", 0)
+                latency = res.get("avg_latency_ms", 0)
+                tok_display = f"{tokens / 1000:.1f}k" if tokens >= 1000 else f"{tokens}"
+                lines.append(f"| {fmt} | {acc:.1%} | {tok_display} | {latency:.0f}ms |")
+
+            lines.append("")
 
     return lines
 

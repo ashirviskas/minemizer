@@ -255,6 +255,14 @@ def _serialize(data: list[dict], cfg: Config) -> str:
         sep_row = cfg.spaced_delimiter.join(cfg.header_separator for _ in header)
         header_block.append(sep_row)
 
+    # Apply schema_prefix to header block lines
+    if cfg.schema_prefix:
+        header_block = [f"{cfg.schema_prefix}{line}" for line in header_block]
+
+    # Apply row_prefix to data rows
+    if cfg.row_prefix:
+        rows = [f"{cfg.row_prefix}{row}" for row in rows]
+
     # Insert header at start and optionally repeat every N rows
     lines = list(header_block)
     for i, row in enumerate(rows):
@@ -293,6 +301,8 @@ def minemize(
     wrap_lines: str | None = _NOT_PROVIDED,
     common_optimizations: bool | None = _NOT_PROVIDED,
     header_repeat_interval: int | None = _NOT_PROVIDED,
+    row_prefix: str | None = _NOT_PROVIDED,
+    schema_prefix: str | None = _NOT_PROVIDED,
 ) -> str:
     """Minimize your data into a compact string format.
 
@@ -307,6 +317,8 @@ def minemize(
         wrap_lines: Wrap each line with this string (e.g., "|" for markdown tables)
         common_optimizations: Use :true/:false/:null for single-token encoding (default: True)
         header_repeat_interval: Repeat header/schema every N data rows (default: None = no repeat)
+        row_prefix: Prefix before each data row (e.g., "- ")
+        schema_prefix: Prefix before header/schema lines (e.g., "> ")
 
     Returns:
         str: The minemized representation
@@ -322,6 +334,9 @@ def minemize(
 
         # Repeat header every 100 rows for better LLM context
         minemize(data, header_repeat_interval=100)
+
+        # Add prefixes for visual structure
+        minemize(data, schema_prefix="> ", row_prefix="- ")
     """
     if isinstance(data, dict):
         data = [data]
@@ -341,5 +356,7 @@ def minemize(
         wrap_lines=wrap_lines,
         common_optimizations=common_optimizations,
         header_repeat_interval=header_repeat_interval,
+        row_prefix=row_prefix,
+        schema_prefix=schema_prefix,
     )
     return _serialize(data, cfg)

@@ -131,7 +131,7 @@ class LLMAccuracyBenchmark:
             "minemizer",
             "minemizer_no_repeat",
             "minemizer_compact",
-            "minemizer_compact_no_repeat",
+            "minemizer_prefixed",
             "minemizer_repeat10",
             "minemizer_compact_repeat10",
         ]

@@ -35,7 +35,15 @@ def convert_to_format(data: list[dict], format_name: str) -> str | None:
         "minemizer": minemize,
         "minemizer_no_repeat": lambda d: minemize(d, header_repeat_interval=None),
         "minemizer_compact": lambda d: minemize(d, preset=presets.compact),
-        "minemizer_compact_no_repeat": lambda d: minemize(d, preset=presets.compact, header_repeat_interval=None),
+        "minemizer_prefixed": lambda d: minemize(d, row_prefix="- ", schema_prefix="> ", header_repeat_interval=None),
+        "minemizer_repeat10_prefixed": lambda d: minemize(
+            d, row_prefix="- ", schema_prefix="> ", header_repeat_interval=10
+        ),
+        # Low sparsity threshold variants (0.2 = include keys appearing in 20%+ of records)
+        "minemizer_low_sparsity": lambda d: minemize(d, sparsity_threshold=0.2),
+        "minemizer_repeat10_prefixed_low_sparsity": lambda d: minemize(
+            d, row_prefix="- ", schema_prefix="> ", header_repeat_interval=10, sparsity_threshold=0.2
+        ),
         # Repeat keys every 10 rows (for flat data)
         "minemizer_repeat10": lambda d: minemize(d, header_repeat_interval=10),
         "minemizer_compact_repeat10": lambda d: minemize(d, preset=presets.compact, header_repeat_interval=10),
