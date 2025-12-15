@@ -1,4 +1,5 @@
 # minemizer
+[![PyPI version](https://img.shields.io/pypi/v/minemizer)](https://pypi.org/project/minemizer/)
 
 minemizer is a format that is focused on representing data using the least amount of tokens (up to 4x gains!) and highest LLM accuracy possible. It is csv-like, but supports sparse and nested data. Minimal and also human readable.
 
@@ -131,8 +132,10 @@ tl;dr:
 See [interactive benchmarks](https://ashirviskas.github.io/) for detailed tokenization and accuracy comparison across different tokenizers and LLMs.
 
 ## Installation
+### Latest build
+Simple `uv add minemizer` or `pip install minemizer` or `poetry add minemizer`
 
-### pip
+### Git version
 
 ```bash
 pip install git+https://github.com/ashirviskas/minemizer.git
